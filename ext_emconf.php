@@ -12,32 +12,34 @@
 
 $EM_CONF[$_EXTKEY] = array (
 	'title' => 'powermail',
-	'description' => 'Powerful and easy to use mailform extension with many features like storing form datas in database, export them to HTML, CSV and EXCEL (last one needs extension phpexcel_library), javascript validation (jQuery), multi step forms, different HTML templates, IRRE (Inline Relationship Record Editing), static_info_tables and many more...',
+	'description' => 'Powermail is a well-known, powerful and easy to use mailform extension with a lots of features (spam prevention, marketing, double-optin, etc...)',
 	'category' => 'plugin',
 	'shy' => 0,
-	'version' => '1.6.9',
+	'version' => '2.0.0',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
 	'loadOrder' => '',
-	'module' => 'mod1',
-	'state' => 'stable',
+	'module' => '',
+	'state' => 'alpha',
 	'uploadfolder' => 0,
-	'createDirs' => 'uploads/tx_powermail/files',
-	'modify_tables' => 'tt_content',
+	'createDirs' => 'uploads/tx_powermail',
+	'modify_tables' => '',
 	'clearcacheonload' => 0,
 	'lockType' => '',
-	'author' => 'Powermail development team',
+	'author' => 'Powermail dev team',
 	'author_email' => 'alexander.kellner@in2code.de',
-	'author_company' => '',
+	'author_company' => 'in2code.de',
 	'CGLcompliance' => NULL,
 	'CGLcompliance_note' => NULL,
 	'constraints' => 
 	array (
 		'depends' => 
 		array (
-			'php' => '5.2.0-0.0.0',
-			'typo3' => '4.4.6-0.0.0',
+			'typo3' => '4.6.0-4.99.0',
+			'cms' => '',
+			'extbase' => '',
+			'fluid' => '',
 		),
 		'conflicts' => 
 		array (
