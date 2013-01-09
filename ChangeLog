@@ -1,3 +1,33 @@
+2010-12-13  Alex Kellner  <alexander.kellner@einpraegsam.net>
+
+	* Release of Powermail 1.5.7
+	
+2010-12-11  Andy Grunwald  <andreas.grunwald@wmdb.de>
+
+	* Fixed bug #11310: PHP Warning: stripslashes() expects parameter 1 to be string in class.tx_powermail_html.php line 1050
+
+2010-12-03  Andy Grunwald  <andreas.grunwald@wmdb.de>
+
+	* Fixed bug #10926: dynamicTyposcript Marker must be lowercase
+	* Fixed bug #11255: "user_powermailOnCurrentPage" fails if "Show content from this page" is used
+	* Fixed bug #11250: JavaScript Validation (Prototype) fails if mandatory Radio-Buttons / Checkboxes has not the same parent Element
+
+2010-11-17  Andy Grunwald  <andreas.grunwald@wmdb.de>
+	
+	* Fixed bug #6523: date fields are ignored by JavaScript Validation
+	* Fixed bug #10901: Fatal error: [] operator not supported for strings
+	* Changed Powermail version to 1.5.7-dev
+	* Fixed bug #10903: isFrontendEditingActive not exists in TYPO3 4.2
+
+2010-11-16  Andy Grunwald  <andreas.grunwald@wmdb.de>
+
+	* Raised Powermail version to 1.6.0-dev
+
+2010-11-16  Alex Kellner  <alexander.kellner@einpraegsam.net>
+
+	* Release of Powermail 1.5.6
+	* Task #6185: Important manual changes needed
+
 2010-11-15  Andy Grunwald  <andreas.grunwald@wmdb.de>
 
 	* Fixed bug #10815: JS-Validation broken in current trunk
