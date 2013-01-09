@@ -247,7 +247,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 	
 	// Function captchaCheck check if captcha fields are within current content and set errof if value is wrong
 	function captchaCheck() {
-		if(t3lib_extMgm::isLoaded('captcha',0) || t3lib_extMgm::isLoaded('sr_freecap',0) || t3lib_extMgm::isLoaded('jm_recaptcha',0)) { // only if a captcha extension is loaded
+		if(t3lib_extMgm::isLoaded('captcha',0) || t3lib_extMgm::isLoaded('sr_freecap',0) || t3lib_extMgm::isLoaded('jm_recaptcha',0) || t3lib_extMgm::isLoaded('wt_calculating_captcha',0)) { // only if a captcha extension is loaded
 		
 			// Give me all captcha fields of current tt_content
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
@@ -314,6 +314,22 @@ class tx_powermail_mandatory extends tslib_pibase {
     							$this->sessionfields['OK'][$row['uid']] = 'recaptcha'; // recaptcha code is ok - set an ok to the session for further checks
     						}
     					}
+						
+					}
+					
+					// wt_calculating_captcha
+					elseif (t3lib_extMgm::isLoaded('wt_calculating_captcha', 0) && $this->conf['captcha.']['use'] == 'wt_calculating_captcha') { // use wt_calculating_captcha if available
+					
+						require_once(t3lib_extMgm::extPath('wt_calculating_captcha').'class.tx_wtcalculatingcaptcha.php'); // include captcha class
+						$captcha = t3lib_div::makeInstance('tx_wtcalculatingcaptcha'); // generate object
+						
+						if ($this->sessionfields['uid'.$row['uid']] == '') { // if captcha value is empty
+							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('error_captcha_empty'); // write error message to session
+						}
+						
+						elseif (!$captcha->correctCode($this->sessionfields['uid'.$row['uid']])) { // if captcha value is wrong
+							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('error_captcha_wrong'); // write error message to session
+						}
 						
 					}
 				}

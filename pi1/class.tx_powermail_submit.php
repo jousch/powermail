@@ -412,6 +412,9 @@ class tx_powermail_submit extends tslib_pibase {
 			if(isset($_SESSION['sr_freecap_attempts'])) $_SESSION['sr_freecap_attempts'] = 0; // clear session of sr_freecap
 			if(isset($_SESSION['sr_freecap_word_hash'])) $_SESSION['sr_freecap_word_hash'] = false; // clear session of sr_freecap
 		}
+		if (t3lib_extMgm::isLoaded('wt_calculating_captcha', 0)) { // if wt_calculating_captcha is loaded
+			unset($GLOBALS['TSFE']->fe_user->sesData['wt_calculating_captcha_value']); // delete value in session of wt_calculating_captcha
+		}
 		unset($GLOBALS['TSFE']->fe_user->sesData['powermail_'.($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid'])]['OK']); // clear all OK from Session (used e.g. from recaptcha)
 	}
 	

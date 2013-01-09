@@ -50,6 +50,7 @@ class tx_powermail_html extends tslib_pibase {
 		$this->conf = $conf;
 		$this->sessionfields = $sessionfields;
 		$this->cObj = $cObj;
+		$this->pi_loadLL();
 		$this->pi_initPIflexForm(); // allow flexform
 		$this->xml = $row['f_field']; // get xml from flexform to current field
 		$this->type = $row['f_type']; // get type of current field
@@ -740,7 +741,7 @@ class tx_powermail_html extends tslib_pibase {
 	 * @return	[type]		...
 	 */
 	function html_captcha() {
-		if(t3lib_extMgm::isLoaded('captcha',0) || t3lib_extMgm::isLoaded('sr_freecap',0)) { // only if a captcha extension is loaded
+		if(t3lib_extMgm::isLoaded('captcha',0) || t3lib_extMgm::isLoaded('sr_freecap',0) || t3lib_extMgm::isLoaded('jm_recaptcha',0) || t3lib_extMgm::isLoaded('wt_calculating_captcha',0)) { // only if a captcha extension is loaded
 			$this->tmpl['html_captcha'] = tslib_cObj::getSubpart($this->tmpl['all'], '###POWERMAIL_FIELDWRAP_HTML_CAPTCHA###'); // work on subpart
 			
 			if (t3lib_extMgm::isLoaded('sr_freecap', 0) && $this->conf['captcha.']['use'] == 'sr_freecap') { // use sr_freecap if available
@@ -753,11 +754,13 @@ class tx_powermail_html extends tslib_pibase {
 				$this->markerArray['###POWERMAIL_CAPTCHA_PICTURERELOAD###'] = $freecaparray['###SR_FREECAP_CANT_READ###']; // reload image button
 				$this->markerArray['###POWERMAIL_CAPTCHA_ACCESSIBLE###'] = $freecaparray['###SR_FREECAP_ACCESSIBLE###']; // audio output
 				$this->markerArray['###LABEL###'] = $this->title; // captcha label
+				$this->markerArray['###POWERMAIL_CAPTCHA_DESCRIPTION###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'label'); // add captcha description to the marker
 			
 			} elseif (t3lib_extMgm::isLoaded('captcha', 0) && $this->conf['captcha.']['use'] == 'captcha') { // use captcha if available
 			
 				$this->markerArray['###POWERMAIL_CAPTCHA_PICTURE###'] = '<img src="'.t3lib_extMgm::siteRelPath('captcha').'captcha/captcha.php" alt="" class="powermail_captcha powermail_captcha_captcha" />'; // captcha image
 				$this->markerArray['###LABEL###'] = $this->title; // captcha label
+				$this->markerArray['###POWERMAIL_CAPTCHA_DESCRIPTION###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'label'); // add captcha description to the marker
 			
 			} elseif (t3lib_extMgm::isLoaded('jm_recaptcha', 0) && $this->conf['captcha.']['use'] == 'recaptcha') { // use recaptcha if available
 				
@@ -768,8 +771,18 @@ class tx_powermail_html extends tslib_pibase {
 				
 				$this->markerArray['###POWERMAIL_CAPTCHA_PICTURE###'] = $recaptcha->getReCaptcha(); // get captcha
 				$this->markerArray['###LABEL###'] = $this->title; // captcha label
+				$this->markerArray['###POWERMAIL_CAPTCHA_DESCRIPTION###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'label'); // add captcha description to the marker
+			
+			} elseif (t3lib_extMgm::isLoaded('wt_calculating_captcha', 0) && $this->conf['captcha.']['use'] == 'wt_calculating_captcha') { // use wt_calculating_captcha if available
 				
-			} else return 'Powermail ERROR: Please check if you have chosen the right captcha extension in the powermail constants!';
+				require_once(t3lib_extMgm::extPath('wt_calculating_captcha').'class.tx_wtcalculatingcaptcha.php'); // include captcha class
+				$captcha = t3lib_div::makeInstance('tx_wtcalculatingcaptcha'); // generate object
+				
+				$this->markerArray['###POWERMAIL_CAPTCHA_PICTURE###'] = $captcha->generateCaptcha(); // image return
+				$this->markerArray['###LABEL###'] = $this->title; // captcha label
+				$this->markerArray['###POWERMAIL_CAPTCHA_DESCRIPTION###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'label'); // add captcha description to the marker
+				
+			} else return $this->pi_getLL('error_captchaWrongExt', 'Powermail ERROR: Please check if you have chosen the right captcha extension in the powermail constants!');
 			
 			$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 			$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_captcha'], $this->markerArray); // substitute Marker in Template
@@ -778,7 +791,7 @@ class tx_powermail_html extends tslib_pibase {
 			return $content; // return HTML
 		
 		} else { // Extension static_info_tables is missing
-			$content = 'Please install extension <strong>captcha</strong> or <strong>sr_freecap</strong> for using captcha';
+			$content = $this->pi_getLL('error_captchaNoExtFound', 'Please install a captcha extension like captcha, sr_freecap, jm_recaptcha or wt_calculating_captcha');
 		}
 		
 		return $content;

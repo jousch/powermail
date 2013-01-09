@@ -28,14 +28,14 @@ function user_powermailOnCurrentPage() {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery ( // DB query
 			'uid',
 			'tt_content',
-			$where_clause = 'pid = ' . $GLOBALS['TSFE']->id ? $GLOBALS['TSFE']->id : 0 . ' AND CType = "powermail_pi1"' . $GLOBALS['TSFE']->sys_page->enableFields('tt_content'),
+			$where_clause = 'pid = ' . ($GLOBALS['TSFE']->id ? $GLOBALS['TSFE']->id : 0) . ' AND CType = "powermail_pi1"' . $GLOBALS['TSFE']->sys_page->enableFields('tt_content'),
 			$groupBy = '',
 			$orderBy = '',
 			$limit = 1
 		);
 		if ($res) {
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res); // Result in array
-			if ($row['uid']) return true;
+			if ($row['uid'] > 0) return true;
 		}
 	}
 	return false;
