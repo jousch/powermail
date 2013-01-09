@@ -22,7 +22,7 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-$.fn.tabs = function(options) {
+$.fn.powermailTabs = function(options) {
 	'use strict';
 	var $this = $(this);
 	options = $.extend({
@@ -31,7 +31,10 @@ $.fn.tabs = function(options) {
 	},options);
 
 	// generate menu
-	var $ul = $('<ul />', {id:'powermail_tabmenu', class:'powermail_tabmenu'}).insertBefore($this.children(options.container).filter(':first'));
+	var $ul = $('<ul />', {
+		'id': 'powermail_tabmenu',
+		'class': 'powermail_tabmenu'
+	}).insertBefore($this.children(options.container).filter(':first'));
 
 	//all containers
 	$this.children(options.container).each(function(i, $fieldset){
