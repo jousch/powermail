@@ -44,12 +44,56 @@ plugin.tx_powermail_pi1 {
 	field.checkboxJS = {$plugin.powermail.field.checkboxJS}
 	rte.parse = {$plugin.powermail.rte.parse}
 	label.parse = {$plugin.powermail.label.parse}
+	input.style = {$plugin.powermail.input.style}
 	powermail.charset = {$plugin.powermail.powermail.charset}
 	barrier-free.tabindex = {$plugin.powermail.barrier-free.tabindex}
 	barrier-free.accesskey = {$plugin.powermail.barrier-free.accesskey}
 	geoip.file = {$plugin.powermail.geoip.file}
 	geoip.addValuesToMarkerALL = {$plugin.powermail.geoip.addValuesToMarkerALL}
 	debug.output = {$plugin.powermail.debug.output}
+	
+	
+	# Some settings for Emails
+	email {
+	
+		# Settings for mail to the default receiver(s)
+		recipient_mail {
+			# Reply name
+			reply.name = TEXT
+			reply.name.value = 
+			
+			# Reply email
+			reply.email = TEXT
+			reply.email.value = 
+			
+			# Add some attachments to the email (wrap every attachment with , if you want to add more than only one)
+			addAttachment = COA
+			addAttachment {
+				10 = TEXT
+				#10.value = fileadmin/pic.jpg
+				10.wrap = |,
+			}
+		}
+		
+		# Settings for mail to the user
+		sender_mail {
+			# Reply name
+			reply.name = TEXT
+			reply.name.value = 
+			
+			# Reply email
+			reply.email = TEXT
+			reply.email.value = 
+			
+			# Add some attachments to the email (split every attachment with , if you want to add more than only one)
+			addAttachment = COA
+			addAttachment {
+				10 = TEXT
+				#10.value = fileadmin/pic.jpg
+				10.wrap = |,
+			}
+		}
+	}
 	
 	
 	# Enable, Disable email to sender or receiver or db saving

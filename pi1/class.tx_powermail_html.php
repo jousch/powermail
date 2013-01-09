@@ -260,7 +260,8 @@ class tx_powermail_html extends tslib_pibase {
 
 			for($i=0; $i < count($optionlines); $i++) { // One tag for every option
 				$markerArray['###NAME###'] = 'name="'.$this->prefixId.'[uid'.$this->uid.']['.$i.']" '; // add name to markerArray
-				$markerArray['###LABEL###'] = $this->dontAllow($options[$i][0]); // add label
+				//$markerArray['###LABEL###'] = $this->dontAllow($options[$i][0]); // add label
+				$markerArray['###LABEL###'] = $this->dontAllow($this->div->parseFunc($options[$i][0], $this->cObj, $this->conf['label.']['parse'])); // add label
 				$markerArray['###LABEL_NAME###'] = 'uid'.$this->uid.'_'.$i; // add labelname
 				$markerArray['###ID###'] = 'id="uid'.$this->uid.'_'.$i.'" '; // add labelname
 				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow(isset($options[$i][1])?$options[$i][1]:$options[$i][0]).'" '; // add value (take value after pipe symbol or all if no pipe: "red | rd")
@@ -323,7 +324,8 @@ class tx_powermail_html extends tslib_pibase {
 
 			for($i=0;$i<count($optionlines);$i++) { // One tag for every option
 				$markerArray['###NAME###'] = 'name="'.$this->prefixId.'[uid'.$this->uid.']" '; // add name to markerArray
-				$markerArray['###LABEL###'] = $this->dontAllow($options[$i][0]); // add label
+				//$markerArray['###LABEL###'] = $this->dontAllow($options[$i][0]); // add label
+				$markerArray['###LABEL###'] = $this->dontAllow($this->div->parseFunc($options[$i][0], $this->cObj, $this->conf['label.']['parse'])); // add label
 				$markerArray['###LABEL_NAME###'] = 'uid'.$this->uid.'_'.$i; // add labelname
 				$markerArray['###ID###'] = 'id="uid'.$this->uid.'_'.$i.'" '; // add labelname
 				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow(isset($options[$i][1]) ? $options[$i][1] : $options[$i][0]).'" '; // add labelname
@@ -393,7 +395,7 @@ class tx_powermail_html extends tslib_pibase {
 		$this->tmpl['html_reset'] = tslib_cObj::getSubpart($this->tmpl['all'],'###POWERMAIL_FIELDWRAP_HTML_RESET###'); // work on subpart
 		
 		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'clearSession')) { // if checkbox clearSession is checked
-			$this->markerArray['###JS###'] = 'onclick="location=\''.t3lib_div::getIndpEnv('TYPO3_SITE_URL').$this->cObj->typolink('x',array("returnLast"=>"url", "parameter"=>$GLOBALS['TSFE']->id, "additionalParams"=>'&tx_powermail_pi1[clearSession]=-1'), 1).'\'" '; // Fill marker ###JS### with eventhandler
+			$this->markerArray['###JS###'] = 'onclick="location=\'' . (strpos($GLOBALS['TSFE']->tmpl->setup['config.']['absRefPrefix'], 'http://') !== false ? '' : t3lib_div::getIndpEnv('TYPO3_SITE_URL')) . $this->cObj->typolink('x',array("returnLast"=>"url", "parameter"=>$GLOBALS['TSFE']->id, "additionalParams"=>'&tx_powermail_pi1[clearSession]=-1'), 1).'\'" '; // Fill marker ###JS### with eventhandler
 		}
 		
 		$this->markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_reset_uid'.$this->uid.'" '; // add class name to markerArray
@@ -650,7 +652,7 @@ class tx_powermail_html extends tslib_pibase {
 	 * @return	[type]		...
 	 */
 	function html_button() {
-		$this->tmpl['html_button'] = tslib_cObj::getSubpart($this->tmpl['all'],'###POWERMAIL_FIELDWRAP_HTML_BUTTON###'); // work on subpart
+		$this->tmpl['html_button'] = tslib_cObj::getSubpart($this->tmpl['all'], '###POWERMAIL_FIELDWRAP_HTML_BUTTON###'); // work on subpart
 
 		$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_button'],$this->markerArray); // substitute Marker in Template
@@ -720,7 +722,7 @@ class tx_powermail_html extends tslib_pibase {
 			
 			
 			$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
-			$content = $this->cObj->substituteMarkerArrayCached($this->tmpl['html_countryselect']['all'],$this->markerArray,$subpartArray); // substitute Marker in Template
+			$content = $this->cObj->substituteMarkerArrayCached($this->tmpl['html_countryselect']['all'], $this->markerArray, $subpartArray); // substitute Marker in Template
 			$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
 			$content = preg_replace("|###.*?###|i", "", $content); // Finally clear not filled markers
 			
@@ -836,13 +838,17 @@ class tx_powermail_html extends tslib_pibase {
 			eval("\$array[0] = \$GLOBALS['TSFE']->tmpl->setup$str[0];"); // $newarray = $array['lib.']['object']
 			eval("\$array[1] = \$GLOBALS['TSFE']->tmpl->setup$str[1];"); // $newarray = $array['lib.']['object.']
 			
+			
+			$localCObj = t3lib_div::makeInstance('tslib_cObj');
 			$row = array ( // $row for using .field in typoscript
 				'uid' => $this->uid, // make current field uid available
 				'label' => $this->dontAllow($this->title), // make current label available
 				'ttcontent_uid' => $this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid'] // make current tt_content uid available
 			);
-			$this->cObj->start($row, 'tx_powermail_fields'); // enable .field to use uid and label in typoscript
-			$content = $this->cObj->cObjGetSingle($array[0], $array[1]); // parse typoscript
+			// $this->cObj->start($row, 'tx_powermail_fields'); // enable .field to use uid and label in typoscript
+			// $content = $this->cObj->cObjGetSingle($array[0], $array[1]); // parse typoscript
+			$localCObj->start($row, 'tx_powermail_fields'); // enable .field to use uid and label in typoscript
+			$content = $localCObj->cObjGetSingle($array[0], $array[1]); // parse typoscript
 		}
 		if (!empty($content)) return $content;
 	}
@@ -875,22 +881,38 @@ class tx_powermail_html extends tslib_pibase {
 		$this->markerArray['###CLASS###'] = 'class="'.$this->required.'powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.'" '; // add class name to markerArray
 		
 		// ###SIZE###
-		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')) {
-			$this->markerArray['###SIZE###'] = 'size="'.intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')).'" '; // add size to markerArray
+		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'size')) { // if size is set in flexform
+			$this->markerArray['###SIZE###'] = ($this->conf['input.']['style'] == 1 ? 'style="width: '.intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'size')).'px;" ' : 'size="'.intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'size')).'" '); // add size to markerArray
+		}
+		
+		// ###COLS###
+		// ###ROWS###
+		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'cols') || $this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'rows')) { // if rows or cols was set
+			if ($this->conf['input.']['style'] == 1) { // if style should be used instead of rows and cols tags
+				$this->markerArray['###COLS###'] = ''; // clear COLS marker
+				$this->markerArray['###ROWS###'] = 'style="width: '.intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'cols')).'px; height: '.intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'rows')).'px;" '; // like style="width: 44px; height: 23px;"
+			} else { // rows and cols tags should be used
+				if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'cols')) { // if there is a value in the cols field
+					$this->markerArray['###COLS###'] = 'cols="'.intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'cols')).'" '; // add number of columns to markerArray
+				}
+				if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'rows')) { // if there is a value in the rows field
+					$this->markerArray['###ROWS###'] = 'rows="'.intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'rows')).'" '; // add number of rows to markerArray
+				}
+			}
 		}
 		
 		// ###MULTIPLE###
-		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'multiple')) {
+		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'multiple')) { // if there is value in the multiple field
 			$this->markerArray['###MULTIPLE###'] = 'multiple="multiple"'; // add multiple to markerArray
 		}
 		
 		// ###MAXLENGTH###
-		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'maxlength')) {
+		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'maxlength')) { // if there is value in the maxlength field
 			$this->markerArray['###MAXLENGTH###'] = 'maxlength="'.intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'maxlength')).'" '; // add size to markerArray
 		}
 		
 		// ###READONLY###
-		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'readonly')) {
+		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'readonly')) { // if there is value in the readonly field
 			$this->markerArray['###READONLY###'] = 'readonly="readonly" '; // add readonly to markerArray
 		}
 		
@@ -919,19 +941,9 @@ class tx_powermail_html extends tslib_pibase {
 		// ###POWERMAIL_FIELD_UID###
 		$this->markerArray['###POWERMAIL_FIELD_UID###'] = $this->uid; // add uid to markerArray
 		
-		// ###COLS###
-		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'cols')) {
-			$this->markerArray['###COLS###'] = 'cols="'.intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'cols')).'" '; // add number of columns to markerArray
-		}
-		
-		// ###ROWS###
-		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'rows')) {
-			$this->markerArray['###ROWS###'] = 'rows="'.intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'rows')).'" '; // add number of rows to markerArray
-		}
-		
 		// ###POWERMAIL_TARGET###
 		#$this->markerArray['###POWERMAIL_TARGET###'] = $GLOBALS['TSFE']->absRefPrefix.$this->cObj->typolink('x', array("returnLast" => "url", "parameter" => $GLOBALS['TSFE']->id, "useCacheHash"=>1)); // Global marker with form target
-		$this->markerArray['###POWERMAIL_TARGET###'] = $GLOBALS['TSFE']->absRefPrefix.$this->cObj->typolink('x', array('returnLast' => 'url', 'parameter' => $GLOBALS['TSFE']->id, 'additionalParams' => '&tx_powermail_pi1[mailID]='.($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']), 'useCacheHash' => 1));
+		$this->markerArray['###POWERMAIL_TARGET###'] = $this->cObj->typolink('x', array('returnLast' => 'url', 'parameter' => $GLOBALS['TSFE']->id, 'additionalParams' => '&tx_powermail_pi1[mailID]='.($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']), 'useCacheHash' => 1));
 		
 		// ###POWERMAIL_NAME###
 		$this->markerArray['###POWERMAIL_NAME###'] = $this->formtitle; // Global Marker with formname

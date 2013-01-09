@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2008 Mischa Heißmann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@wunschtacho.de>
+*  (c) 2008 Alexander Kellner, Mischa Heissmann <alexander.kellner@einpraegsam.net, typo3.2008@heissmann.org>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -146,11 +146,12 @@ class  tx_powermail_module1 extends t3lib_SCbase {
 	// What to show
 	function moduleContent()	{
 		global $BACK_PATH,$LANG;
+		$this->action = t3lib_div::makeInstance('tx_powermail_action');
 		
 		if ($_GET['deleteID'] > 0) { // a mail should be deleted
-			$this->action = t3lib_div::makeInstance('tx_powermail_action');
 			$this->content .= $this->action->main(intval($_GET['deleteID']), $LANG); // Show export functions
 		}
+		$this->action->deleteFiles(); // delete old temp files from typo3temp folder
 		
 		switch((string)$this->MOD_SETTINGS['function'])	{
 			case 1:

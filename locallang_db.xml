@@ -43,6 +43,8 @@
 			The text:
 			###POWERMAIL_ALL###</label>
 			<label index="tx_powermail_forms.redirect">Auto-redirect after confirmation-page</label>
+			<label index="tx_powermail_forms.updateError">Powermail ERROR: Please go back to the extension manager, choose powermail and click the update button!</label>
+			<label index="tx_powermail_forms.noError">No errors found</label>
 			<label index="tx_powermail_fieldsets">Fieldsets</label>
 			<label index="tx_powermail_fieldsets.form">Form</label>
 			<label index="tx_powermail_fieldsets.title">Title</label>
@@ -181,6 +183,8 @@
 			Der Text:
 			###POWERMAIL_ALL###</label>
 			<label index="tx_powermail_forms.redirect">Auto-Weiterleitung nach Bestätigungsseite</label>
+			<label index="tx_powermail_forms.updateError">Powermail FEHLER: Bitte gehen Sie zurück in den Extension Manager, wählen die Extension powermail und drücken den update Button!</label>
+			<label index="tx_powermail_forms.noError">Es konnten keine Fehler gefunden werden</label>
 			<label index="tx_powermail_fieldsets">Formularseiten</label>
 			<label index="tx_powermail_fieldsets.form">Form</label>
 			<label index="tx_powermail_fieldsets.title">Titel</label>

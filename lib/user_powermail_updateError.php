@@ -22,33 +22,15 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-
-/**
- * Class/Function which manipulates the item-array for table/field tx_powermail_forms_recip_field.
- *
- * @author	Mischa Heißmann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@einpraegsam.net>
- * @package	TYPO3
- * @subpackage	tx_powermail
- */
-class user_powermail_tx_powermail_uid {
-	function main($PA, $fobj) {
-		$content = '';
-		$content .= '<input type="text" readonly="readonly" name="uid'.$PA['row']['uid'].'" value="';
-		$content .= '###UID'.$PA['row']['uid'].'###';
-		$content .= '" />';
-		
-		if(!empty($PA['row']['uid'])) return $content;
-	}
+class user_powermail_updateError {
 	
-	function noReturn($PA, $fobj) {
-		return FALSE;
+	function user_updateError($PA, $fobj) {
+		if (strlen($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['powermail']) < 1) { // settings for powermail missing
+			return '<div style="padding: 5px; background-color: red; color: white;">'.$fobj->sL('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.updateError').'</div>';
+		} else {
+			return $fobj->sL('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.noErrors');
+		}
 	}
+
 }
-
-
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/powermail/lib/class.user_powermail_tx_powermail_uid.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/powermail/lib/class.user_powermail_tx_powermail_uid.php']);
-}
-
 ?>

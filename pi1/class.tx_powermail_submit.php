@@ -154,17 +154,24 @@ class tx_powermail_submit extends tslib_pibase {
 		$this->htmlMail->from_email = $this->maildata['sender']; // sender email address
 		$this->htmlMail->from_name = $this->maildata['sendername']; // sender email name
 		$this->htmlMail->returnPath = $this->maildata['sender']; // return path
-		$this->htmlMail->replyto_email = ''; // clear replyto email
-		$this->htmlMail->replyto_name = ''; // clear replyto name
+		$this->htmlMail->replyto_email = $this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart.'.']['reply.']['email'], $this->conf['email.'][$this->subpart.'.']['reply.']['email.']); // set replyto email
+		$this->htmlMail->replyto_name = $this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart.'.']['reply.']['name'], $this->conf['email.'][$this->subpart.'.']['reply.']['name.']); // set replyto name
 		
-		// add attachment if neeeded
-		if(isset($this->sessiondata['FILE']) && $this->conf['upload.']['attachment'] == 1) { // if there are uploaded files AND attachment to emails is activated via constants
-			if(is_array($this->sessiondata['FILE']) && $this->subpart == 'recipient_mail') { // only if array and mail to receiver
+		// add attachment (from user upload)
+		if (isset($this->sessiondata['FILE']) && $this->conf['upload.']['attachment'] == 1) { // if there are uploaded files AND attachment to emails is activated via constants
+			if (is_array($this->sessiondata['FILE']) && $this->subpart == 'recipient_mail') { // only if array and mail to receiver
 				foreach ($this->sessiondata['FILE'] as $file) { // one loop for every file
 					if (is_file(t3lib_div::getFileAbsFileName($this->div->correctPath($this->conf['upload.']['folder']).$file))) { // If file exists
 						$this->htmlMail->addAttachment($this->div->correctPath($this->conf['upload.']['folder']).$file); // add attachment
 					}
 				}
+			}
+		}
+		// add attachment (from typoscript)
+		if ($this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart.'.']['addAttachment'], $this->conf['email.'][$this->subpart.'.']['addAttachment.'])) { // if there is an entry in the typoscript
+			$files = t3lib_div::trimExplode(',', $this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart.'.']['addAttachment'], $this->conf['email.'][$this->subpart.'.']['addAttachment.']), 1); // get an array with all files to add
+			for ($i=0; $i < count($files); $i++) { // one loop for every file to add
+				$this->htmlMail->addAttachment($files[$i]); // add attachment
 			}
 		}
 		
@@ -324,13 +331,19 @@ class tx_powermail_submit extends tslib_pibase {
 		if ($subpart != 'db') {
 			// If debug output for email
 			if ($this->conf['debug.']['output'] == 'all' || $this->conf['debug.']['output'] == 'email') { // only if debug output activated via constants
+				$fileArray1 = $this->sessiondata['FILE']; // file array from session (user upload)
+				$fileArray2 = t3lib_div::trimExplode(',', $this->cObj->cObjGetSingle($this->conf['email.'][$subpart.'.']['addAttachment'], $this->conf['email.'][$subpart.'.']['addAttachment.']), 1); // get an array with all files to add from typoscript
+				$fileArray = array_merge((array) $fileArray1, (array) $fileArray2); // overall fileArray
+				
 				$debugarray = array (
 					'receiver' => $this->maildata['receiver'] ? $this->maildata['receiver'] : 'SYSTEM NOTE: No receiver email address',
 					'cc receiver' => $this->maildata['cc'] ? $this->maildata['cc'] : 'SYSTEM NOTE: No cc addresses',
 					'sender' => $this->maildata['sender'] ? $this->maildata['sender'] : 'SYSTEM NOTE: No sender email address',
 					'sendername' => $this->maildata['sendername'] ? $this->maildata['sendername'] : 'SYSTEM NOTE: No sender name',
+					'reply email' => $this->cObj->cObjGetSingle($this->conf['email.'][$subpart.'.']['reply.']['email'], $this->conf['email.'][$subpart.'.']['reply.']['email.']),
+					'reply name' => $this->cObj->cObjGetSingle($this->conf['email.'][$subpart.'.']['reply.']['name'], $this->conf['email.'][$subpart.'.']['reply.']['name.']),
 					'charset' => $GLOBALS['TSFE']->metaCharset ? $GLOBALS['TSFE']->metaCharset : 'SYSTEM NOTE: No charset set',
-					'attachment' => $this->sessiondata['FILE'] ? $this->sessiondata['FILE'] : 'SYSTEM NOTE: No attachments',
+					'attachment' => (count($fileArray) > 0 ? $fileArray : 'SYSTEM NOTE: No attachments'),
 					'subject' => $this->maildata['subject'] ? $this->maildata['subject'] : 'SYSTEM NOTE: No subject',
 					'mailcontent (html)' => ($this->conf['emailformat.'][$this->subpart] != 'plain' ? $this->mailcontent[$subpart] : 'SYSTEM NOTE: Disabled via typoscript'),
 					'mailcontent (plaintext)' => ($this->conf['emailformat.'][$this->subpart] != 'html' ? $this->div->makePlain($this->mailcontent[$subpart]) : 'SYSTEM NOTE: Disabled via typoscript')
