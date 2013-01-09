@@ -995,31 +995,42 @@ class tx_powermail_html extends tslib_pibase {
 	/**
 	 * Function html_typoscript() returns result of a typoscript
 	 *
-	 * @return	string	$content
+	 * @return string Content of parsed typoscript object
 	 */
 	private function html_typoscript() {
-		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'typoscriptobject') != '') { // only if object field was set
-			// config
-			$str = array(); $array = array(); // init
-			$tsarray = t3lib_div::trimExplode('.', $this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'typoscriptobject'), 1); // $tsarray[0] = lib // $tsarray[1] = object
+		$content = '';
 
-			// let's go
-			for ($i=0; $i<count($tsarray); $i++) { // One loop for every level in typoscript object array
-				$str[0] .= '[\'' . str_replace(';', '', $tsarray[$i]) . ($i==(count($tsarray)-1) ? '' : '.') . '\']'; // create php code for array like ['lib.']['object']
-				$str[1] .= '[\'' . str_replace(';', '', $tsarray[$i]) . '.\']'; // create php code for array like ['lib.']['object.']
+		$typoScriptObject = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'typoscriptobject');
+		if (!empty($typoScriptObject)) { // only if object field was set
+				// Convert typoscript object into an array
+			$pathSegments = t3lib_div::trimExplode('.', $typoScriptObject, 1);
+			$lastSegment = array_pop($pathSegments);
+
+			$setup = $GLOBALS['TSFE']->tmpl->setup;
+			foreach ($pathSegments as $segment) {
+				if (isset($setup[$segment . '.'])) {
+					$setup = $setup[$segment . '.'];
+				} else {
+					$setup = array();
+				}
 			}
-			eval("\$array[0] = \$GLOBALS['TSFE']->tmpl->setup$str[0];"); // $newarray = $array['lib.']['object']
-			eval("\$array[1] = \$GLOBALS['TSFE']->tmpl->setup$str[1];"); // $newarray = $array['lib.']['object.']
+			unset($segment);
 
-
-			$localCObj = t3lib_div::makeInstance('tslib_cObj');
-			$row = array ( // $row for using .field in typoscript
-				'uid' => $this->uid, // make current field uid available
+			if (isset($setup[$lastSegment])) {
+					/** @var tslib_cObj $contentObject */
+				$contentObject = t3lib_div::makeInstance('tslib_cObj');
+					// $row for using .field in typoscript
+				$row = array(
+					'uid' => $this->uid,
 				'label' => $this->title,
-				'ttcontent_uid' => $this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid'] // make current tt_content uid available
+					'ttcontent_uid' => ($this->cObj->data['_LOCALIZED_UID'] > 0) ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']
 			);
-			$localCObj->start($row, 'tx_powermail_fields'); // enable .field to use uid and label in typoscript
-			$content = $localCObj->cObjGetSingle($array[0], $array[1]); // parse typoscript
+				$contentObject->start($row, 'tx_powermail_fields');
+				if (!isset($setup[$lastSegment . '.'])) {
+					$setup[$lastSegment . '.'] = '';
+				}
+				$content = $contentObject->cObjGetSingle($setup[$lastSegment], $setup[$lastSegment . '.']);
+			}
 		}
 		
 		return $content;
