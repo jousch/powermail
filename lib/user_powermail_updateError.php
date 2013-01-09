@@ -33,4 +33,9 @@ class user_powermail_updateError {
 	}
 
 }
+
+
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/powermail/lib/user_powermail_updateError.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/powermail/lib/user_powermail_updateError.php']);
+}
 ?>

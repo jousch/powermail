@@ -22,12 +22,12 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-require_once(PATH_tslib.'class.tslib_pibase.php');
-require_once(PATH_t3lib.'class.t3lib_htmlmail.php');
-require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_functions_div.php'); // file for div functions
-require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_markers.php'); // file for marker functions
-require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_db.php'); // file for marker functions
-require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_dynamicmarkers.php'); // file for dynamicmarker functions
+require_once(PATH_tslib . 'class.tslib_pibase.php');
+require_once(PATH_t3lib . 'class.t3lib_htmlmail.php');
+require_once(t3lib_extMgm::extPath('powermail') . 'lib/class.tx_powermail_functions_div.php'); // file for div functions
+require_once(t3lib_extMgm::extPath('powermail') . 'lib/class.tx_powermail_markers.php'); // file for marker functions
+require_once(t3lib_extMgm::extPath('powermail') . 'lib/class.tx_powermail_db.php'); // file for marker functions
+require_once(t3lib_extMgm::extPath('powermail') . 'lib/class.tx_powermail_dynamicmarkers.php'); // file for dynamicmarker functions
 
 
 class tx_powermail_submit extends tslib_pibase {
@@ -57,17 +57,13 @@ class tx_powermail_submit extends tslib_pibase {
 		// Configuration
 		$this->noReplyEmail = str_replace('###DOMAIN###', str_replace(array('www.','www1','www2','www3','www4','www5'), '', $_SERVER['SERVER_NAME']), $this->conf['email.']['noreply']); // no reply email address from TS setup
 		$this->sessiondata = $GLOBALS['TSFE']->fe_user->getKey('ses',$this->extKey.'_'.($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid'])); // Get piVars from session
-		$this->sender = ($this->cObj->data['tx_powermail_sender'] && t3lib_div::validEmail($this->sessiondata[$this->cObj->data['tx_powermail_sender']]) ? $this->sessiondata[$this->cObj->data['tx_powermail_sender']] : $this->noReplyEmail); // email sender (if sender is selected and email exists)
-		$this->username = $this->userName(); // name of sender (if field is selected)
-		$this->emailReceiver(); // Receiver mail
-		$this->subject_r = $this->cObj->data['tx_powermail_subject_r']; // Subject of mails (receiver)
-		$this->subject_s = $this->cObj->data['tx_powermail_subject_s']; // Subject of mails (sender)
+		$this->emailSettings(); // emailSettings
 		$this->markerArray = array();
 		
 		// Templates
 		$this->tmpl = array(); $this->mailcontent = array();
-		$this->tmpl['thx'] = $this->cObj->getSubpart(tslib_cObj::fileResource($this->conf['template.']['thxMessage']),"###POWERMAIL_THX###"); // Load HTML Template: THX (works on subpart ###POWERMAIL_THX###)
-		$this->tmpl['all'] = $this->cObj->getSubpart(tslib_cObj::fileResource($this->conf['template.']['all']),"###POWERMAIL_ALL###"); // Load HTML Template: ALL (works on subpart ###POWERMAIL_ALL###)
+		$this->tmpl['thx'] = $this->cObj->getSubpart(tslib_cObj::fileResource($this->conf['template.']['thxMessage']), '###POWERMAIL_THX###'); // Load HTML Template: THX (works on subpart ###POWERMAIL_THX###)
+		$this->tmpl['all'] = $this->cObj->getSubpart(tslib_cObj::fileResource($this->conf['template.']['all']), '###POWERMAIL_ALL###'); // Load HTML Template: ALL (works on subpart ###POWERMAIL_ALL###)
 		$this->tmpl['emails']['all'] = tslib_cObj::fileResource($this->conf['template.']['emails']); // Load HTML Template: Emails
 		
 		
@@ -75,8 +71,15 @@ class tx_powermail_submit extends tslib_pibase {
 		if(!$this->hook_submit_beforeEmails()) { // All is ok (no spam maybe)
 			
 			$this->ok = 1; // sending allowed
-			if ($this->cObj->cObjGetSingle($this->conf['allow.']['email2receiver'], $this->conf['allow.']['email2receiver.'])) $this->sendMail('recipient_mail'); // 2a. Email: Generate the Mail for the recipient (if allowed via TS)
-			if ($this->cObj->cObjGetSingle($this->conf['allow.']['email2sender'], $this->conf['allow.']['email2sender.']) && $this->cObj->data['tx_powermail_sender'] && t3lib_div::validEmail($this->sessiondata[$this->cObj->data['tx_powermail_sender']])) $this->sendMail('sender_mail'); // 2b. Email: Generate the Mail for the sender (if allowed via TS and sender is selected and email exists)
+			if ($this->cObj->cObjGetSingle($this->conf['allow.']['email2receiver'], $this->conf['allow.']['email2receiver.'])) { // main email is allowed
+				$this->sendMail('recipient_mail'); // 2a. Email: Generate the Mail for the recipient (if allowed via TS)
+			}
+			if ($this->cObj->cObjGetSingle($this->conf['allow.']['email2sender'], $this->conf['allow.']['email2sender.']) // email to sender allowed in ts
+				&& t3lib_div::validEmail($this->sessiondata[$this->cObj->data['tx_powermail_sender']]) // senderemail is defined in backend and is an email address
+				&& (!empty($this->subject_s) || !empty($this->cObj->data['tx_powermail_mailsender'])) // subject and body may not be empty to the same time
+			) {
+				$this->sendMail('sender_mail'); // 2b. Email: Generate the Mail for the sender (if allowed via TS and sender is selected and email exists)
+			}
 			if ($this->cObj->cObjGetSingle($this->conf['allow.']['dblog'], $this->conf['allow.']['dblog.'])) $this->saveMail(); // 2c. Safe values to DB (if allowed via TS)
 			
 		} else { // Spam hook is true (maybe spam recognized)
@@ -87,22 +90,22 @@ class tx_powermail_submit extends tslib_pibase {
 		// 2. Return Message to FE
 		if ($this->ok == 1) $this->markerArray = $this->markers->GetMarkerArray($this->conf, $this->sessionfields, $this->cObj, 'thx'); // Fill markerArray
 		$this->hook_submit_afterEmails(); // add hook for manipulation of data after E-Mails where sent
-		$this->content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['thx'],$this->markerArray); // substitute Marker in Template
+		$this->content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['thx'], $this->markerArray); // substitute Marker in Template
 		$this->content = $this->dynamicMarkers->main($this->conf, $this->cObj, $this->content); // Fill dynamic locallang or typoscript markers
-		$this->content = preg_replace("|###.*?###|i","",$this->content); // Finally clear not filled markers
+		$this->content = preg_replace('|###.*?###|i', '', $this->content); // Finally clear not filled markers
 		$this->hook_submit_LastOne(); // add hook for manipulation thx message
 		
 		// 3. Additional db storing if wanted
 		$this->dbImport->main($this->conf, $this->sessiondata, $this->cObj, $this->ok);
 		
-		// 4. Now clear the session if option is set in TS
+		// 4. Redirect if wanted
+		$this->redirect();
+		
+		// 5. Now clear the session if option is set in TS
 		$this->clearSession();
 		
-		// 5. Clear sessions of captcha
+		// 6. Clear sessions of captcha
 		$this->clearCaptchaSession();
-		
-		// 6. Redirect if wanted
-		$this->redirect();
 		
 		// 7. Check html templates
 		if (!$this->div->subpartsExists($this->tmpl)) $this->content = $this->pi_getLL('error_templateNotFound', 'Template not found, check path to your powermail templates');
@@ -116,28 +119,39 @@ class tx_powermail_submit extends tslib_pibase {
 
 		// Configuration
 		$this->subpart = $subpart;
-		$this->tmpl['emails'][$this->subpart] = $this->cObj->getSubpart($this->tmpl['emails']['all'], '###POWERMAIL_'.strtoupper($this->subpart).'###'); // Content for HTML Template
+		$this->tmpl['emails'][$this->subpart] = $this->cObj->getSubpart($this->tmpl['emails']['all'], '###POWERMAIL_' . strtoupper($this->subpart) . '###'); // Content for HTML Template
 		$this->markerArray = $this->markers->GetMarkerArray($this->conf, $this->sessionfields, $this->cObj, $this->subpart); // Fill markerArray
 		$this->mailcontent[$this->subpart] = $this->cObj->substituteMarkerArrayCached(trim($this->tmpl['emails'][$this->subpart]), $this->markerArray); // substitute markerArray for HTML content
 		$this->mailcontent[$this->subpart] = $this->dynamicMarkers->main($this->conf, $this->cObj, $this->mailcontent[$this->subpart]); // Fill dynamic locallang or typoscript markers
-		$this->mailcontent[$this->subpart] = preg_replace("|###.*?###|i","",$this->mailcontent[$this->subpart]); // Finally clear not filled markers
+		$this->mailcontent[$this->subpart] = preg_replace('|###.*?###|i', '', $this->mailcontent[$this->subpart]); // Finally clear not filled markers
 		$this->maildata = array();
 		
 		// Set emails and names
 		if ($this->subpart == 'recipient_mail') { // default settings: mail to receiver
 			$this->maildata['receiver'] = $this->MainReceiver; // set receiver
 			$this->maildata['sender'] = $this->sender; // set sender
+			if (t3lib_div::validEmail($this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart . '.']['sender.']['email'], $this->conf['email.'][$this->subpart . '.']['sender.']['email.']))) { // if overwrite value was set in ts
+				$this->maildata['sender'] = $this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart . '.']['sender.']['email'], $this->conf['email.'][$this->subpart . '.']['sender.']['email.']); // overwrite sender email
+			}
+			$this->maildata['sendername'] = $this->username; // set sendername
+			if (strlen($this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart . '.']['sender.']['name'], $this->conf['email.'][$this->subpart . '.']['sender.']['name.'])) > 1) { // if sendername should be overwritten by typoscript
+				$this->maildata['sendername'] = $this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart . '.']['sender.']['name'], $this->conf['email.'][$this->subpart . '.']['sender.']['name.']); // overwrite sender name
+			}
 			$this->maildata['subject'] = $this->subject_r; // set subject
-			$this->maildata['sendername'] = !empty($this->username) ? $this->username : $this->sender; // set sendername (if not exists, take email)
 			$this->maildata['cc'] = (isset($this->CCReceiver) ? $this->CCReceiver : ''); // carbon copy (take email addresses or nothing if not available)
 		} elseif ($this->subpart == 'sender_mail') { // extended settings: mail to sender
 			$this->maildata['receiver'] = $this->sender; // set receiver
-			$this->maildata['sender'] = (isset($this->conf['email.']['overwritesender']) &&  t3lib_div::validEmail($this->conf['email.']['overwritesender']) ? $this->conf['email.']['overwritesender'] : $this->MainReceiver); // set sender email address (take from ts or from first receiver)
+			$this->maildata['sender'] = $this->MainReceiver; // set sender email address (take from ts or from first receiver)
+			if (t3lib_div::validEmail($this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart . '.']['sender.']['email'], $this->conf['email.'][$this->subpart . '.']['sender.']['email.']))) { // if overwrite value was set in ts
+				$this->maildata['sender'] = $this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart . '.']['sender.']['email'], $this->conf['email.'][$this->subpart . '.']['sender.']['email.']); // overwrite sender email
+			}
+			$this->maildata['sendername'] = $this->sendername; // set sendername
+			if (strlen($this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart . '.']['sender.']['name'], $this->conf['email.'][$this->subpart . '.']['sender.']['name.'])) > 1) { // if sendername should be overwritten by typoscript
+				$this->maildata['sendername'] = $this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart . '.']['sender.']['name'], $this->conf['email.'][$this->subpart . '.']['sender.']['name.']); // overwrite sender name
+			}
 			$this->maildata['subject'] = $this->subject_s; // set subject
-			$this->maildata['sendername'] = (isset($this->sendername) ? $this->sendername : $this->MainReceiver); // set sendername
 			$this->maildata['cc'] = ''; // no cc
 		}
-		
 		
 		$this->hook_submit_changeEmail(); // Last chance to manipulate the mail via hook
 		$this->debug($this->subpart); // Debug output
@@ -153,7 +167,7 @@ class tx_powermail_submit extends tslib_pibase {
 		$this->htmlMail->subject = $this->dynamicMarkers->main($this->conf, $this->cObj, $this->div->marker2value($this->maildata['subject'], $this->sessiondata)); // mail subject (with dynamicmarkers and markers2value)
 		$this->htmlMail->from_email = $this->maildata['sender']; // sender email address
 		$this->htmlMail->from_name = $this->maildata['sendername']; // sender email name
-		$this->htmlMail->returnPath = $this->maildata['sender']; // return path
+		$this->htmlMail->returnPath = (t3lib_div::validEmail($this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart.'.']['returnpath'], $this->conf['email.'][$this->subpart.'.']['returnpath.'])) ? $this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart.'.']['returnpath'], $this->conf['email.'][$this->subpart.'.']['returnpath.']) : $this->maildata['sender']); // return path
 		$this->htmlMail->replyto_email = $this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart.'.']['reply.']['email'], $this->conf['email.'][$this->subpart.'.']['reply.']['email.']); // set replyto email
 		$this->htmlMail->replyto_name = $this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart.'.']['reply.']['name'], $this->conf['email.'][$this->subpart.'.']['reply.']['name.']); // set replyto name
 		
@@ -162,7 +176,18 @@ class tx_powermail_submit extends tslib_pibase {
 			if (is_array($this->sessiondata['FILE']) && $this->subpart == 'recipient_mail') { // only if array and mail to receiver
 				foreach ($this->sessiondata['FILE'] as $file) { // one loop for every file
 					if (is_file(t3lib_div::getFileAbsFileName($this->div->correctPath($this->conf['upload.']['folder']).$file))) { // If file exists
-						$this->htmlMail->addAttachment($this->div->correctPath($this->conf['upload.']['folder']).$file); // add attachment
+						
+						// stdWrap for each file
+						$localCObj = t3lib_div::makeInstance('tslib_cObj'); // local cObj
+						$row = array ( // $row for using .field in typoscript
+							'file' => $this->div->correctPath($this->conf['upload.']['folder']) . $file, // whole file with path
+							'filename' => $file, // filename
+							'path' => $this->div->correctPath($this->conf['upload.']['folder']) // path
+						);
+						$localCObj->start($row, 'tx_powermail_fields'); // enable .field in typoscript
+						$this->htmlMail->addAttachment($localCObj->cObjGetSingle($this->conf['email.']['recipient_mail.']['attachment'], $this->conf['email.']['recipient_mail.']['attachment.'])); // add attachment
+						#$this->htmlMail->addAttachment($this->div->correctPath($this->conf['upload.']['folder']).$file); // add attachment
+						
 					}
 				}
 			}
@@ -183,6 +208,7 @@ class tx_powermail_submit extends tslib_pibase {
 		if ($this->conf['emailformat.'][$this->subpart] != 'plain') { // add html only if emailformat "both" or "html"
 			$this->htmlMail->setHTML($this->htmlMail->encodeMsg($this->mailcontent[$this->subpart])); // html format if active via constants
 		}
+		$this->hook_submit_changeEmail2(); // hook with last chance to manipulate email values like attachment, etc...
 		if ($this->email_send) $this->htmlMail->send($this->maildata['receiver']);
 	}
 	
@@ -202,10 +228,12 @@ class tx_powermail_submit extends tslib_pibase {
 			'crdate' => time(), // save current time
 			'formid' => ($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']), // save pid
 			'recipient' => $this->MainReceiver, // save receiver mail
+			'cc_recipient' => (isset($this->CCReceiver) ? $this->CCReceiver : ''),
 			'subject_r' => $this->subject_r, // save subject of receiver mail
 			'sender' => $this->sender, // save sender mail
 			'content' => trim($this->mailcontent['recipient_mail']), // save content of receiver mail
 			'piVars' => t3lib_div::array2xml($this->div->TSmanipulation($this->sessiondata, 'dblog', $this->conf, $this->cObj), '', 0, 'piVars'), // save values of session as xml
+			'feuser' => ($GLOBALS['TSFE']->fe_user->user['uid'] > 0 ? $GLOBALS['TSFE']->fe_user->user['uid'] : '0'), // current feuser id
 			'senderIP' => ($this->confArr['disableIPlog'] == 1 ? $this->pi_getLL('error_backend_noip') : t3lib_div::getIndpEnv('REMOTE_ADDR')), // save users IP address
 			'UserAgent' => t3lib_div::getIndpEnv('HTTP_USER_AGENT'), // save user agent
 			'Referer' => t3lib_div::getIndpEnv('HTTP_REFERER'), // save referer
@@ -216,20 +244,26 @@ class tx_powermail_submit extends tslib_pibase {
 	}
 	
 	
-	// Function emailReceiver() returns comma-separated list of email receivers
-	function emailReceiver() {
-		$emails = ''; $this->sendername = ''; // init
+	// Function emailSettings() defines some sender and receiver settings (name, email, etc...)
+	function emailSettings() {
+		// config
+		$emails = ''; 
+		$this->sendername = '';
+		$this->sender = ($this->cObj->data['tx_powermail_sender'] && t3lib_div::validEmail($this->sessiondata[$this->cObj->data['tx_powermail_sender']]) ? $this->sessiondata[$this->cObj->data['tx_powermail_sender']] : $this->noReplyEmail); // email sender (if sender is selected and email exists)
+		$this->username = $this->userName(); // name of sender (if field is selected)
+		$this->subject_r = $this->cObj->data['tx_powermail_subject_r']; // Subject of mails (receiver)
+		$this->subject_s = $this->cObj->data['tx_powermail_subject_s']; // Subject of mails (sender)
 		
-		// 1. Field receiver
+		// 1. Field receiver (and sendername!)
 		if ($this->cObj->data['tx_powermail_recipient']) { // If receivers are listed in field receiver
 			$emails = str_replace(array("\r\n", "\n\r", "\n", "\r", ";", "|", "+"), ',', $this->cObj->data['tx_powermail_recipient']); // commaseparated list of emails
-			$emails = $this->div->marker2value($emails, $this->sessiondata); // make markers available in email receiver field
 			$emails = $this->dynamicMarkers->main($this->conf, $this->cObj, $emails); // set dynamic markers receiver
+			$emails = $this->div->marker2value($emails, $this->sessiondata); // make markers available in email receiver field
 			$emailarray = t3lib_div::trimExplode(',', $emails, 1); // write every part to an array
 			
 			for ($i=0,$emails='';$i<count($emailarray);$i++) { // one loop for every key
-				if (t3lib_div::validEmail($emailarray[$i])) $emails .= $emailarray[$i].', '; // if current value is an email write to $emails
-				else $this->sendername .= $emailarray[$i].' '; // if current value is no email, take it for sender name and write to $this->sendername
+				if (t3lib_div::validEmail($emailarray[$i])) $emails .= $emailarray[$i] . ', '; // if current value is an email write to $emails
+				else $this->sendername .= $emailarray[$i] . ' '; // if current value is no email, take it for sender name and write to $this->sendername
 			}
 			if ($emails) $emails = substr(trim($emails), 0, -1); // delete last ,
 			if (!empty($this->sendername)) $this->sendername = trim($this->sendername); // trim name
@@ -241,38 +275,40 @@ class tx_powermail_submit extends tslib_pibase {
 		}
 		
 		// 3. Field receiver query
-		elseif ($this->cObj->data['tx_powermail_query']) { // If own select query is chosen
-			$query = $this->secQuery($this->cObj->data['tx_powermail_query']); // secure function of query
-			$query = $this->div->marker2value($query,$this->sessiondata); // make markers available in email query
+		elseif ($this->conf['email.']['recipient_mail.']['email_query.']) { // If own select query is chosen
+			$query = $this->secQuery($this->cObj->cObjGetSingle($this->conf['email.']['recipient_mail.']['email_query'], $this->conf['email.']['recipient_mail.']['email_query.'])); // secure function of query
+			$query = $this->div->marker2value($query, $this->sessiondata, 1); // make markers available in email query
 			
 			$res = mysql_query($query); // mysql query
 			
 			if ($res && $query) { // If there is a result
-				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every result
+				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every result
 					if (is_array($row)) { // if $row is an array
 						foreach ($row as $key => $value) { // give me the key
-							if(t3lib_div::validEmail($row[$key])) { // only if result is a valid email address
-								$emails .= $row[$key].', '; // add email address with comma at the end
+							if (t3lib_div::validEmail($row[$key])) { // only if result is a valid email address
+								$emails .= $row[$key] . ', '; // add email address with comma at the end
 							}
 						}
 					}
 				}
-				if($emails) $emails = substr(trim($emails), 0, -1); // delete last ,
+				if ($emails) $emails = substr(trim($emails), 0, -1); // delete last ,
 			}
 		}
 		
 		// 4. Split to main receiver and to all other receivers (aa@aa.com, bb@bb.com, cc@cc.com => 1. aa@aa.com / 2. bb@bb.com, cc@cc.com)
 		if (isset($emails)) { // if email string is set
-			if(strpos($emails,',') > 1) { // if there is a , in the string (more than only one email is set)
-				$this->MainReceiver = substr($emails,0,strpos($emails,',')); // aa@aa.com
-				$this->CCReceiver = substr($emails,trim(strpos($emails,',')+1)); // bb@bb.com, cc@cc.com
+			if (strpos($emails,',') > 1) { // if there is a , in the string (more than only one email is set)
+				$this->MainReceiver = substr($emails, 0, strpos($emails, ',')); // aa@aa.com
+				$this->CCReceiver = substr($emails, trim(strpos($emails, ',') +1)); // bb@bb.com, cc@cc.com
 			} else { // only one email is set
 				$this->MainReceiver = $emails; // set mail
 			}
 		}
 		
-		// 5. If Sendername is not set, take sender email address instead of name
-		if (empty($this->sendername)) $this->sendername = $this->MainReceiver;
+		// 5. If Sendername is not set, take default value
+		if (empty($this->sendername)) { // if no sendername was defined (see 1.)
+			$this->sendername = $this->extKey; // take "powermail" as sendername
+		}
 		
 		return false;
 	}
@@ -282,7 +318,7 @@ class tx_powermail_submit extends tslib_pibase {
 	function userName() {
 		if ($this->cObj->data['tx_powermail_sendername']) { // if name of sender was defined in flexform
 			// config
-			$fields = t3lib_div::trimExplode(',', $this->cObj->data['tx_powermail_sendername'], 1)	; // get array with list of all uids (0=>uid3, 1=>uid4)		
+			$fields = t3lib_div::trimExplode(',', $this->cObj->data['tx_powermail_sendername'], 1); // get array with list of all uids (0=>uid3, 1=>uid4)		
 			$sendername = '';
 			
 			// let's go
@@ -292,36 +328,57 @@ class tx_powermail_submit extends tslib_pibase {
 			
 			return trim($sendername); // return sendername
 		
-		} else return '';
+		} else return $this->extKey; // take "powermail" as sendername
 	}
 
 	
-	// Function redirect() forward the user to a new location after submit
+	/**
+	 * Function redirect() forward the user to a new location after submit
+	 *
+	 * @return	void
+	 */
 	function redirect() {
-		if($this->ok) { // only if spamhook is not set
-			if($this->cObj->data['tx_powermail_redirect']) { // only if redirect target was set in backend
+		if ($this->ok) { // only if spamhook is not set
+		
+			// 1. Get Target from Flexform or Typoscript
+			if (!empty($this->cObj->data['tx_powermail_redirect'])) {
+				$target = $this->cObj->data['tx_powermail_redirect']; // get target from flexform in Backend
+			} elseif (is_array($this->conf['redirect.']) && count($this->conf['redirect.']) > 0) {
+				$target = $this->cObj->cObjGetSingle($this->conf['redirect'], $this->conf['redirect.']); // get target from TS
+			} else {
+				$target = 0; // disable target
+			}
+			
+			
+			// 2. Create Redirection Header
+			if ($target) { // only if there is a redirect target
 					
 				$typolink_conf = array (
-				  "returnLast" => "url", // Give me only the string
-				  "parameter" => $this->cObj->data['tx_powermail_redirect'], // target pid
-				  "useCacheHash" => 0 // Don't use cache
+				  'returnLast' => 'url', // Give me only the string
+				  'parameter' => $target, // target pid
+				  'useCacheHash' => 0, // Don't use cache
+				  'section' => '' // clear section value if any
 				);
+				$link = t3lib_div::locationHeaderUrl($this->cObj->typolink('x', $typolink_conf)); // Create target url
+			
+				/*
 				$link = $this->cObj->typolink('x', $typolink_conf); // Create target url
 				
-				if (intval($this->cObj->data['tx_powermail_redirect']) > 0 || strpos($this->cObj->data['tx_powermail_redirect'], 'fileadmin/') !== false) { // PID (intern link) OR file
-					if ($GLOBALS['TSFE']->tmpl->setup['config.']['absRefPrefix'] === '') { // only if absRefPrefix is not in use
-						$link = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')) . $link; // Add baseurl to link
+				if (intval($target) > 0 || strpos($target, 'fileadmin/') !== false) { // PID (intern link) OR file
+					if (!strstr($link, '://')) { // if no http:// could be found in current link
+						$link = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')) . $link; // Add baseurl or host in front of the link
 					} 
-				} 
-				elseif (t3lib_div::validEmail($this->cObj->data['tx_powermail_redirect'])) { // if email recognized
-					$link = 'mailto:'.$link; // add mailto: 
+				
+				} elseif (t3lib_div::validEmail($target)) { // if email recognized
+					$link = 'mailto:' . $link; // add mailto: 
 				}
 				
 				$link = preg_replace('#([^:])//#', '$1/', $link); // strip out "//"
-				
-				// Header for redirect
-				header("Location: $link"); 
-				header("Connection: close");
+				*/
+
+				// Set Header for redirect
+				header('Location: ' . $link); 
+				header('Connection: close');
 		
 			}
 		}
@@ -344,6 +401,7 @@ class tx_powermail_submit extends tslib_pibase {
 					'sendername' => $this->maildata['sendername'] ? $this->maildata['sendername'] : 'SYSTEM NOTE: No sender name',
 					'reply email' => $this->cObj->cObjGetSingle($this->conf['email.'][$subpart.'.']['reply.']['email'], $this->conf['email.'][$subpart.'.']['reply.']['email.']),
 					'reply name' => $this->cObj->cObjGetSingle($this->conf['email.'][$subpart.'.']['reply.']['name'], $this->conf['email.'][$subpart.'.']['reply.']['name.']),
+					'return path' => (t3lib_div::validEmail($this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart.'.']['returnpath'], $this->conf['email.'][$this->subpart.'.']['returnpath.'])) ? $this->cObj->cObjGetSingle($this->conf['email.'][$this->subpart.'.']['returnpath'], $this->conf['email.'][$this->subpart.'.']['returnpath.']) : $this->maildata['sender']), // Return path
 					'charset' => $GLOBALS['TSFE']->metaCharset ? $GLOBALS['TSFE']->metaCharset : 'SYSTEM NOTE: No charset set',
 					'attachment' => (count($fileArray) > 0 ? $fileArray : 'SYSTEM NOTE: No attachments'),
 					'subject' => $this->maildata['subject'] ? $this->maildata['subject'] : 'SYSTEM NOTE: No subject',
@@ -363,7 +421,7 @@ class tx_powermail_submit extends tslib_pibase {
 
 	// Function hook_submit_changeEmail() to add a hook and change the email datas (changing subject, receiver, sender, sendername)
 	function hook_submit_changeEmail() {
-		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitEmailHook'])) { // Adds hook for processing
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitEmailHook'])) { // Adds hook for processing
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitEmailHook'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
 				$_procObj->PM_SubmitEmailHook($this->subpart, $this->maildata, $this->sessiondata, $this->markerArray, $this); // Get new marker Array from other extensions
@@ -371,10 +429,21 @@ class tx_powermail_submit extends tslib_pibase {
 		}
 	}
 	
+
+	// Function hook_submit_changeEmail2() to add a hook and change the email datas short befor sending (changing attachments, subject, receiver, sender, sendername)
+	function hook_submit_changeEmail2() {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitEmailHook2'])) { // Adds hook for processing
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitEmailHook2'] as $_classRef) {
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$_procObj->PM_SubmitEmailHook2($this->subpart, $this->htmlMail, $this); // Get new marker Array from other extensions
+			}
+		}
+	}
+	
 	
 	// Function hook_submit_beforeEmails() to add a hook at the end of this file to manipulate markers and content before emails where sent
 	function hook_submit_beforeEmails() {
-		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitBeforeMarkerHook'])) { // Adds hook for processing of extra global markers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitBeforeMarkerHook'])) { // Adds hook for processing of extra global markers
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitBeforeMarkerHook'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
 				$hookreturn = $_procObj->PM_SubmitBeforeMarkerHook($this, $this->markerArray, $this->sessiondata); // Get new marker Array from other extensions - if TRUE, don't send mails (maybe spam)
@@ -388,7 +457,7 @@ class tx_powermail_submit extends tslib_pibase {
 
 	// Function hook_submit_LastOne() to add a hook and maybe change thx message
 	function hook_submit_LastOne() {
-		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitLastOne'])) { // Adds hook for processing
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitLastOne'])) { // Adds hook for processing
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitLastOne'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
 				$_procObj->PM_SubmitLastOneHook($this->content, $this->conf, $this->sessiondata, $this->ok, $this); // Get new marker Array from other extensions
@@ -399,7 +468,7 @@ class tx_powermail_submit extends tslib_pibase {
 
 	// Function hook_submit_afterEmails() to add a hook at the end of this file to manipulate markers and content after emails where sent
 	function hook_submit_afterEmails() {
-		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitAfterMarkerHook'])) { // Adds hook for processing of extra global markers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitAfterMarkerHook'])) { // Adds hook for processing of extra global markers
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitAfterMarkerHook'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
 				$_procObj->PM_SubmitAfterMarkerHook($this,$this->markerArray,$this->sessiondata); // Get new marker Array from other extensions
@@ -410,9 +479,9 @@ class tx_powermail_submit extends tslib_pibase {
 	
 	// Function to clear the Session after submitting the form. Will only be cleared when option is selected in Constant-Editor oder set by TS
 	function clearSession() {
-		if($this->ok) { // only if spamhook is not set
-			if($this->conf['clear.']['session'] == 1) { // If set in constants // setup
-				$GLOBALS['TSFE']->fe_user->setKey("ses", $this->extKey.'_'.($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']), array()); // Generate Session without ERRORS
+		if ($this->ok) { // only if spamhook is not set
+			if ($this->conf['clear.']['session'] == 1) { // If set in constants // setup
+				$GLOBALS['TSFE']->fe_user->setKey('ses', $this->extKey.'_'.($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']), array()); // Generate Session without ERRORS
 				$GLOBALS['TSFE']->storeSessionData(); // Save session*/
 			}
 		}
@@ -423,9 +492,9 @@ class tx_powermail_submit extends tslib_pibase {
 	function clearCaptchaSession() {
 		if (t3lib_extMgm::isLoaded('sr_freecap', 0) || t3lib_extMgm::isLoaded('captcha', 0)) { // if captcha or freecap is loaded
 			session_start(); // start session
-			if(isset($_SESSION['tx_captcha_string'])) $_SESSION['tx_captcha_string'] = ''; // clear session of captcha
-			if(isset($_SESSION['sr_freecap_attempts'])) $_SESSION['sr_freecap_attempts'] = 0; // clear session of sr_freecap
-			if(isset($_SESSION['sr_freecap_word_hash'])) $_SESSION['sr_freecap_word_hash'] = false; // clear session of sr_freecap
+			if (isset($_SESSION['tx_captcha_string'])) $_SESSION['tx_captcha_string'] = ''; // clear session of captcha
+			if (isset($_SESSION['sr_freecap_attempts'])) $_SESSION['sr_freecap_attempts'] = 0; // clear session of sr_freecap
+			if (isset($_SESSION['sr_freecap_word_hash'])) $_SESSION['sr_freecap_word_hash'] = false; // clear session of sr_freecap
 		}
 		if (t3lib_extMgm::isLoaded('wt_calculating_captcha', 0)) { // if wt_calculating_captcha is loaded
 			unset($GLOBALS['TSFE']->fe_user->sesData['wt_calculating_captcha_value']); // delete value in session of wt_calculating_captcha
@@ -436,20 +505,41 @@ class tx_powermail_submit extends tslib_pibase {
 	
 	// Function secQuery() disables query functions like UPDATE, TRUNCATE, DELETE, and so on
 	function secQuery($string) {
-		$notAllowed = array('UPDATE','TRUNCATE','DELETE','INSERT','REPLACE','HANDLER','LOAD','ALTER','CREATE','DROP','RENAME','DESCRIBE','BEGIN','COMMIT','ROLLBACK','LOCK','REVOKE','GRANT'); // list of all not allowed strings for querycheck
 		$error = 0; $failure = ''; // init 
+		$notAllowed = array ( // list of all not allowed strings for querycheck
+			'UPDATE',
+			'TRUNCATE',
+			'DELETE ', // deleted with space at the end (to allow "... where deleted = 0")
+			'INSERT',
+			'REPLACE',
+			'HANDLER',
+			'LOAD',
+			'ALTER',
+			'CREATE',
+			'DROP',
+			'RENAME',
+			'DESCRIBE',
+			'BEGIN',
+			'COMMIT',
+			'ROLLBACK',
+			'LOCK',
+			'REVOKE',
+			'GRANT'
+		);
 		
-		if(is_array($notAllowed)) { // only if array
+		if (is_array($notAllowed)) { // only if array
 			foreach ($notAllowed as $key => $value) { // one loop for every not allowed string
 				if (strpos(strtolower($string), strtolower($value)) !== false) { // search for (e.g.) "delete" in string
-					$error = 1; // set error if found
-					$failure .= '"'.$value.'", '; // Save error string
+					if (1) {
+						$error = 1; // set error if found
+						$failure .= '"'.$value.'", '; // Save error string
+					}
 				}
 			}
 		}
-		if($failure) $failure = substr(trim($failure), 0, -1); // delete last ,
+		if ($failure) $failure = substr(trim($failure), 0, -1); // delete last ,
 		
-		if($error === 0) return $string; // return query if no error
+		if ($error === 0) return $string; // return query if no error
 		else { // if error
 			echo 'Not allowed string ('.$failure.') in receiver sql query!'; // print error message
 			return false; // no return

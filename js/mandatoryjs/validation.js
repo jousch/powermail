@@ -136,11 +136,14 @@ Object.extend(Validation, {
 				var advice = Validation.getAdvice(name, elm);
 				if(advice == null) {
 					var errorMsg = useTitle ? ((elm && elm.title) ? elm.title : v.error) : v.error;
-					advice = '<div class="powermail_mandatory_js" id="advice-' + name + '-' + Validation.getElmID(elm) +'" style="display:none">' + errorMsg + '</div>'
+					advice = '<div class="<!-- ###DIV_CLASS### -->powermail_mandatory_js<!-- ###DIV_CLASS### -->" id="advice-' + name + '-' + Validation.getElmID(elm) +'" style="display:none">' + errorMsg + '</div>'
 					switch (elm.type.toLowerCase()) {
 						case 'checkbox':
 						case 'radio':
-							var p = elm.parentNode;
+							/*var p = elm.parentNode; // 20090224 #2694 Powermail update */
+							var p = elm.parentNode.parentNode;
+							advice = '<div class="<!-- ###DIV_CLASS### -->powermail_mandatory_js<!-- ###DIV_CLASS### -->" id="advice-' + name + '-' + Validation.getElmID(p) +'" style="display:none">' + errorMsg + '</div>'
+
 							if(p) {
 								new Insertion.Bottom(p, advice);
 							} else {
@@ -148,6 +151,7 @@ Object.extend(Validation, {
 							}
 							break;
 						default:
+							advice = '<div class="<!-- ###DIV_CLASS### -->powermail_mandatory_js<!-- ###DIV_CLASS### -->" id="advice-' + name + '-' + Validation.getElmID(elm) +'" style="display:none">' + errorMsg + '</div>'
 							new Insertion.After(elm, advice);
 				    }
 					advice = Validation.getAdvice(name, elm);
@@ -182,7 +186,18 @@ Object.extend(Validation, {
 		return true;
 	},
 	getAdvice : function(name, elm) {
-		return $('advice-' + name + '-' + Validation.getElmID(elm)) || $('advice-' + Validation.getElmID(elm));
+		/* return $('advice-' + name + '-' + Validation.getElmID(elm)) || $('advice-' + Validation.getElmID(elm)); // 20090224 #2694 Powermail update */
+		switch (elm.type.toLowerCase()) {
+			case 'checkbox':
+			case 'radio':
+				var p = elm.parentNode.parentNode;
+				advice = $('advice-' + name + '-' + Validation.getElmID(p)) || $('advice-' + Validation.getElmID(p));
+				break;
+
+			default:
+				advice = $('advice-' + name + '-' + Validation.getElmID(elm)) || $('advice-' + Validation.getElmID(elm));
+		}
+		return advice;
 	},
 	getElmID : function(elm) {
 		return elm.id ? elm.id : elm.name;
@@ -278,7 +293,9 @@ Validation.addAllThese([
 
 				var options = p.getElementsByTagName('INPUT');
 				return $A(options).any(function(elm) {
-					return $F(elm);
+					if(elm.type.toLowerCase() == 'radio' || elm.type.toLowerCase() == 'checkbox') {  /* // 20090224 #2695 Powermail update */
+						return $F(elm);
+					}
 				});
 			}]
 ]);

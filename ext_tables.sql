@@ -28,6 +28,7 @@ CREATE TABLE tx_powermail_fieldsets (
 	tt_content int(11) DEFAULT '0' NOT NULL,
 	felder int(11) DEFAULT '0' NOT NULL,
 	title tinytext NOT NULL,
+	class text NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)
@@ -69,6 +70,7 @@ CREATE TABLE tx_powermail_fields (
 	fe_field text NOT NULL,
 	name tinytext NOT NULL,
 	description text NOT NULL,
+	class text NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)
@@ -89,10 +91,12 @@ CREATE TABLE tx_powermail_mails (
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	formid int(11) DEFAULT '0' NOT NULL,
 	recipient tinytext NOT NULL,
+	cc_recipient text NOT NULL,
 	subject_r tinytext NOT NULL,
 	sender tinytext NOT NULL,
 	content text NOT NULL,
 	piVars text NOT NULL,
+	feuser int(11) DEFAULT '0' NOT NULL,
 	senderIP tinytext NOT NULL,
 	UserAgent text NOT NULL,
 	Referer text NOT NULL,
@@ -120,7 +124,6 @@ CREATE TABLE tt_content (
 	tx_powermail_recip_table text NOT NULL,
 	tx_powermail_recip_id text NOT NULL,
 	tx_powermail_recip_field text NOT NULL,
-	tx_powermail_query text NOT NULL,
 	tx_powermail_thanks text NOT NULL,
 	tx_powermail_mailsender text NOT NULL,
 	tx_powermail_mailreceiver text NOT NULL,

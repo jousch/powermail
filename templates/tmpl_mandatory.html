@@ -6,6 +6,7 @@ Powermail HTML Template mandatory, errormessages if fields where not filled (e.g
 	Target for backlink:								###POWERMAIL_TARGET###
 	Form method for backlink:							###POWERMAIL_METHOD###
 	Submitbutton value:									###POWERMAIL_LOCALLANG_MANDATORY_SUBMIT###
+    Subpart for backbutton (clear if needed):			###BACKBUTTON###
 	
 	-- MARKERS INSIDE SUBPARTS ---
 	Current Errormessage:								###POWERMAIL_MANDATORY_LABEL###
@@ -25,8 +26,10 @@ Powermail HTML Template mandatory, errormessages if fields where not filled (e.g
 		<!-- ###ITEM### --><!-- ###CONTENT### -->
 		</ul>
 		
-		<form name="###POWERMAIL_NAME###" action="###POWERMAIL_TARGET###" method="###POWERMAIL_METHOD###">
-			<input type="submit" value="###POWERMAIL_LOCALLANG_MANDATORY_SUBMIT###" class="tx-powermail-pi1_mandatory_submit" />
-		</form>
+        <!-- ###BACKBUTTON### -->
+            <form name="###POWERMAIL_NAME###" action="###POWERMAIL_TARGET###" method="###POWERMAIL_METHOD###">
+                <input type="submit" value="###POWERMAIL_LOCALLANG_MANDATORY_SUBMIT###" class="tx-powermail-pi1_mandatory_submit" />
+            </form>
+        <!-- ###BACKBUTTON### -->
 	</div>
 <!-- ###POWERMAIL_MANDATORY_ALL### end -->

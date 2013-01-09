@@ -40,7 +40,7 @@ class tx_powermail_db extends tslib_pibase {
 		$this->conf = $conf; // conf
 		$this->sessiondata = $sessiondata; // sessionvalues
 		$this->div = t3lib_div::makeInstance('tx_powermail_functions_div'); // Create new instance for div class
-		$db_values = $this->debug_array = $db_values_mm = array(); // init dbArray
+		$this->db_values = $this->db_values_mm = $this->debug_array = array(); // init dbArray
 		
 		// let's go
 		if ($ok) { // if it's allowed to save db values
@@ -57,7 +57,7 @@ class tx_powermail_db extends tslib_pibase {
 								if (substr($kk, 0, 1) != '_' && substr($kk, -1) != '.') { // if fieldname is not _enable or _mm and not with . at the end
 									
 									if ($this->fieldExists($kk, str_replace('.','',$key))) { // if db table and field exists
-										$db_values[$key][$kk] = $this->cObj->cObjGetSingle($this->conf['dbEntry.'][$key][$kk], $this->conf['dbEntry.'][$key][$kk.'.']); // write current TS value to array
+										$this->db_values[$key][$kk] = $this->cObj->cObjGetSingle($this->conf['dbEntry.'][$key][$kk], $this->conf['dbEntry.'][$key][$kk.'.']); // write current TS value to array
 									}
 									
 								}
@@ -66,11 +66,10 @@ class tx_powermail_db extends tslib_pibase {
 						}
 					
 						// 2. DB insert
-						if ($this->dbInsert && count($db_values[$key]) > 0) { // if its allowed and db array is not empty
+						if (count($this->db_values[$key]) > 0) { // if db array is not empty
 							
 							// 2.1 Main db insert for main table
-							$GLOBALS['TYPO3_DB']->exec_INSERTquery(str_replace('.', '', $key), $db_values[$key]); // DB entry for every table
-							$uid[$key] = mysql_insert_id(); // Get uid of current db entry
+							$this->dbUpdate(str_replace('.', '', $key), $this->db_values[$key]); // DB entry for every table
 							
 							
 							// 2.1 db entry for mm tables if set
@@ -84,11 +83,13 @@ class tx_powermail_db extends tslib_pibase {
 											&&
 											is_numeric($this->cObj->cObjGetSingle($this->conf['dbEntry.'][$key]['_mm.'][$kkk]['3'], $this->conf['dbEntry.'][$key]['_mm.'][$kkk]['3.']))
 										) { // 1. is db table && 2. is db table && 3. is a number
-											$db_values_mm[$key] = array (
-												'uid_local' => $uid[$key],
-												'uid_foreign' => $this->cObj->cObjGetSingle($this->conf['dbEntry.'][$key]['_mm.'][$kkk]['3'], $this->conf['dbEntry.'][$key]['_mm.'][$kkk]['3.'])
-											);
-											if ($this->dbInsert && count($db_values_mm[$key]) > 0) $GLOBALS['TYPO3_DB']->exec_INSERTquery($this->cObj->cObjGetSingle($this->conf['dbEntry.'][$key]['_mm.'][$kkk]['1'], $this->conf['dbEntry.'][$key]['_mm.'][$kkk]['1.']), $db_values_mm[$key]); // DB entry for every table
+											if ($this->uid[str_replace('.', '', $key)] > 0) { // if uid_local exists
+												$this->db_values_mm[$key] = array (
+													'uid_local' => $this->uid[str_replace('.', '', $key)],
+													'uid_foreign' => $this->cObj->cObjGetSingle($this->conf['dbEntry.'][$key]['_mm.'][$kkk]['3'], $this->conf['dbEntry.'][$key]['_mm.'][$kkk]['3.'])
+												);
+											}
+											if (count($this->db_values_mm[$key]) > 0) $this->dbUpdate($this->cObj->cObjGetSingle($this->conf['dbEntry.'][$key]['_mm.'][$kkk]['1'], $this->conf['dbEntry.'][$key]['_mm.'][$kkk]['1.']), $this->db_values_mm[$key]); // DB entry for every table
 										}
 									}
 								}
@@ -97,8 +98,62 @@ class tx_powermail_db extends tslib_pibase {
 					}		
 				}
 			}
-			$this->debug($db_values, $db_values_mm); // 3. Debug output
+			$this->debug(); // 3. Debug output
 		}
+	}
+	
+	
+	// Function dbUpdate() inserts or updates database
+	function dbUpdate($table, $values) {
+	
+		if (count($values) > 0) { // if there are values
+			if (!isset($this->conf['dbEntry.'][$table.'.']['_ifUnique.']) || $this->conf['dbEntry.'][$table.'.']['_ifUnique.'] == 'disable') { // no unique values
+			
+				if ($this->dbInsert) { // if allowed
+					$GLOBALS['TYPO3_DB']->exec_INSERTquery($table, $values); // DB entry for every table
+					$this->uid[$table] = mysql_insert_id(); // Get uid of current db entry
+				}
+				
+			} else { // unique values
+			
+				$uniqueField = key($this->conf['dbEntry.'][$table.'.']['_ifUnique.']); // get first entry of this array
+				$mode = $this->conf['dbEntry.'][$table.'.']['_ifUnique.'][$uniqueField]; // mode could be "none" or "update"
+				if ($this->fieldExists('uid', $table)) { // check if field uid exists in table
+					$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery ( // get uid of existing value
+						'uid',
+						$table,
+						$where_clause = $uniqueField . ' = "'.$this->cObj->cObjGetSingle($this->conf['dbEntry.'][$table.'.'][$uniqueField], $this->conf['dbEntry.'][$table.'.'][$uniqueField.'.']).'"' . ($this->fieldExists('deleted', $table) ? ' AND deleted = 0' : ''),
+						$groupBy = '',
+						$orderBy = '',
+						$limit = 1
+					);
+					if ($res) $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+				}
+				
+				if ($row['uid'] > 0) { // there is already an entry in the database
+					switch ($mode) {
+						case 'update': // mode is update
+							$GLOBALS['TYPO3_DB']->exec_UPDATEquery($table, 'uid = ' . intval($row['uid']), $values); // update old entry with new values
+							//$this->uid[$table] = $row['uid']; // make row uid global
+							break;
+							
+						case 'none': // mode is none
+						default:
+							// do nothing
+							$this->db_values = 'Entry already exists, won\'t be overwritten';
+							break;
+					}
+								
+				} else { // there is no entry in the database
+					
+					$GLOBALS['TYPO3_DB']->exec_INSERTquery($table, $values); // New DB entry
+					$this->uid[$table] = mysql_insert_id(); // Get uid of current db entry
+					
+				}
+				
+			}
+		}
+		
 	}
 	
 	
@@ -121,9 +176,9 @@ class tx_powermail_db extends tslib_pibase {
 	
 	
 	// Function debug() generates debug output
-	function debug($db_values, $db_values_mm) {
-		$this->debug_array['Main Table'] = $db_values; // array for debug view
-		$this->debug_array['MM Table'] = $db_values_mm; // array for debug view
+	function debug() {
+		$this->debug_array['Main Table'] = $this->db_values; // array for debug view
+		$this->debug_array['MM Table'] = (count($this->db_values_mm) > 0 ? $this->db_values_mm : 'no values or entry already exists'); // array for debug view
 		if ($this->conf['debug.']['output'] == 'all' || $this->conf['debug.']['output'] == 'externdbtable') $this->div->debug($this->debug_array, 'Extern DB-table entries'); // Debug function
 	}
 	
