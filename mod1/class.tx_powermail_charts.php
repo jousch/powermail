@@ -64,6 +64,10 @@ class tx_powermail_charts {
 				}
 			}
 		}
+
+		$this->tsconfig['properties']['config.']['chart.']['timeframe'] = intval($this->tsconfig['properties']['config.']['chart.']['timeframe']);
+		$this->tsconfig['properties']['config.']['chart.']['sectionframe'] = intval($this->tsconfig['properties']['config.']['chart.']['sectionframe']);
+
 		$values = $content = '';
 		$no = 0;
 		$_GET['startdate'] = strftime('%Y-%m-%d %H:%M', (time() - $this->tsconfig['properties']['config.']['chart.']['timeframe'])); // overwrite GET param for start for listview
@@ -130,7 +134,7 @@ class tx_powermail_charts {
 	function urlencode2($string, $delimiter) {
 		$parts = t3lib_div::trimExplode($delimiter, $string, 1);
 		foreach ((array) $parts as $key => $value) { // one loop for every part
-			$parts[$key] = urlencode($value); // encode current part
+			$parts[$key] = rawurlencode($value); // encode current part
 		}
 		$string = implode($delimiter, $parts); // merge again
 

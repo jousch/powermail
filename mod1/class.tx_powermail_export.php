@@ -263,7 +263,7 @@ class tx_powermail_export {
 					if ($export == 'csv') { // CSV only
 						$table .= '"' . $value . '"' . $this->seperator;
 					} else { // HTML and EXCEL only
-						$table .= '<td><b>' . $value . '</b></td>';
+						$table .= '<td><b>' . htmlspecialchars($value) . '</b></td>';
 					}
 				} else {
 					if (isset($values) && is_array($values)) {
@@ -309,7 +309,7 @@ class tx_powermail_export {
 			if (isset($row['title'])) return $row['title']; // if title was found return ist
 			else if ($uid < 100000) return 'POWERMAIL ERROR: No title to current field found in DB'; // if no title was found return 
 		} else { // no uid55 so return $name
-			return $name;
+			return htmlspecialchars($name);
 		}
     }
 	
