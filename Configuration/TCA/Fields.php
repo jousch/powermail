@@ -357,7 +357,7 @@ $TCA['tx_powermail_domain_model_fields'] = array(
 					),
 					array(
 						'LLL:EXT:powermail/Resources/Private/Language/locallang_db.xml:tx_powermail_domain_model_fields.feuser_value.phone',
-						'phone'
+						'telephone'
 					),
 					array(
 						'LLL:EXT:powermail/Resources/Private/Language/locallang_db.xml:tx_powermail_domain_model_fields.feuser_value.fax',
@@ -392,7 +392,7 @@ $TCA['tx_powermail_domain_model_fields'] = array(
 				'maxitems' => 1,
 				'eval' => ''
 			),
-			'displayCond' => 'FIELD:type:IN:input,textarea,hidden'
+			'displayCond' => 'FIELD:type:IN:input,textarea,select,check,radio,hidden'
 		),
 		'css' => array(
 			'l10n_mode' => 'exclude',
@@ -422,7 +422,7 @@ $TCA['tx_powermail_domain_model_fields'] = array(
 				'maxitems' => 1,
 				'eval' => ''
 			),
-			'displayCond' => 'FIELD:type:IN:input,textarea,select,check,radio,submit,location'
+			'displayCond' => 'FIELD:type:IN:input,textarea,select,check,radio,submit,password,location,text'
 		),
 		'marker_title' => array(
 			'l10n_mode' => 'exclude',
