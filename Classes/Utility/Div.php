@@ -49,6 +49,9 @@ class Tx_Powermail_Utility_Div {
 		$formsRepository = t3lib_div::makeInstance('Tx_Powermail_Domain_Repository_FormsRepository');
 		$fields = array();
 		$form = $formsRepository->findByUid($formUid);
+		if (!method_exists($form, 'getPages')) {
+			return;
+		}
 		foreach ($form->getPages() as $page) {
 			foreach ($page->getFields() as $field) {
 				$fields[] = $field->getUid();
@@ -107,6 +110,8 @@ class Tx_Powermail_Utility_Div {
 
 		if (!$email) {
 			$email = Tx_Extbase_Utility_Localization::translate('error_no_sender_email', 'powermail');
+			$email .= '@';
+			$email .= t3lib_div::getIndpEnv('TYPO3_HOST_ONLY');
 		}
 		return $email;
 	}
