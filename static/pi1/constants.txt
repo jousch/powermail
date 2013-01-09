@@ -27,6 +27,9 @@ plugin.powermail {
 	
 	# cat=plugin.powermail_mainconfig/file/0080; type=file[html,htm,tmpl,txt]; label= Template File multiple: HTML-template file for multiple pages (see EXT:powermail/templates/tmpl_multiplejs.html for an example)
 	template.MultipleJS = EXT:powermail/templates/tmpl_multiplejs.html
+
+	# cat=plugin.powermail_mainconfig/file/0090; type=file[js,tmpl,txt]; label= Template File Frontend JS: Template file for frontend javascript (see EXT:powermail/templates/tmpl_frontend.js for an example)
+	template.frontendJsTemplatePath = EXT:powermail/templates/tmpl_frontend.js
 	
 	# cat=plugin.powermail_mainconfig/enable/0100; type=boolean; label= Email to receiver active: You can disable emails to receiver (maybe if you want only to store the values to db)
 	allow.email2receiver = 1
@@ -37,7 +40,7 @@ plugin.powermail {
 	# cat=plugin.powermail_mainconfig/enable/0130; type=boolean; label= Log every mail in db: Disable logging, if you want only to get mails
 	allow.dblog = 1
 	
-	# cat=plugin.powermail_mainconfig/enable/0200; type=int; label= PID where to save logfiles: Enter a Page ID where the form values should be saved to the db (empty: same PID as form PID)
+	# cat=plugin.powermail_mainconfig/enable/0200; type=int+; label= PID where to save logfiles: Enter a Page ID where the form values should be saved to the db (empty: same PID as form PID)
 	PID.dblog = 
 	
 	# cat=plugin.powermail_mainconfig//0300; type=options[both,html,plain]; label= Receivermail HTML or Plain: If you use this value, emails to the receiver will be send in html or plaintext or both formats (both, html or plain)
@@ -46,6 +49,9 @@ plugin.powermail {
 	# cat=plugin.powermail_mainconfig//0310; type=options[both,html,plain]; label= Sendermail HTML or Plain: If you use this value, emails to the sender will be send in html or plaintext or both formats (both, html or plain)
 	emailformat.sender_mail = both
 	
+	# cat=plugin.powermail_mainconfig//0320; type=boolean; label= Enables tags in plain part of receiver and sendermails. This makes it possible to send xml (e.g.) syntax in plain text email part
+	emailformat.enableTagsInPlainTextPart = 0
+
 	# cat=plugin.powermail_additionalconfig//0390; type=text; label= Onetime form: Checks if a field has already this entry (maybe email address), IP check is also possible if ip addresses will be logged) - (e.G. uid11,ip checks for unique IP and unique entry in field uid11)
 	enable.unique = 
 	
@@ -106,7 +112,7 @@ plugin.powermail {
 	# cat=plugin.powermail_additionalconfig//0580; type=boolean; label= Mime check for upload: Checks if uploaded file is realy the file which it should be (mime check)
 	upload.mimecheck = 1
 	
-	# cat=plugin.powermail_additionalconfig//0600; type=int; label= Allow filesize for upload: If you are using min. one upload field in frontend, you can set the allowed filesize of the files (in kB)
+	# cat=plugin.powermail_additionalconfig//0600; type=int+; label= Allowed file size for upload: If you are using min. one upload field in frontend, you can set the allowed file size of the files (in kB)
 	upload.filesize = 1000
 	
 	# cat=plugin.powermail_additionalconfig//0610; type=boolean; label= Upload and attach: If checked, all files will be sent as an attachment to the receiver (if disabled, files will only stored on server)
@@ -118,16 +124,31 @@ plugin.powermail {
 	# cat=plugin.powermail_additionalconfig//0630; type=boolean; label= Clear Session: Check if session should be cleared after submit (emails sent)
 	clear.session = 0
 	
-	# cat=plugin.powermail_additionalconfig//0910; type=text; label= Mandatory JS DIV class: Enter your own css class for the mandatory javascript div layer (div layer which is shown, if a field was not filled, etc...)
-	js.mandatorydivclass = powermail_mandatory_js
-	
-	# cat=plugin.powermail_additionalconfig//0920; type=boolean; label= Activate JavaScript Validation: (De)activate javascript validation in fields
+	# cat=plugin.powermail_additionalconfig//0640; type=boolean; label= Allow caching: Check if powermail frontend output (first page for php multiple step forms) should be cached. Please empty TYPO3 frontend cache of all pages containing powermail forms after changing. Please Do NOT use this feature if a captcha field is on the first page of a form.
+	caching = 0
+
+	# cat=plugin.powermail_additionalconfig//0920; type=boolean; label= Activate javascript validation: (De)activate javascript validation in fields
 	js.validation = 1
+
+	# cat=plugin.powermail_additionalconfig//0930; type=boolean; label= Always include javascript for form validation and special input types (date/datetime/slider)
+	js.alwaysInclude = 0
+
+	# cat=plugin.powermail_additionalconfig//0940; type=boolean; label= Include jQuery and jQueryTools libraries to header (only for usage without t3jquery)
+	js.toHeader = 0
+
+	# cat=plugin.powermail_additionalconfig//0950; type=boolean; label= Include jQuery library (only for usage without t3jquery)
+	js.includeJquery = 1
+
+	# cat=plugin.powermail_additionalconfig//0960; type=boolean; label= Include jQueryTools Form library (only for usage without t3jquery)
+	js.includeJqueryTools = 1
+
+	# cat=plugin.powermail_additionalconfig//0970; type=boolean; label= Include jQueryTools Tab library (only for usage without t3jquery)
+	js.includeJqueryToolsTabs = 1
 
 	# cat=plugin.powermail_additionalconfig//1000; type=boolean; label= Hiddenfields for checkboxes: (De)activate the hiddenfields for checkboxes. If only checkboxes are in use, there is a problem to enable a checkbox, submit, go back and deaktivate checkbox and submit again - the value ist still set. To fix this, you can use a JavaScript with hiddenfields (set by default).
 	field.checkboxJS = 1
 	
-	# cat=plugin.powermail_additionalconfig//1100; type=boolean; label= Use rteCSStext function: Text from rich text editor will be parsed automaticly for emails and thx message (every line gets an p tag, etc...). Disabling could be useful if you want to use only plaintext mails.
+	# cat=plugin.powermail_additionalconfig//1100; type=boolean; label= Use rteCSStext function: Text from rich text editor will be parsed automatically for emails and thx message (every line gets an p tag, etc...). Disabling could be useful if you want to use only plain text mails.
 	rte.parse = 1
 	
 	# cat=plugin.powermail_additionalconfig//1110; type=boolean; label= Use labelparse function: Labels could be used with TYPO3 LINK syntax (e.g. 1)
@@ -136,6 +157,12 @@ plugin.powermail {
 	# cat=plugin.powermail_additionalconfig//1120; type=boolean; label= Style instead of size: Using a local stylesheet in the input fields and in all textareas instead of size or rows and cols - the value in the flexform should be in pixel (e.g. 1)
 	input.style = 0
 	
+	# cat=plugin.powermail_additionalconfig//1130; type=boolean; label= Move "Add CSS class" assignment back to input tag (old style < 1.6.4). Before 1.6.5, this assignment was added to the class attribute of the input tags. For better styling possibilities it is now added to the surrounding div tag.
+	additionalCssToInputField = 0
+
+	# cat=plugin.powermail_additionalconfig//1140; type=boolean; label= Move submit field(s) to outer markers.
+	moveSubmitToOuterMarker = 0
+
 	# cat=plugin.powermail_additionalconfig//1200; type=options[,utf8_encode,utf8_decode]; label= Charset for powermail: You can use the php functions utf8_encode or utf8_decode to change the whole powermail output
 	powermail.charset = 
 	

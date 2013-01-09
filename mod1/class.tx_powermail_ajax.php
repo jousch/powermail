@@ -39,23 +39,23 @@
  */
 class tx_powermail_Ajax {
 	
-	public function ajaxController($params, &$ajaxObj) {
+	public function ajaxController($params, $ajaxObj) {
 		$cmd = t3lib_div::_GP('cmd');
 		switch ($cmd) {
 			case 'getItems':
 				// get list of Powermails on the selected page
-				$this->ajaxGetItems($params, &$ajaxObj);
+				$this->ajaxGetItems($params, $ajaxObj);
 				break;
 			case 'getLabelsAndFormtypes':
 				// get labels of Powermail fields
-				$this->ajaxGetLabelsAndFormtypes($params,&$ajaxObj);
+				$this->ajaxGetLabelsAndFormtypes($params, $ajaxObj);
 				break;
 			case 'getItemDetails':
 				// get details of Powermail
 				break;
 			case 'doDelete':
 				// delete Item(s)
-				$this->ajaxDeleteItem($params, &$ajaxObj);
+				$this->ajaxDeleteItem($params, $ajaxObj);
 				break;
 			case 'getExcel':
 				$this->excelExport = t3lib_div::makeInstance('tx_powermail_export');
@@ -94,30 +94,27 @@ class tx_powermail_Ajax {
 		}
 	}
 	
-	private function ajaxGetItems($params, &$ajaxObj) {
+	private function ajaxGetItems($params, $ajaxObj) {
 		$this->belist = t3lib_div::makeInstance('tx_powermail_repository');
 		$this->belist->pid = intval(t3lib_div::_GP('pid'));
 		$this->belist->pointer = intval(t3lib_div::_GP('start'));
 		$this->belist->perpage = intval(t3lib_div::_GP('pagingSize'));
-		$this->belist->sort = (t3lib_div::_GP('sort')) ? t3lib_div::_GP('sort') : 'crdate';
-		if (!t3lib_div::inArray(array('crdate', 'uid', 'sender', 'recipient', 'senderIP'), $this->belist->sort)) {
-			$this->belist->sort = 'crdate';
-		}
-		$this->belist->dir = (t3lib_div::_GP('dir')) ? 'ASC' : 'DESC';
+		$this->belist->sort = (!t3lib_div::inArray(array('crdate', 'uid', 'sender', 'recipient', 'senderIP'), t3lib_div::_GP('sort'))) ? 'crdate' : t3lib_div::_GP('sort');
+		$this->belist->dir = (t3lib_div::_GP('dir') == 'ASC') ? 'ASC' : 'DESC';
 		$this->belist->startDateTime = intval(t3lib_div::_GP('startDateTime'));
 		$this->belist->endDateTime = intval(t3lib_div::_GP('endDateTime'));
 		$ajaxObj->setContent($this->belist->main());
 		$ajaxObj->setContentFormat('jsonbody');
 	}
 	
-	private function ajaxGetLabelsAndFormtypes($params, &$ajaxObj) {
+	private function ajaxGetLabelsAndFormtypes($params, $ajaxObj) {
 		$this->labelsAndFormtypes = t3lib_div::makeInstance('tx_powermail_repository');
 		$this->labelsAndFormtypes->pid = intval(t3lib_div::_GP('pid'));
 		$ajaxObj->setContent($this->labelsAndFormtypes->getLabelsAndFormtypes());
 		$ajaxObj->setContentFormat('jsonbody');
 	}
 
-	private function ajaxDeleteItem($params, &$ajaxObj) {
+	private function ajaxDeleteItem($params, $ajaxObj) {
 		$uids = t3lib_div::_GP('uids');
 		$this->action = t3lib_div::makeInstance('tx_powermail_action');
 		$this->ajaxReturn = $this->action->deleteItem($uids);

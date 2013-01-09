@@ -33,6 +33,8 @@
 class tx_powermail_scheduler extends tx_scheduler_Task {
 	
 	public $lang;
+
+	public $msg;
 	
 	/**
 	* Function executed from the Scheduler.
@@ -102,13 +104,26 @@ class tx_powermail_scheduler extends tx_scheduler_Task {
 		$export->endDateTime = time(); // set endtime
 		$export->export = (stristr($tsconfig['format'], 'email_') ? $tsconfig['format'] : $this->tmp_defaultconfig['format']); // set
 		$export->LANG = $LANG;
-		if (!empty($tsconfig['attachedFilename'])) {
-			$export->overwriteFilename = $tsconfig['attachedFilename']; // overwrite filename with this
+		if (!empty($this->filename)) {
+			$formatExtension = '';
+			switch ($this->format) {
+				case 'email_csv':
+					$formatExtension = '.csv';
+					break;
+				case 'email_xls':
+					$formatExtension = '.xls';
+					break;
+				case 'email_html':
+					$formatExtension = '.html';
+					break;
+			}
+
+			$export->overwriteFilename = $this->filename . $formatExtension; // overwrite filename with this
 		}
 		$export->main(); // generate file
+		$file = t3lib_div::getFileAbsFileName('typo3temp/' . $export->filename); // read filename
 
 		if ($export->resNumRows > 0) { // if file is not empty
-            $file = t3lib_div::getFileAbsFileName('typo3temp/' . $export->filename); // read filename
 			// Generate the mail
             if (t3lib_div::compat_version('4.5')){
                 // new TYPO3 swiftmailer code
@@ -141,26 +156,38 @@ class tx_powermail_scheduler extends tx_scheduler_Task {
                 $success = $mail->send();
             }
 			if ($success) {
-				$this->msg = 'Mail successfully sent';
+				$this->msg = 'Mail successfully sent. Generated and attached file: ' . $file;
 			} else {
-				$this->msg = 'Powermail Error in sending mail';
+				$this->msg = 'Powermail Error in sending mail. Generated file: ' . $file;
 			}
-            unlink($file);
 
 		} else {
 			$this->msg = 'There are no mails to export in the last ' . intval($tsconfig['time']) . ' seconds in pid ' . $this->pid;
 		}
-		
+		//t3lib_div::devlog($this->msg, 'powermail', 0);
+		unlink($file);
 		return true;
 	}
 	
 	/**
 	* Return message for backend
 	*
-	* @return    bool
+	* @return    string
 	*/
 	public function getAdditionalInformation() {
-		return $this->msg;
+		$format = '';
+		switch ($this->format) {
+			case 'email_csv':
+				$format = 'CSV';
+				break;
+			case 'email_xls':
+				$format = 'XLS';
+				break;
+			case 'email_html':
+				$format = 'HTML';
+				break;
+		}
+		return 'Send powermails from page ' . $this->pid . ' to ' . $this->email . ' as ' . $format;
 	}
 }
 

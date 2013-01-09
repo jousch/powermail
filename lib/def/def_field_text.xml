@@ -7,6 +7,7 @@
 		<el>
 			<size>
 				<TCEforms>
+					<exclude>1</exclude>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.size</label>
 					<config>
 						<type>input</type>
@@ -16,6 +17,7 @@
 			</size>
 			<maxlength>
 				<TCEforms>
+					<exclude>1</exclude>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.maxlength</label>
 					<config>
 						<type>input</type>
@@ -25,6 +27,7 @@
 			</maxlength>
 			<readonly>
 				<TCEforms>
+					<exclude>1</exclude>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.readonly</label>
 					<config>
 						<type>check</type>
@@ -33,6 +36,7 @@
 			</readonly>
 			<mandatory>
 				<TCEforms>
+					<exclude>1</exclude>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.mandatory</label>
 					<config>
 						<type>check</type>
@@ -50,6 +54,7 @@
 			</value>
 			<placeholder>
 				<TCEforms>
+					<exclude>1</exclude>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.placeholder</label>
 					<config>
 						<type>input</type>
@@ -59,6 +64,7 @@
 			</placeholder>
 			<validate>
 				<TCEforms>
+					<exclude>1</exclude>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.validate</label>
 					<onChange>reload</onChange>
 					<config>
@@ -97,12 +103,21 @@
 								<numIndex index="0">LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.validate.7</numIndex>
 								<numIndex index="1">validate-pattern</numIndex>
 							</numIndex>
+							<numIndex index="8" type="array">
+								<numIndex index="0">LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.validate.8</numIndex>
+								<numIndex index="1">validate-alpha-w-umlaut</numIndex>
+							</numIndex>
+							<numIndex index="9" type="array">
+								<numIndex index="0">LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.validate.9</numIndex>
+								<numIndex index="1">validate-alphanum-w-umlaut</numIndex>
+							</numIndex>
 						</items>
 					</config>
 				</TCEforms>
 			</validate>
 			<inputtype>
 				<TCEforms>
+					<exclude>1</exclude>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.inputtype</label>
 					<displayCond>FIELD:validate:!IN:validate-email,validate-url</displayCond>
 					<config>
@@ -135,6 +150,7 @@
 			</inputtype>
 			<min>
 				<TCEforms>
+					<exclude>1</exclude>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.min</label>
 					<displayCond>FIELD:validate:IN:validate-number,validate-digits</displayCond>
 					<config>
@@ -145,6 +161,7 @@
 			</min>
 			<max>
 				<TCEforms>
+					<exclude>1</exclude>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.max</label>
 					<displayCond>FIELD:validate:IN:validate-number,validate-digits</displayCond>
 					<config>
@@ -155,6 +172,7 @@
 			</max>
 			<step>
 				<TCEforms>
+					<exclude>1</exclude>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.step</label>
 					<displayCond>FIELD:validate:IN:validate-number,validate-digits</displayCond>
 					<config>
@@ -165,6 +183,7 @@
 			</step>
 			<pattern>
 				<TCEforms>
+					<exclude>1</exclude>
 					<displayCond>FIELD:validate:=:validate-pattern</displayCond>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.pattern</label>
 					<config>
@@ -175,6 +194,7 @@
 			</pattern>
 			<name>
 				<TCEforms>
+					<exclude>1</exclude>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.name</label>
 					<config>
 						<type>user</type>
@@ -185,6 +205,7 @@
 			</name>
 			<example>
 				<TCEforms>
+					<exclude>1</exclude>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.example</label>
 					<config>
 						<type>user</type>

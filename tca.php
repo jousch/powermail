@@ -138,7 +138,7 @@ $TCA['tx_powermail_fieldsets'] = array (
 				    'showRemovedLocalizationRecords' => 1,
 				),
 				'behaviour' => array(
-					'localizeChildrenAtParentLocalization' => 1,						    			
+					'localizeChildrenAtParentLocalization' => 1,
 					'localizationMode' => 'select',
 				),
 			)
@@ -195,7 +195,7 @@ if ($confArr['cssSelection'] == 0) { // selector box is not wanted
 		'config' => array (
 			'type' => 'input',
 			'size' => '10',
-			'eval' => 'trim,lower'
+			'eval' => 'trim'
 		)
 	);
 }
@@ -476,7 +476,7 @@ if ($confArr['cssSelection'] == 0) { // selector box is not wanted
 		'config' => array (
 			'type' => 'input',
 			'size' => '10',
-			'eval' => 'trim,lower'
+			'eval' => 'trim'
 		)
 	);
 }
@@ -640,7 +640,7 @@ $TCA['tx_powermail_mails'] = array (
 			)
 		),
 		'Additional' => array (		
-			'exclude' => 1,		
+			'exclude' => 1,
 			'label' => 'LLL:EXT:powermail/locallang_db.xml:tx_powermail_mails.Additional',		
 			'config' => array (
 				'type' => 'input',	

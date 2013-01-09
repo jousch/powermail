@@ -8,6 +8,7 @@ Powermail HTML Template for formwrap
     CSS classname (only if multiple):					###POWERMAIL_MULTIPLE###
 	Backlink (only if multiple):						###POWERMAIL_MULTIPLE_BACKLINK###
 	Nextlink (only if multiple):						###POWERMAIL_MULTIPLE_FORWARDLINK###
+    Submit fields if moveSubmitToOuterMarker = 1:		###POWERMAIL_SUBMIT_FIELDS###
     Marker for Extensions:								###POWERMAIL_JS###
     Own CSS class for fieldset (with ending space):		###OWNCSS###
     Fill Marker with any parsed field:					###UID[number]### (e.g. ###UID23###)
@@ -25,7 +26,7 @@ Powermail HTML Template for formwrap
 
 <!-- ###POWERMAIL_FORMWRAP### begin -->
 	<div class="tx-powermail-pi1_formwrap tx-powermail-pi1_formwrap_###POWERMAIL_FORM_UID######POWERMAIL_MULTIPLE###">
-		<form id="###POWERMAIL_NAME###" action="###POWERMAIL_ACTION###" method="post" class="tx_powermail_pi1_form" enctype="multipart/form-data">
+		<form id="###POWERMAIL_NAME###" action="###POWERMAIL_ACTION###" method="post" class="tx_powermail_pi1_form" enctype="multipart/form-data" novalidate="novalidate">
 			###POWERMAIL_MULTIPLE_PAGEBROWSER###
 			<div class="fieldsets">
 				<!-- ###POWERMAIL_CONTENT### --><!-- ###POWERMAIL_ITEM### -->
@@ -38,6 +39,7 @@ Powermail HTML Template for formwrap
 			</div>
 			###POWERMAIL_MULTIPLE_BACKLINK###
 			###POWERMAIL_MULTIPLE_FORWARDLINK###
+            ###POWERMAIL_SUBMIT_FIELDS###
 		</form>
 	</div>
 <!-- ###POWERMAIL_FORMWRAP### end -->

@@ -31,7 +31,8 @@ fieldset.tx-powermail-pi1_fieldset input {
 fieldset.tx-powermail-pi1_fieldset input.powermail_text,
 fieldset.tx-powermail-pi1_fieldset input.powermail_date,
 fieldset.tx-powermail-pi1_fieldset input.powermail_datetime,
-fieldset.tx-powermail-pi1_fieldset textarea.powermail_textarea {
+fieldset.tx-powermail-pi1_fieldset textarea.powermail_textarea,
+fieldset.tx-powermail-pi1_fieldset input.powermail_captcha{
 	/* Input and textarea */
 	border:1px solid #ccc;
 	background:#f8f8f8 none;
@@ -94,13 +95,12 @@ div.tx_powermail_pi1_fieldwrap_html fieldset legend.tx_powermail_pi1_fieldwrap_h
     position:absolute;
     z-index:1;
     width: auto;
-    height:15px;
     padding:3px 10px 5px 10px;
     background-color:#00559E;
     border:1px solid #00559E;
     font-size:11px;
     color:#fff;
-    text-decoration: none;
+    white-space: normal;
     /* CSS3 spicing for mozilla and webkit */
     -moz-border-radius:5px;
     -webkit-border-radius:5px;
@@ -224,6 +224,19 @@ ul.powermail_multiplejs_tabs li a.act {
     margin-bottom:-1px
 }
 
+input.tx_powermail_pi1_submitmultiple_forward,
+input.tx_powermail_pi1_submitmultiple_back {margin-top:1em;}
+
+input.tx_powermail_pi1_submitmultiple_forward {
+    float: right;
+}
+
+.powermail_multiple_php form > div.tx_powermail_pi1_fieldwrap_html_submit {
+    display: inline;
+    float: right;
+    margin-top:1em;
+}
+
 /* error message */
 .error {
 	/* supply height to ensure consistent positioning for every browser */
@@ -255,7 +268,7 @@ ul.powermail_multiplejs_tabs li a.act {
 }
 
 /* pure CSS arrow */
-.error em {
+html:root .error em {
 	display:block;
 	width:0;
 	height:0;
@@ -264,7 +277,7 @@ ul.powermail_multiplejs_tabs li a.act {
 
 	/* positioning */
 	position:absolute;
-	bottom:-7px;
+	bottom:-10px;
 	left:5px;
 	border-bottom:0 none;
 }
@@ -273,7 +286,7 @@ ul.powermail_multiplejs_tabs li a.act {
 
 /* the input field */
 .date {
-	width:198px !important;
+	width: 237px !important;
 }
 
 /* calendar root element */

@@ -119,9 +119,7 @@ class tx_powermail_form extends tslib_pibase {
 				$linkVars = array(
 					'returnLast' => 'url', 
 					'parameter' => $GLOBALS['TSFE']->id, 
-					'additionalParams' => '
-						&tx_powermail_pi1[mailID]=' . $formUid . '
-						&tx_powermail_pi1[multiple]=' . ($this->multiple['currentpage'] + 1), 
+					'additionalParams' => '&tx_powermail_pi1[mailID]=' . intval($formUid) .	'&tx_powermail_pi1[multiple]=' . ($this->multiple['currentpage'] + 1),
 					'useCacheHash' => 1
 				);
 				$this->OuterMarkerArray['###POWERMAIL_ACTION###'] = $this->cObj->typolink('x', $linkVars); // Overwrite Target
@@ -167,7 +165,11 @@ class tx_powermail_form extends tslib_pibase {
 				);
 				if ($res2) { // If there is a result
 					while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2)) { // One loop for every field
-						$this->InnerMarkerArray['###POWERMAIL_FIELDS###'] .= $this->html_input_field->main($this->conf, $this->sessionfields, $this->cObj, $row, $this->tabindexArray(), $i); // Get HTML code for each field
+                        if($this->conf['moveSubmitToOuterMarker'] && $row['f_type'] == 'submit') {
+                            $this->OuterMarkerArray['###POWERMAIL_SUBMIT_FIELDS###'] .= $this->html_input_field->main($this->conf, $this->sessionfields, $this->cObj, $row, $this->tabindexArray(), $i); // Submit button
+                        } else {
+                            $this->InnerMarkerArray['###POWERMAIL_FIELDS###'] .= $this->html_input_field->main($this->conf, $this->sessionfields, $this->cObj, $row, $this->tabindexArray(), $i); // Get HTML code for each field
+                        }
 						$i++; // increase counter
 					}
 				}
@@ -271,9 +273,7 @@ class tx_powermail_form extends tslib_pibase {
 				$linkVars = array(
 					'parameter' => $GLOBALS['TSFE']->id, 
 					'returnLast' => 'url', 
-					'additionalParams' => '
-						&tx_powermail_pi1[multiple]=' . ($this->multiple['currentpage'] + $add) . '
-						&tx_powermail_pi1[mailID]=' . ($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']), 
+					'additionalParams' => '&tx_powermail_pi1[multiple]=' . ($this->multiple['currentpage'] + $add) . '&tx_powermail_pi1[mailID]=' . ($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']),
 					'useCacheHash' => 1
 				);
 				$link = ($GLOBALS['TSFE']->tmpl->setup['config.']['absRefPrefix'] == '' ? $this->baseurl : '');
@@ -295,8 +295,9 @@ class tx_powermail_form extends tslib_pibase {
 			*/
 
 			// e.g. 3 of 8
-			$content = $this->multiple['currentpage'] . $this->pi_getLL('pagebrowser_inner') . $this->multiple['numberoffieldsets']; // 1 of 4
+			$content = $this->multiple['currentpage'] . ' ' . $this->pi_getLL('pagebrowser_inner') . ' ' . $this->multiple['numberoffieldsets']; // 1 of 4
 			$content = $this->cObj->wrap($content, $this->conf['pagebrowser.']['wrap'], '|'); // wrap this
+            $this->hookPageBrowser($content);
 
 		} elseif ($add === 'js') { // Pagebrowser Multiple JS
 
@@ -383,6 +384,20 @@ class tx_powermail_form extends tslib_pibase {
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FormWrapMarkerHookInner'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
 				$_procObj->PM_FormWrapMarkerHookInner($this->InnerMarkerArray, $this->conf, $row, $this); // Open function to manipulate datas
+			}
+		}
+	}
+
+    /**
+     * Function hookPageBrowser() to enable manipulation of the php-pagebrowser
+     * @param  $content
+     * @return void
+     */
+	function hookPageBrowser(&$content) {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FormPageBrowserHook'])) {
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FormPageBrowserHook'] as $_classRef) {
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$_procObj->PM_FormPageBrowserHook($this->multiple, $content, $this->conf, $this);
 			}
 		}
 	}

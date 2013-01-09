@@ -267,8 +267,6 @@ class tx_powermail_export {
 		// Set absolute path to typo3temp dir
 		$this->absFilePath = PATH_site . 'typo3temp/';
 
-		$this->tempFilename = t3lib_div::tempnam($this->extKey);
-
 		$this->timeFilter = '';
 		if ($this->startDateTime > 0){
 			$this->timeFilter .= ' AND crdate > ' . intval($this->startDateTime);
@@ -476,10 +474,10 @@ tr.odd td{background:#eee;}
                                     $value = $this->charConvert($this->cleanString($value));
                                     switch ($this->formtypes[$key]){
                                         case 'date':
-                                            $value = ($value == intval($value)) ? date($this->dateFormat, $value) : $value;
+                                            $value = ($value == intval($value)) ? gmdate($this->dateFormat, $value) : $value;
                                             break;
                                         case 'datetime':
-                                            $value = ($value == intval($value)) ? date($this->datetimeFormat, $value) : $value;
+                                            $value = ($value == intval($value)) ? gmdate($this->datetimeFormat, $value) : $value;
                                             break;
                                         case 'file':
                                             $value = '<a href="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $this->tsConfig['properties']['config.']['list.']['uploadFolder'] . $value . '">' . $value . '</a>';
@@ -520,7 +518,21 @@ tr.odd td{background:#eee;}
 							if ($piVars[$key] == '') {
 								$key = $this->getOriginalLanguageFieldUid($piVars, $key);
 							}
-							$htmlContent .= '<td>' . $this->charConvert($this->cleanString($piVars[$key])) . '</td>';
+							//$htmlContent .= '<td>' . $this->charConvert($this->cleanString($piVars[$key])) . '</td>';
+
+							$value = $this->charConvert($this->cleanString($piVars[$key]));
+							switch ($this->formtypes[$key]){
+							    case 'date':
+							        $value = ($value == intval($value)) ? gmdate($this->dateFormat, $value) : $value;
+							        break;
+							    case 'datetime':
+							        $value = ($value == intval($value)) ? gmdate($this->datetimeFormat, $value) : $value;
+							        break;
+							    case 'file':
+							        $value = '<a href="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $this->tsConfig['properties']['config.']['list.']['uploadFolder'] . $value . '">' . $value . '</a>';
+							        break;
+							}
+							$htmlContent .= '<td>' . $value . '</td>';
 
 						// PiVars in second level
 						} else {
@@ -613,10 +625,10 @@ tr.odd td{background:#eee;}
                                     $value = $this->charConvert($this->cleanString($value));
                                     switch ($this->formtypes[$key]){
                                         case 'date':
-                                            $value = ($value == intval($value)) ? date($this->dateFormat, $value) : $value;
+                                            $value = ($value == intval($value)) ? gmdate($this->dateFormat, $value) : $value;
                                             break;
                                         case 'datetime':
-                                            $value = ($value == intval($value)) ? date($this->datetimeFormat, $value) : $value;
+                                            $value = ($value == intval($value)) ? gmdate($this->datetimeFormat, $value) : $value;
                                             break;
                                         case 'file':
                                             $value = t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $this->tsConfig['properties']['config.']['list.']['uploadFolder'] . $value;
@@ -658,7 +670,21 @@ tr.odd td{background:#eee;}
 							if ($piVars[$key] == '') {
 								$key = $this->getOriginalLanguageFieldUid($piVars, $key);
 							}
-							$csvContent .= '"' . $this->charConvert($this->cleanString($piVars[$key])) . '"' . $this->seperator;
+							//$csvContent .= '"' . $this->charConvert($this->cleanString($piVars[$key])) . '"' . $this->seperator;
+
+							$value = $this->charConvert($this->cleanString($piVars[$key]));
+							switch ($this->formtypes[$key]){
+							    case 'date':
+							        $value = ($value == intval($value)) ? gmdate($this->dateFormat, $value) : $value;
+							        break;
+							    case 'datetime':
+							        $value = ($value == intval($value)) ? gmdate($this->datetimeFormat, $value) : $value;
+							        break;
+							    case 'file':
+							        $value = t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $this->tsConfig['properties']['config.']['list.']['uploadFolder'] . $value;
+							        break;
+							}
+							$csvContent .= '"' . $value . '"' . $this->seperator;
 
 						// PiVars in second level
 						} else {
@@ -725,6 +751,9 @@ tr.odd td{background:#eee;}
 				$sheetHeaderCol = 0;
 				$sheetHeaderCols = array();
 				$excelColNames = $this->getExcelColNames(intval(count($headerPiVars) + count($this->rowConfig)));
+				if ($this->debug) {
+					t3lib_div::devLog('Generated excelColNames: ', $this->extKey, 0, $excelColNames);
+				}
 
 				foreach ($this->rowConfig as $key => $value) {
 					$newValue = $this->charConvert($value);
@@ -790,10 +819,10 @@ tr.odd td{background:#eee;}
                                         $value = $this->charConvert($this->cleanString(t3lib_div::htmlspecialchars_decode($value)));
                                         switch ($this->formtypes[$key]){
                                             case 'date':
-                                                $value = ($value == intval($value)) ? date($this->dateFormat, $value) : $value;
+                                                $value = ($value == intval($value)) ? gmdate($this->dateFormat, $value) : $value;
                                                 break;
                                             case 'datetime':
-                                                $value = ($value == intval($value)) ? date($this->datetimeFormat, $value) : $value;
+                                                $value = ($value == intval($value)) ? gmdate($this->datetimeFormat, $value) : $value;
                                                 break;
                                             case 'file':
                                                 $value = t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $this->tsConfig['properties']['config.']['list.']['uploadFolder'] . $value;
@@ -829,7 +858,21 @@ tr.odd td{background:#eee;}
 								if ($piVars[$key] == '') {
 									$key = $this->getOriginalLanguageFieldUid($piVars, $key);
 								}
-								$excelObject->getActiveSheet()->setCellValue($colname, $this->charConvert($this->cleanString(t3lib_div::htmlspecialchars_decode($piVars[$key]))));
+								//$excelObject->getActiveSheet()->setCellValue($colname, $this->charConvert($this->cleanString(t3lib_div::htmlspecialchars_decode($piVars[$key]))));
+
+								$value = $this->charConvert($this->cleanString(t3lib_div::htmlspecialchars_decode($piVars[$key])));
+								switch ($this->formtypes[$key]){
+								    case 'date':
+								        $value = ($value == intval($value)) ? gmdate($this->dateFormat, $value) : $value;
+								        break;
+								    case 'datetime':
+								        $value = ($value == intval($value)) ? gmdate($this->datetimeFormat, $value) : $value;
+								        break;
+								    case 'file':
+								        $value = t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $this->tsConfig['properties']['config.']['list.']['uploadFolder'] . $value;
+								        break;
+								}
+								$excelObject->getActiveSheet()->setCellValue($excelColNames[$sheetCol] . $sheetRow, $value);
 
 							// PiVars in second level
 							} else {
@@ -862,6 +905,8 @@ tr.odd td{background:#eee;}
 					$excelObject->getActiveSheet()->getColumnDimension($excelColNames[$autosize])->setAutoSize(true);
 				}
 			}
+
+			$this->tempFilename = t3lib_div::tempnam($this->extKey);
 
 			if ($this->xlsFileFormat != 'Excel2007') {
 				// Save Excel 5 file
@@ -913,34 +958,31 @@ tr.odd td{background:#eee;}
 	}
 
 	/**
-	 * Set filenames for export and stores result in $this->filename
+	 * Set filename for export and stores result in $this->filename
 	 *
 	 * @return	void
 	 */
 	protected function setFilenames() {
-
 		// overwrite filename if wanted
 		if (!empty($this->overwriteFilename)) {
 			$this->filename = $this->overwriteFilename;
-			return;
+		} else {
+			// create filename
+			switch ($this->export) {
+				case 'xls':
+				case 'email_xls':
+					$this->filename = $this->cleanFileName($this->pageTitle . $this->timeFilePrefix) . $this->xlsFileSuffix;
+					break;
+				case 'csv':
+				case 'email_csv':
+					$this->filename = $this->cleanFileName($this->pageTitle . $this->timeFilePrefix) . $this->csvFileSuffix;
+					break;
+				case 'html':
+				case 'email_html':
+					$this->filename = $this->cleanFileName($this->pageTitle . $this->timeFilePrefix) . $this->htmlFileSuffix;
+					break;
+			}
 		}
-
-		// create filename
-		switch ($this->export) {
-			case 'xls':
-			case 'email_xls':
-				$this->filename = $this->cleanFileName($this->pageTitle . $this->timeFilePrefix) . $this->xlsFileSuffix;
-				break;
-			case 'csv':
-			case 'email_csv':
-				$this->filename = $this->cleanFileName($this->pageTitle . $this->timeFilePrefix) . $this->csvFileSuffix;
-				break;
-			case 'html':
-			case 'email_html':
-				$this->filename = $this->cleanFileName($this->pageTitle . $this->timeFilePrefix) . $this->htmlFileSuffix;
-				break;
-		}
-
 	}
 
 	/**
@@ -1099,7 +1141,8 @@ tr.odd td{background:#eee;}
 
         $select = 'uid,formtype';
         $from = 'tx_powermail_fields';
-        $where = 'pid = ' . intval($this->pid);
+        //$where = 'pid = ' . intval($this->pid);
+	    $where = '';
         $orderBy = '';
         $groupBy = '';
         $limit = '';
@@ -1245,24 +1288,31 @@ tr.odd td{background:#eee;}
     }
 
     /**
-	 * Method getExcelColNames() returns an array with Excel colnames like A or AA
+	 * Method getExcelColNames() returns an array with Excel column names like A or AA
 	 *
 	 * @param	integer		$cols this is the number of cols who should be generated
 	 * @return	array	returns the excelColNames array;
 	 */
     protected function getExcelColNames($cols = 1000) {
     	$excelColNames = array();
-    	$colnames = 'ABCDEFHGIJKLMNOPQRSTUVWXYZ';
     	for ($excelCol = 0; $excelCol < $cols; $excelCol ++) {
-			$colname = substr($colnames, $excelCol, 1);
-			$coloverflow = floor(($excelCol + 1) / strlen($colnames));
-			if($coloverflow >= 1) {
-				$colname = substr($colnames, $coloverflow - 1, 1) . $colname;
-			}
-			$excelColNames[] .= $colname;
+			$excelColNames[] .= $this->num2alpha($excelCol);
     	}
     	return $excelColNames;
     }
+
+	/**
+	 * Method num2alpha() returns a string with a Excel column name like A or AA of a give column position
+	 *
+	 * @param	integer	position which should be converted to a excel column value
+	 * @return	string	returns the excel column value;
+	 */
+	protected function num2alpha($n) {
+		for($r = ''; $n >= 0; $n = intval($n / 26) - 1) {
+			$r = chr($n %26 + 0x41) . $r;
+		}
+		return $r;
+	}
 
 }
 

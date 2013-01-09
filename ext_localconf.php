@@ -7,7 +7,7 @@ if (TYPO3_MODE == 'BE') {
 	include_once(t3lib_extMgm::extPath('powermail') . 'lib/class.user_powermail_tx_powermail_fieldsetchoose.php');
 }
 
-$TYPO3_CONF_VARS['BE']['AJAX']['tx_powermail::controller'] = 'EXT:powermail/mod1/class.tx_powermail_ajax.php:tx_powermail_Ajax->ajaxController';
+$TYPO3_CONF_VARS['BE']['AJAX']['tx_powermail::controller'] = t3lib_extMgm::extPath('powermail') . 'mod1/class.tx_powermail_ajax.php:tx_powermail_Ajax->ajaxController';
 
 $confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['powermail']); // Get backend config
 include_once(t3lib_extMgm::extPath('powermail') . 'lib/user_powermailOnCurrentPage.php'); // Conditions for JS including
@@ -18,7 +18,7 @@ include_once(t3lib_extMgm::extPath('powermail') . 'cli/class.tx_powermail_schedu
 
 t3lib_extMgm::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:powermail/pageTSconfig.txt">');
 
-t3lib_extMgm::addPItoST43($_EXTKEY, 'pi1/class.tx_powermail_pi1.php', '_pi1', 'CType', 0);
+t3lib_extMgm::addPItoST43($_EXTKEY, 'pi1/class.tx_powermail_pi1.php', '_pi1', 'CType', 1);
 
 $TYPO3_CONF_VARS['EXTCONF']['cms']['db_layout']['addTables']['tx_powermail_fieldsets'][0] = array(
 	'fList' => 'uid,title',

@@ -75,10 +75,11 @@ class tx_powermail_mandatory extends tslib_pibase {
 		$targetLinkParams = array(
 			'returnLast' => 'url', 
 			'parameter' => $GLOBALS['TSFE']->id, 
-			'useCacheHash' => 1, 
+			'useCacheHash' => 1,
+            #'no_cache' => 1
 			#'section' => 
 		);
-		$this->markerArray['###POWERMAIL_TARGET###'] = $this->cObj->typolink('x', $targetLinkParams) . '#' . $anchorId;
+		$this->markerArray['###POWERMAIL_TARGET###'] = $this->cObj->typolink('x', $targetLinkParams) . '#c' . $anchorId;
 		$this->markerArray['###POWERMAIL_NAME###'] = $this->cObj->data['tx_powermail_title'] . '_mandatory'; // Fill Marker with formname
 		$this->markerArray['###POWERMAIL_METHOD###'] = $this->conf['form.']['method']; // Form method
 
@@ -123,11 +124,11 @@ class tx_powermail_mandatory extends tslib_pibase {
 	 *
 	 * @return	void
 	*/
-	private function mandatoryCheck() {
+	public function mandatoryCheck() {
 
         // Give me all fields of current content uid
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
-			'tx_powermail_fields.uid, tx_powermail_fields.title, tx_powermail_fields.flexform',
+			'tx_powermail_fields.uid, tx_powermail_fields.title, tx_powermail_fields.flexform, tx_powermail_fields.class',
 			'tx_powermail_fields LEFT JOIN tx_powermail_fieldsets ON tx_powermail_fields.fieldset = tx_powermail_fieldsets.uid LEFT JOIN tt_content ON tx_powermail_fieldsets.tt_content = tt_content.uid',
 			$where_clause = 'tx_powermail_fieldsets.tt_content = ' . ($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']) . tslib_cObj::enableFields('tt_content') . tslib_cObj::enableFields('tx_powermail_fieldsets') . tslib_cObj::enableFields('tx_powermail_fields'),
 			$groupBy = '',
@@ -136,7 +137,11 @@ class tx_powermail_mandatory extends tslib_pibase {
 		);
 		if ($res) { // If there is a result
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every field
-				if ($this->pi_getFFvalue(t3lib_div::xml2array($row['flexform']), 'mandatory') == 1 || $this->conf['validate.']['uid' . $row['uid'] . '.'][required] == 1) { // if in current xml mandatory == 1 OR mandatory was set via TS for current field
+				//t3lib_div::devlog('class found: ' . $row['class'], 'powermail', 0);
+				/**
+				 * Modified for Bel: do not validate on server side if class of field is set to "donotcheckmandatory"
+				 */
+				if (($this->pi_getFFvalue(t3lib_div::xml2array($row['flexform']), 'mandatory') == 1 || $this->conf['validate.']['uid' . $row['uid'] . '.']['required'] == 1) && $row['class'] != 'donotcheckmandatory') { // if in current xml mandatory == 1 OR mandatory was set via TS for current field
 					if (!is_array($this->sessionfields['uid' . $row['uid']])) { // first level
 						if (trim($this->sessionfields['uid' . $row['uid']]) === '' || !isset($this->sessionfields['uid'.$row['uid']])) { // only if current value is not set in session (piVars)
 							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_mandatory_emptyfield') . ' <b>' . $row['title'] . '</b>'; // set current error to sessionlist
@@ -161,7 +166,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 	 *
 	 * @return	void
 	*/
-	private function uniqueCheck() {
+	public function uniqueCheck() {
 		// config
 		$uniquearray = t3lib_div::trimExplode(',', $this->conf['enable.']['unique'], 1); // Get unique constants from ts
 		$confarray = unserialize($GLOBALS['TSFE']->TYPO3_CONF_VARS['EXT']['extConf'][$this->extKey]); // get config from localconf.php
@@ -227,11 +232,11 @@ class tx_powermail_mandatory extends tslib_pibase {
 	 *
 	 * @return	void
 	*/
-	private function regulareExpressions() {
+	public function regulareExpressions() {
 		// Config - set regulare expressions for autocheck
 		$autoarray = array (
-			'email' => "#^[_a-z0-9]+(\.[_a-z0-9-]+)*@([a-z0-9-]+\.)+([a-z0-9]{2,4})$#",
-			'url' => "#^(http://)?([a-z0-9-]+\.)+([a-z0-9-]{2,3})$#",
+			'email' => "#^[_a-z0-9!#$%&\\'*+-\/=?^_`.{|}~]+(\.[_a-z0-9!#$%&\'*+-\\/=?^_`.{|}~]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$#",
+			'url' => "#^(http://|https://)?([a-z0-9-]+\.)+([a-z0-9-]{2,3})$#",
 			'numbers' => "/^[0-9]+$/",
 			'phone' => "/^[0-9\/+-]+$/",
 			'alphanum' => "/^[a-zA-Z0-9]+$/"
@@ -271,13 +276,13 @@ class tx_powermail_mandatory extends tslib_pibase {
 	 *
 	 * @return	void
 	*/
-	private function emailCheck() {
+	public function emailCheck() {
 		if ($this->cObj->data['tx_powermail_sender'] && is_array($this->sessionfields)) { // If email address from sender is set in backend
 			if ($this->sessionfields[$this->cObj->data['tx_powermail_sender']]) { // if there is content in the email sender field
 				if (!t3lib_div::validEmail($this->sessionfields[$this->cObj->data['tx_powermail_sender']])) { // Value is not an email address
 					$this->sessionfields['ERROR'][str_replace('uid', '', $this->cObj->data['tx_powermail_sender'])][] = $this->pi_getLL('error_validemail'); // write error message to session
 				} else { // Syntax of email address is correct - check for MX Record (if activated via constants)
-					if ($this->conf['email.']['checkMX'] && !$this->div->checkMX($this->sessionfields[$this->cObj->data['tx_powermail_sender']] )) {
+					if ($this->conf['email.']['checkMX'] && !t3lib_div::validEmail($this->sessionfields[$this->cObj->data['tx_powermail_sender']])) {
                         $this->sessionfields['ERROR'][str_replace('uid', '', $this->cObj->data['tx_powermail_sender'])][] = $this->pi_getLL('error_nomx'); // write error message to session
                     }
 				}
@@ -290,7 +295,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 	 *
 	 * @return	void
 	*/
-	private function captchaCheck() {
+	public function captchaCheck() {
 		if ( // only if a supported captcha extension is loaded
 			t3lib_extMgm::isLoaded('captcha', 0) ||
 			t3lib_extMgm::isLoaded('sr_freecap', 0) ||
@@ -413,7 +418,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 	* In case the called user function throws an exception, this is treated as a failed
 	* validation.
 	********************************************/
-	private function customValidation() {
+	public function customValidation() {
 
 		$configKey = 'customvalidation.';
 		if (isset($this->conf[$configKey]) && is_array($this->conf[$configKey])) { // Only if any validation is set per typoscript

@@ -107,15 +107,15 @@ class tx_powermail_functions_div {
 	 * Function clearValue() to remove all " or ' from any string
 	 *
 	 * @param	string		$string: string input
-	 * @param	boolean		$htmlentities: (De)activate htmlentities
+	 * @param	boolean		$htmlspecialchars: (De)activate htmlspecialchars
 	 * @param	boolean		$strip_tags: (De)activate strip_tags
 	 * @return	string		$string: Filtered string
 	 */
-	public function clearValue($string, $htmlentities = 1, $strip_tags = 0) {
+	public function clearValue($string, $htmlspecialchars = 1, $strip_tags = 0) {
 		$notallowed = array('"', "'");
-		$string = str_replace($notallowed, "" ,$string); // replace not allowed letters with nothing
-		if ($htmlentities) {
-			$string = htmlentities($string); // change code to ascii code
+		$string = str_replace($notallowed, '' , $string); // replace not allowed letters with nothing
+		if ($htmlspecialchars) {
+			$string = htmlspecialchars($string); // change code to ascii code
 		}
 		if ($strip_tags) {
 			$string = strip_tags($string); // disable html/php code
@@ -289,24 +289,6 @@ class tx_powermail_functions_div {
 	}
 
 	/**
-	 * Function checkMX() checks if a domain exists
-	 *
-	 * @param	string		$email: string like "aaa@bbb.cc"
-	 * @param	string		$record: Check for a special function
-	 * @return	boolean
-	 */
-	public function checkMX($email, $record = 'NS') {
-        if (function_exists('checkdnsrr')) { // if function checkdnsrr() exist (not available on windows systems)
-            $emailparts = explode('@', $email);
-            $emailparts = explode('.', $emailparts[1]);
-            $emailparts = $emailparts[sizeof($emailparts) - 2] . '.' . $emailparts[sizeof($emailparts) - 1];
-            return (checkdnsrr($emailparts, $record) == 1);
-        } else { // function checkdnsrr() don't exist
-            return TRUE; // so always return TRUE
-        }
-    }
-
-	/**
 	 * Function charset() changes content with utf8_decode or utf8_encode or nothing
 	 *
 	 * @param	string		$content: any string
@@ -369,13 +351,13 @@ class tx_powermail_functions_div {
 
 		// let's go
 		$content = str_replace($htmltagarray, $htmltagarray[0].'<br />', $content); // 1. add linebreaks on some parts (</p> => </p><br />)
-		$content = strip_tags($content, '<br>'); // 2. remove all tags but not linebreak (<b>bla</b><br /> => bla<br />)
+		$content = strip_tags($content, '<br><address>'); // 2. remove all tags but not linebreaks and address (<b>bla</b><br /> => bla<br />)
 		$content = preg_replace('/\s+/', ' ', $content); // 3. removes tabs and whitespaces
 		$content = $this->br2nl($content); // 4. <br /> to \n
 		$content = implode("\n", t3lib_div::trimExplode("\n", $content)); // 5. explode and trim each line and implode again (" bla \n blabla " => "bla\nbla")
 		$content = str_replace($notallowed, '', $content); // 6. remove not allowed signs
 
-		if (!empty($content)) return $content;
+		return $content;
 	}
 
 	/**
