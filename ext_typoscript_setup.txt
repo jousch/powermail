@@ -254,31 +254,31 @@ plugin.tx_powermail_pi1 {
 
 
 
+
 # ---------------------- Additional Typoscript ---------------------
 
 
 
 
 # Add Javascript files to page header if a powermail plugin is on current page
-[userFunc = user_powermailOnCurrentPage]
-page.includeJS.file31311 = EXT:powermail/js/checkbox/checkbox.js
-page.includeJS.file31312 = EXT:powermail/js/mandatoryjs/lib/prototype.js
-page.includeJS.file31313 = EXT:powermail/js/mandatoryjs/src/effects.js
-page.includeJS.file31314 = EXT:powermail/js/mandatoryjs/fabtabulous.js
-
-page.headerData.31310 = TEXT
-page.headerData.31310 {
+lib.powermail_dynJavascript = TEXT
+lib.powermail_dynJavascript {
     wrap = <script src="|" type="text/javascript"></script>
-    typolink.parameter.data = page : uid
-    typolink.additionalParams = &type=3131
-    typolink.addQueryString = 1
+	typolink.parameter.dataWrap = {TSFE:id},3131
     typolink.returnLast = url
 }
-seite.headerData.31310 < page.headerData.31310
-seite.includeJS.31311 < page.includeJS.file31311
-seite.includeJS.31312 < page.includeJS.file31312
-seite.includeJS.31313 < page.includeJS.file31313
-seite.includeJS.31314 < page.includeJS.file31314
+	# userFunc to check if powremail is on current page
+[userFunc = user_powermailOnCurrentPage()]
+	page.includeJS.file31311 = EXT:powermail/js/checkbox/checkbox.js
+	page.includeJS.file31312 = EXT:powermail/js/mandatoryjs/lib/prototype.js
+	page.includeJS.file31313 = EXT:powermail/js/mandatoryjs/src/effects.js
+	page.includeJS.file31314 = EXT:powermail/js/mandatoryjs/fabtabulous.js
+	page.headerData.31310 < lib.powermail_dynJavascript
+	seite.headerData.31310 < page.headerData.31310
+	seite.includeJS.31311 < page.includeJS.file31311
+	seite.includeJS.31312 < page.includeJS.file31312
+	seite.includeJS.31313 < page.includeJS.file31313
+	seite.includeJS.31314 < page.includeJS.file31314
 [end]
 
 

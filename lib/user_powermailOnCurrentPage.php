@@ -23,7 +23,7 @@
 ***************************************************************/
 
 // Function user_powermailOnCurrentPage() checks if a powermail plugin is inserted on current page
-function user_powermailOnCurrentPage() {
+function user_powermailOnCurrentPage($mode) {
 	if (TYPO3_MODE == 'FE') { // only in Frontend
 		global $TCA;
 		
@@ -37,7 +37,14 @@ function user_powermailOnCurrentPage() {
 		);
 		if ($res) {
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res); // Result in array
-			if ($row['uid'] > 0) return true;
+			
+			if ($mode != 'ssd') { // if default or realurl
+				if ($row['uid'] > 0) return true;
+			} else {
+				if ($GLOBALS['TSFE']->tmpl->setup['config.']['simulateStaticDocuments'] == 1 && $row['uid'] > 0) { // if ssd activated
+					return true;
+				}
+			}
 		}
 	}
 	return false;

@@ -52,7 +52,7 @@ class tx_powermail_form extends tslib_pibase {
 			
 			// Set limit
 			$limitArray = array(0,1); // If multiple (PHP) set limit
-			if(isset($this->piVars['multiple'])) $limitArray[0] = ($this->piVars['multiple'] - 1); // Set current fieldset
+			if (isset($this->piVars['multiple'])) $limitArray[0] = ($this->piVars['multiple'] - 1); // Set current fieldset
 			$limit = $limitArray[0].','.$limitArray[1]; // e.g. 0,1
 		
 		} elseif ($this->cObj->data['tx_powermail_multiple'] == 1) { // If multiple (JS) active
@@ -213,14 +213,14 @@ class tx_powermail_form extends tslib_pibase {
 		
 		if ($add === 1) { // Forward link
 		
-			if($this->multiple['numberoffieldsets'] != $this->multiple['currentpage']) { // If current fieldset is not the latest
+			if ($this->multiple['numberoffieldsets'] != $this->multiple['currentpage']) { // If current fieldset is not the latest
 				$content = '<input type="submit" value="'.$this->pi_getLL('multiple_forward', 'Next step').'" class="tx_powermail_pi1_submitmultiple_forward" />';
 			} else $content = ''; // clear it if it's not needed
 			
 		} elseif ($add === -1) { // Backward link
 		
-			if($this->multiple['currentpage'] > 1) { // If current fieldset is not the first
-				$link = $this->baseurl.$this->cObj->typolink('x',array('parameter'=>$GLOBALS['TSFE']->id,'returnLast'=>'url', 'additionalParams'=>'&tx_powermail_pi1[multiple]='.($this->multiple['currentpage'] + $add).'&tx_powermail_pi1[mailID]='.($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']),'useCacheHash' => 1)); // Create target url
+			if ($this->multiple['currentpage'] > 1) { // If current fieldset is not the first
+				$link = ($GLOBALS['TSFE']->tmpl->setup['config.']['absRefPrefix'] === '' ? $this->baseurl : '') . $this->cObj->typolink('x', array('parameter' => $GLOBALS['TSFE']->id, 'returnLast' => 'url', 'additionalParams' => '&tx_powermail_pi1[multiple]='.($this->multiple['currentpage'] + $add).'&tx_powermail_pi1[mailID]='.($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']), 'useCacheHash' => 1)); // Create target url
 				$content = '<input type="button" value="'.$this->pi_getLL('multiple_back', 'Previous step').'" onclick="location=\''.$link.'\'" class="tx_powermail_pi1_submitmultiple_back" />';
 			}
 			else $content = ''; // clear it if it's not needed
@@ -254,7 +254,7 @@ class tx_powermail_form extends tslib_pibase {
 				''
 			);
 			if ($res) { // If there is a result
-				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every fieldset
+				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every fieldset
 					$markerArray['###POWERMAIL_MULTIPLEJS_PAGEBROWSER_LINK###'] = htmlentities($this->cObj->typolink('x',array('parameter'=>$GLOBALS['TSFE']->id, 'returnLast'=>'url', 'useCacheHash' => 1)).'#tx-powermail-pi1_fieldset_'.$row['uid']);             
  					$markerArray['###POWERMAIL_MULTIPLEJS_PAGEBROWSER_TITLE###'] = $row['title'];
 					$content_item .= $this->cObj->substituteMarkerArrayCached($this->tmpl['multiplejs']['item'], $markerArray);

@@ -236,10 +236,12 @@ Validation.addAllThese([
 				return Validation.get('IsEmpty').test(v) ||  !/[^\d]/.test(v);
 			}],
 	['validate-alpha', '<!-- ###VALIDATE_ALPHA### -->Please use letters only (a-z) in this field.<!-- ###VALIDATE_ALPHA### -->', function (v) {
-				return Validation.get('IsEmpty').test(v) ||  /^[a-zA-Z]+$/.test(v);
+				//return Validation.get('IsEmpty').test(v) ||  /^[a-zA-Z]+$/.test(v);
+				return Validation.get('IsEmpty').test(v) || /^[\sa-z\u00C0-\u00FF-]+$/i.test(v);
 			}],
 	['validate-alphanum', '<!-- ###VALIDATE_ALPHANUM### -->Please use only letters (a-z) or numbers (0-9) only in this field. No spaces or other characters are allowed.<!-- ###VALIDATE_ALPHANUM### -->', function(v) {
-				return Validation.get('IsEmpty').test(v) ||  !/\W/.test(v);
+				//return Validation.get('IsEmpty').test(v) ||  !/\W/.test(v);
+				return Validation.get('IsEmpty').test(v) || /^[\sa-z0-9\u00C0-\u00FF-]+$/i.test(v);
 			}],
 	['validate-date', '<!-- ###VALIDATE_DATE### -->Please enter a valid date.<!-- ###VALIDATE_DATE### -->', function(v) {
 				var test = new Date(v);

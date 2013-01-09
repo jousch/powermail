@@ -150,7 +150,7 @@ class tx_powermail_submit extends tslib_pibase {
 		$this->htmlMail->start(); // start htmlmail
 		$this->htmlMail->recipient = $this->maildata['receiver']; // main receiver email address
 		$this->htmlMail->recipient_copy = $this->maildata['cc']; // cc field (other email addresses)
-		$this->htmlMail->subject = $this->div->marker2value($this->maildata['subject'],$this->sessiondata); // mail subject
+		$this->htmlMail->subject = $this->dynamicMarkers->main($this->conf, $this->cObj, $this->div->marker2value($this->maildata['subject'], $this->sessiondata)); // mail subject (with dynamicmarkers and markers2value)
 		$this->htmlMail->from_email = $this->maildata['sender']; // sender email address
 		$this->htmlMail->from_name = $this->maildata['sendername']; // sender email name
 		$this->htmlMail->returnPath = $this->maildata['sender']; // return path
@@ -222,9 +222,10 @@ class tx_powermail_submit extends tslib_pibase {
 		
 		// 1. Field receiver
 		if ($this->cObj->data['tx_powermail_recipient']) { // If receivers are listed in field receiver
-			$emails = str_replace(array("\r\n","\n\r","\n","\r",";"),',',$this->cObj->data['tx_powermail_recipient']); // commaseparated list of emails
-			$emails = $this->div->marker2value($emails,$this->sessiondata); // make markers available in email receiver field
-			$emailarray = t3lib_div::trimExplode(',',$emails,1); // write every part to an array
+			$emails = str_replace(array("\r\n", "\n\r", "\n", "\r", ";", "|", "+"), ',', $this->cObj->data['tx_powermail_recipient']); // commaseparated list of emails
+			$emails = $this->div->marker2value($emails, $this->sessiondata); // make markers available in email receiver field
+			$emails = $this->dynamicMarkers->main($this->conf, $this->cObj, $emails); // set dynamic markers receiver
+			$emailarray = t3lib_div::trimExplode(',', $emails, 1); // write every part to an array
 			
 			for ($i=0,$emails='';$i<count($emailarray);$i++) { // one loop for every key
 				if (t3lib_div::validEmail($emailarray[$i])) $emails .= $emailarray[$i].', '; // if current value is an email write to $emails
@@ -292,7 +293,6 @@ class tx_powermail_submit extends tslib_pibase {
 			return trim($sendername); // return sendername
 		
 		} else return '';
-		//$this->sessiondata[$this->cObj->data['tx_powermail_sendername']]
 	}
 
 	
@@ -309,7 +309,9 @@ class tx_powermail_submit extends tslib_pibase {
 				$link = $this->cObj->typolink('x', $typolink_conf); // Create target url
 				
 				if (intval($this->cObj->data['tx_powermail_redirect']) > 0 || strpos($this->cObj->data['tx_powermail_redirect'], 'fileadmin/') !== false) { // PID (intern link) OR file
-					$link = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')) . $link; // Add baseurl to link
+					if ($GLOBALS['TSFE']->tmpl->setup['config.']['absRefPrefix'] === '') { // only if absRefPrefix is not in use
+						$link = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')) . $link; // Add baseurl to link
+					} 
 				} 
 				elseif (t3lib_div::validEmail($this->cObj->data['tx_powermail_redirect'])) { // if email recognized
 					$link = 'mailto:'.$link; // add mailto: 

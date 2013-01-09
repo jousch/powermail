@@ -784,7 +784,7 @@ class tx_powermail_html extends tslib_pibase {
 				$this->markerArray['###LABEL###'] = $this->title; // captcha label
 				$this->markerArray['###POWERMAIL_CAPTCHA_DESCRIPTION###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'label'); // add captcha description to the marker
 				
-			} else return $this->pi_getLL('error_captchaWrongExt', 'Powermail ERROR: Please check if you have chosen the right captcha extension in the powermail constants!');
+			} else return sprintf($this->pi_getLL('error_captchaWrongExt', 'Powermail ERROR: The chosen captcha extension "%s" is not loaded! Choose another captcha extension in the powermail constants or install the extension "%s".'), $this->conf['captcha.']['use'], $this->conf['captcha.']['use']);
 			
 			$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 			$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_captcha'], $this->markerArray); // substitute Marker in Template

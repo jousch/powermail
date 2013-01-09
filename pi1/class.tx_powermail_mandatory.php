@@ -47,12 +47,12 @@ class tx_powermail_mandatory extends tslib_pibase {
 		
 		// Template
 		$content_item = ''; $this->error = 0; $this->innerMarkerArray = $this->tmpl = $fieldarray = array();
-		$this->tmpl['mandatory']['all'] = $this->cObj->getSubpart(tslib_cObj::fileResource($this->conf['template.']['mandatory']),'###POWERMAIL_MANDATORY_ALL###'); // Load HTML Template outer (work on subpart)
-		$this->tmpl['mandatory']['item'] = $this->cObj->getSubpart($this->tmpl['mandatory']['all'],'###ITEM###'); // Load HTML Template inner (work on subpart)
+		$this->tmpl['mandatory']['all'] = $this->cObj->getSubpart(tslib_cObj::fileResource($this->conf['template.']['mandatory']), '###POWERMAIL_MANDATORY_ALL###'); // Load HTML Template outer (work on subpart)
+		$this->tmpl['mandatory']['item'] = $this->cObj->getSubpart($this->tmpl['mandatory']['all'], '###ITEM###'); // Load HTML Template inner (work on subpart)
 		
 		// Fill Markers
 		$this->markerArray = $this->markers->GetMarkerArray($this->conf, $this->sessionfields, $this->cObj, 'mandatory'); // Fill markerArray
-		$this->markerArray['###POWERMAIL_TARGET###'] = $this->cObj->typolink('x',array("returnLast"=>"url","parameter"=>$GLOBALS['TSFE']->id,"useCacheHash"=>1)); // Fill Marker with action parameter
+		$this->markerArray['###POWERMAIL_TARGET###'] = $this->cObj->typolink('x', array('returnLast' => 'url', 'parameter' => $GLOBALS['TSFE']->id, 'useCacheHash' => 1)); // Fill Marker with action parameter
 		$this->markerArray['###POWERMAIL_NAME###'] = $this->cObj->data['tx_powermail_title'].'_mandatory'; // Fill Marker with formname
 		$this->markerArray['###POWERMAIL_METHOD###'] = $this->conf['form.']['method']; // Form method
 		
@@ -81,7 +81,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 		$this->hook(); // adds hook
 		$this->content = $this->cObj->substituteMarkerArrayCached($this->tmpl['mandatory']['all'], $this->markerArray,$subpartArray); // substitute Marker in Template
 		$this->content = $this->dynamicMarkers->main($this->conf, $this->cObj, $this->content); // Fill dynamic locallang or typoscript markers
-		$this->content = preg_replace("|###.*?###|i", "", $this->content); // Finally clear not filled markers
+		$this->content = preg_replace('|###.*?###|i', '', $this->content); // Finally clear not filled markers
 		$this->overwriteSession(); // write $this->sessionfields to session if there is an ok for an error
         
         if ($this->error == 1) { // if there is an error
@@ -259,7 +259,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 				$limit = 1
 			);
 			if ($res) { // If there is a result
-				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every captcha field
+				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every captcha field
 					
 					// sr_freecap
 					if (t3lib_extMgm::isLoaded('sr_freecap', 0) && $this->conf['captcha.']['use'] == 'sr_freecap') { // use sr_freecap if available
