@@ -56,6 +56,7 @@ class tx_powermail_html extends tslib_pibase {
 		$this->formtitle = $row['c_title']; // get title of powermail
 		$this->uid = $row['f_uid']; // get uid of current field
 		$this->fe_field = $row['f_fefield']; // Get frontend user field if related to
+		$this->description = $row['f_description']; // Get frontend user field if related to
 		$this->tabindex = $tabindex; // get current tabindex
 		$this->tmpl = array('all' => tslib_cObj::fileResource($this->conf['template.']['fieldWrap'])); // Load HTML Template
 		$this->dynamicMarkers = t3lib_div::makeInstance('tx_powermail_dynamicmarkers'); // New object: TYPO3 marker function
@@ -894,7 +895,10 @@ class tx_powermail_html extends tslib_pibase {
 		}
 		
 		// ###LABEL###
-		$this->markerArray['###LABEL###'] = $this->dontAllow($this->title); // add label to markerArray
+		if (!empty($this->title)) $this->markerArray['###LABEL###'] = $this->dontAllow($this->title); // add label to markerArray
+		
+		// ###DESCRIPTION###
+		if (!empty($this->description)) $this->markerArray['###DESCRIPTION###'] = $this->cObj->wrap($this->dontAllow($this->description), $this->conf['description.']['wrap'], '|'); // add wrapped label to markerArray
 		
 		// ###MANDATORY_SYMBOL###
 		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1 || $this->type == 'captcha') $this->markerArray['###MANDATORY_SYMBOL###'] = $this->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|');
@@ -913,7 +917,8 @@ class tx_powermail_html extends tslib_pibase {
 		}
 		
 		// ###POWERMAIL_TARGET###
-		$this->markerArray['###POWERMAIL_TARGET###'] = $GLOBALS['TSFE']->absRefPrefix.$this->cObj->typolink('x', array("returnLast" => "url", "parameter" => $GLOBALS['TSFE']->id, "useCacheHash"=>1)); // Global marker with form target
+		#$this->markerArray['###POWERMAIL_TARGET###'] = $GLOBALS['TSFE']->absRefPrefix.$this->cObj->typolink('x', array("returnLast" => "url", "parameter" => $GLOBALS['TSFE']->id, "useCacheHash"=>1)); // Global marker with form target
+		$this->markerArray['###POWERMAIL_TARGET###'] = $GLOBALS['TSFE']->absRefPrefix.$this->cObj->typolink('x', array('returnLast' => 'url', 'parameter' => $GLOBALS['TSFE']->id, 'additionalParams' => '&tx_powermail_pi1[mailID]='.($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']), 'useCacheHash' => 1));
 		
 		// ###POWERMAIL_NAME###
 		$this->markerArray['###POWERMAIL_NAME###'] = $this->formtitle; // Global Marker with formname

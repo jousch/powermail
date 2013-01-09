@@ -29,6 +29,7 @@ plugin.tx_powermail_pi1 {
 	label.allowTags = {$plugin.powermail.label.allowTags}
 	html.removeXSS = {$plugin.powermail.html.removeXSS}
 	countryselect.charset = {$plugin.powermail.countryselect.charset}
+	description.wrap = {$plugin.powermail.description.wrap}
 	mandatory.symbol = {$plugin.powermail.mandatory.symbol}
 	mandatory.wrap = {$plugin.powermail.mandatory.wrap}
 	captcha.use = {$plugin.powermail.captcha.use}

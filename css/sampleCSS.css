@@ -61,9 +61,38 @@ p.tx_powermail_pi1_fieldwrap_html_radio_title {
 div.countryzone {
 	margin: 10px 0 0 150px;
 }
+div.tx_powermail_pi1_fieldwrap_html label a {
+	/* Description */
+	cursor: help;
+}
+div.tx_powermail_pi1_fieldwrap_html label a dfn {
+	/* Description */
+	display: none;
+}
+div.tx_powermail_pi1_fieldwrap_html label a:hover dfn {
+	/* Description on mouseover */
+	display: block;
+	position: absolute;
+	width: 250px;
+	padding: 5px;
+	background-color: #ddd;
+	border: 1px solid red;
+	color: black;
+	text-decoration: none;
+	font-size: 0.8em;
+}
+div.tx_powermail_pi1_fieldwrap_html img.icon_info {
+	/* Description icon */
+	padding: 2px 2px 0 2px;
+}
 
 
 	/* Confirmation */
 td.powermail_all_td {
 	padding: 3px 10px 3px 0;
+}
+
+	/* THX */
+td.powermail_all p.bodytext {
+	margin: 0;
 }

@@ -25,6 +25,11 @@ $TCA["tx_powermail_fieldsets"] = array (
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
+		'versioningWS' => TRUE, 
+		'origUid' => 't3_origuid',
+		'languageField'            => 'sys_language_uid',	
+		'transOrigPointerField'    => 'l18n_parent',	
+		'transOrigDiffSourceField' => 'l18n_diffsource',		
 		'sortby' => 'sorting',
 		'default_sortby' => "ORDER BY crdate",	
 		'delete' => 'deleted',		
@@ -55,6 +60,11 @@ $TCA["tx_powermail_fields"] = array (
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
+		'versioningWS' => TRUE, 
+		'origUid' => 't3_origuid',
+		'languageField'            => 'sys_language_uid',	
+		'transOrigPointerField'    => 'l18n_parent',	
+		'transOrigDiffSourceField' => 'l18n_diffsource',			
 		'sortby' => 'sorting',
 		'delete' => 'deleted',			
 		'enablecolumns' => array (		
@@ -82,7 +92,7 @@ $TCA["tx_powermail_mails"] = array (
 		'label'     => 'sender',	
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
-		'cruser_id' => 'cruser_id',
+		'cruser_id' => 'cruser_id',			
 		'default_sortby' => "ORDER BY crdate DESC",	
 		'delete' => 'deleted',			
 		'enablecolumns' => array (		
@@ -298,7 +308,16 @@ $tempColumns = Array (
 				'useSortable' => 1,
 				'newRecordLinkAddTitle' => 1,
 				'newRecordLinkPosition' => 'both',
+				
+				'showSynchronizationLink' => 0,
+				'showAllLocalizationLink' => 1,
+				'showPossibleLocalizationRecords' => 1,
+				'showRemovedLocalizationRecords' => 1,
 			),
+			'behaviour' => array(
+				'localizeChildrenAtParentLocalization' => 1,						    		
+				'localizationMode' => 'select',
+			),			
 		)
 	),
 	"tx_powermail_users" => Array (		

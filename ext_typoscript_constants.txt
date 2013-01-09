@@ -96,7 +96,10 @@ plugin.powermail {
 	# cat=plugin.powermail_additionalconfig//0490; type=options[,utf8_encode,utf8_decode]; label= Charset for countryselector: You can use the php functions utf8_encode or utf8_decode to change the countryselector output
 	countryselect.charset = 
 	
-	# cat=plugin.powermail_additionalconfig//0500; type=text; label= Add symbol for mandatory fields: If any field is a mandatory field, add this at the end of the label
+	# cat=plugin.powermail_additionalconfig//0500; type=text; label= Description wrap: Define the wrap for the field description
+	description.wrap = <a href="#"><img src="/typo3conf/ext/powermail/img/icon_info.gif" alt="Description" class="icon icon_info" style="border: none;" /><dfn>|</dfn></a>
+	
+	# cat=plugin.powermail_additionalconfig//0505; type=text; label= Add symbol for mandatory fields: If any field is a mandatory field, add this at the end of the label
 	mandatory.symbol = *
 	
 	# cat=plugin.powermail_additionalconfig//0510; type=wrap; label= Wrap mandatory symbol: You can wrap the mandatory symbol with any html code

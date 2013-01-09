@@ -27,7 +27,7 @@ function user_powermailOnCurrentPage() {
 	$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery ( // DB query
 		'uid',
 		'tt_content',
-		$where_clause = 'pid = '.$GLOBALS['TSFE']->id.' AND CType = "powermail_pi1" AND hidden = 0 AND deleted = 0',
+		$where_clause = 'pid = '.$GLOBALS['TSFE']->id.' AND CType = "powermail_pi1"' . $GLOBALS['TSFE']->sys_page->enableFields('tt_content'),
 		$groupBy = '',
 		$orderBy = '',
 		$limit = 1
