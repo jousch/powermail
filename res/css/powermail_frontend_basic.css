@@ -23,6 +23,7 @@ fieldset.tx-powermail-pi1_fieldset fieldset legend {
 	float: left;
 	font-weight: bold;
     color:#515151;
+    white-space:normal;
 }
 fieldset.tx-powermail-pi1_fieldset input {
 	margin-left:0;
@@ -149,6 +150,11 @@ fieldset.tx-powermail-pi1_fieldset fieldset legend {
 .powermail_mandatory {
 	color: #f00;
 }
+.placeholder {
+    color:#999;
+}
+
+.powermail_mandatory_helper{visibility:hidden;height:1px;position:absolute;}
 fieldset.tx-powermail-pi1_fieldset .powermail_check_inner,
 fieldset.tx-powermail-pi1_fieldset .powermail_radio_inner {
 	margin-left: 200px;
@@ -173,7 +179,8 @@ fieldset.tx-powermail-pi1_fieldset .powermail_radio_inner input {
 div.fieldsets {
     clear: both;
 }
-div.powermail_multiple_js fieldset.tx-powermail-pi1_fieldset legend {
+div.powermail_multiple_js fieldset.tx-powermail-pi1_fieldset legend,
+div.powermail_multiple_js fieldset.tx-powermail-pi1_fieldset.ui-tabs-hide{
     display:none;
 }
 div.powermail_multiple_js fieldset.tx-powermail-pi1_fieldset {
@@ -220,13 +227,15 @@ ul.powermail_multiplejs_tabs li a.act {
 /* error message */
 .error {
 	/* supply height to ensure consistent positioning for every browser */
-	height:15px;
 	background-color:#FF0000;
 	border:1px solid #FF0000;
 	font-size:11px;
 	color:#fff;
 	padding:3px 10px 5px 10px;
 	margin-left:-2px;
+    z-index:10;
+    text-align:left;
+    height:auto;
 
 
 	/* CSS3 spicing for mozilla and webkit */

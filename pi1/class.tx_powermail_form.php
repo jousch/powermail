@@ -75,7 +75,7 @@ class tx_powermail_form extends tslib_pibase {
 		} elseif ($this->cObj->data['tx_powermail_multiple'] == 1) { // If multiple (JS) active
 
 			// add css for multiple javascript
-			$GLOBALS['TSFE']->additionalHeaderData[$this->extKey] .= "\t" . '<link rel="stylesheet" type="text/css" href="' . $GLOBALS['TSFE']->tmpl->getFileName($this->conf['css.']['MultipleJS']) . '" />';
+			//$GLOBALS['TSFE']->additionalHeaderData[$this->extKey] .= "\t" . '<link rel="stylesheet" type="text/css" href="' . $GLOBALS['TSFE']->tmpl->getFileName($this->conf['css.']['MultipleJS']) . '" />';
 			$limit = ''; // no limit for SQL select
 
 		} elseif ($this->cObj->data['tx_powermail_multiple'] == 0) { // Standardmode
@@ -105,11 +105,11 @@ class tx_powermail_form extends tslib_pibase {
 		$this->tmpl['multiplejs']['all'] = $this->cObj->getSubpart(tslib_cObj::fileResource($this->conf['template.']['MultipleJS']), '###POWERMAIL_MULTIPLEJS_PAGEBROWSER###'); // Load HTML Template for multiple JS (work on subpart)
 
 		// Form tag generation
-		//$this->OuterMarkerArray['###POWERMAIL_ACTION###'] = $this->cObj->typolink('x', array('returnLast' => 'url', 'parameter' => $GLOBALS['TSFE']->id, 'section' => ($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']), 'additionalParams' => '&tx_powermail_pi1[mailID]='.($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']), 'useCacheHash'=>1)); // Fill Marker with action parameter
-		//$this->cObj->start($this->cObj->data, 'tt_content'); // enable .field in typoscript
+		$this->cObj->start($this->cObj->data, 'tx_powermail_fieldsets'); // enable .field in typoscript
 		$this->OuterMarkerArray['###POWERMAIL_ACTION###'] = $this->cObj->cObjGetSingle($this->conf['formaction'], $this->conf['formaction.']);
 		$this->OuterMarkerArray['###POWERMAIL_NAME###'] = $this->cObj->data['tx_powermail_title']; // Fill Marker with formname
-		$this->OuterMarkerArray['###POWERMAIL_FORM_UID###'] = ($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']); // Form method
+        $formUid = $this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid'];
+		$this->OuterMarkerArray['###POWERMAIL_FORM_UID###'] = $formUid; // Form method
 		if ($this->cObj->data['tx_powermail_multiple'] == 2) { // If multiple PHP is set
 			$this->OuterMarkerArray['###POWERMAIL_MULTIPLE_BACKLINK###'] = $this->multipleLink(-1); // Backward Link (-1)
 			$this->OuterMarkerArray['###POWERMAIL_MULTIPLE_FORWARDLINK###'] = $this->multipleLink(1); // Forward Link (+1)
@@ -120,7 +120,7 @@ class tx_powermail_form extends tslib_pibase {
 					'returnLast' => 'url', 
 					'parameter' => $GLOBALS['TSFE']->id, 
 					'additionalParams' => '
-						&tx_powermail_pi1[mailID]=' . ($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']) . '
+						&tx_powermail_pi1[mailID]=' . $formUid . '
 						&tx_powermail_pi1[multiple]=' . ($this->multiple['currentpage'] + 1), 
 					'useCacheHash' => 1
 				);
@@ -172,7 +172,7 @@ class tx_powermail_form extends tslib_pibase {
 					}
 				}
 
-				$this->InnerMarkerArray['###POWERMAIL_FIELDSETNAME###'] = $row_fs['title']; // Name of fieldset
+				$this->InnerMarkerArray['###POWERMAIL_FIELDSETNAME###'] = htmlspecialchars($row_fs['title']); // Name of fieldset
 				$this->InnerMarkerArray['###POWERMAIL_FIELDSETNAME_small###'] = $this->div->clearName($row_fs['title'], 1, 32); // Fieldsetname clear (strtolower = 1 / cut after 32 letters)
 				$this->InnerMarkerArray['###POWERMAIL_FIELDSET_UID###'] = $row_fs['uid']; // uid of fieldset
 					 // own css for fieldset

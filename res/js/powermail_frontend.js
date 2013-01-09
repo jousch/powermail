@@ -25,41 +25,66 @@ function checkTextArea(obj, maxLength) {
 (function($) {
     $(function(){
 
-        var powermail_validator = $('.tx_powermail_pi1_form').validator({
-            inputEvent: 'blur',
-            grouped: true,
-            singleError: false,
-            position: 'top right',
-            offset: [-5, -20],
-            message: '<div><em/></div>'
-
-        });
-
         // initialize range input
         $(':range').rangeinput();
-        
-        // multiple checkbox validation
-        $.tools.validator.fn('input:checkbox', 'required',
-            function(input, value) {
-                checkboxes = input.parent().parent().find('input:checkbox');
-                if (checkboxes.filter('.required_one').length > 0) {
-                    if (checkboxes.filter(':checked').length == 0) {
-                        return (input.filter('.required_one').length == 0);
-                    } else {
-                        powermail_validator.data('validator').reset(checkboxes);
-                        return true;
+
+        $('.tx_powermail_pi1_form input:checkbox').click(function(){$(this).parent().parent().find('input:checkbox').blur();});
+
+        var fakeInput = document.createElement('input'),
+            placeHolderSupport = ('placeholder' in fakeInput);
+        clearPlaceholderValues = function () {
+            if (!placeHolderSupport) {
+                $('input:text, textarea').each(function(i){
+                    if ($(this).val() === $(this).attr('placeholder')) {
+                        $(this).val('');
                     }
-                } else {
-                    return true;
+                });
+            }
+        };
+
+        clearPlaceholderValue = function (e, els) {
+            if (!placeHolderSupport) {
+                $(this).removeClass('placeholder');
+                if (els.val() === els.attr('placeholder')) {
+                    els.val('');
                 }
             }
-        );
-		
-		// radio buttons validation (workarround with a checkbox)
-		$('input[type=radio][required]:checked').parent().siblings('.powermail_radio_inner_fake').children('input[type=checkbox]').attr('checked', true).change();
-		$('input[type=radio][required]').live('click', function() {
-			$('div.powermail_radio_inner_fake').children('input[type=checkbox]').attr('checked', true).change();
-		});
+        };
+
+        setPlaceholderValue = function (e, els, matcher) {
+            if (!placeHolderSupport) {
+                if (els.val().length === 0 && e.keyCode != 9 && els.attr('placeholder') != undefined) {
+                    els.val(els.attr('placeholder'));
+                    els.addClass('placeholder');
+                }
+            }
+        };
+
+        // Applies placeholder attribute behavior in web browsers that don't support it
+        if (!placeHolderSupport) {
+            $('input:text, textarea').each(function(i){
+                if($(this).val().length === 0) {
+                    var originalText = $(this).attr('placeholder');
+                    $(this).val(originalText);
+                    $(this).addClass('placeholder');
+                    $(this).bind('focus', function (i) {
+                        $(this).removeClass('placeholder');
+                        if ($(this).val() === $(this).attr('placeholder')) {
+                            $(this).val('');
+                        }
+                    });
+                }
+            });
+            // Empties the placeholder text at form submit if it hasn't changed
+            $('form').bind('submit', function () {
+                clearPlaceholderValues();
+            });
+
+            // Clear at window reload to avoid it stored in autocomplete
+            $(window).bind('unload', function () {
+                clearPlaceholderValues();
+            });
+        }
 
         // time validation
         $.tools.validator.fn('input[type=time]', 'required',
@@ -110,13 +135,33 @@ function checkTextArea(obj, maxLength) {
                 return value.length > 0;
             }
         );
-        
+
         // add tabs to fieldsets for multiple page
         $('ul.powermail_multiplejs_tabs li a:first').addClass('act'); // first tab with class "act"
-        $('ul.powermail_multiplejs_tabs').tabs('div.fieldsets > fieldset'); // enable tabs()
+        if ($.ui && typeof($.ui.tabs) == 'function') {
+            // Add UI tabs
+            $('.powermail_multiple_js .powermail_multiplejs_tabs_item a').each(function(id, item){
+                var temp = item.href.split('#');
+                var temp_last = temp[temp.length - 1];
+                var search = /^tx\-powermail\-pi1\_fieldset/;
+                if (search.test(temp_last)){
+                    item.href = '#' + temp_last;
+                }
+            });
+            $('.powermail_multiple_js').tabs(); // enable UI tabs()
+        } else {
+            // Add TOOLS tabs
+            $('ul.powermail_multiplejs_tabs').tabs('div.fieldsets > fieldset');
+        }
         $('ul.powermail_multiplejs_tabs li a').click(function() { // change "act" on click
             $('ul.powermail_multiplejs_tabs li a').removeClass('act');
             $(this).addClass('act');
+            // reset error messages
+            $(this).parent().parent().find('a:NOT(.current)').each(function(id, item){
+                var temp = item.href.split('#');
+                var resetSelector = $('#' + temp[temp.length - 1] + ' :input');
+                powermail_validator.data('validator').reset(resetSelector);
+            });
         });
     });
 })(jQuery);
