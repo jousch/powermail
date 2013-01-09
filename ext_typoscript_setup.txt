@@ -149,6 +149,10 @@ plugin.tx_powermail_pi1 {
 		# Enable or disable saving values to database
 		dblog = TEXT
 		dblog.value = {$plugin.powermail.allow.dblog}
+		
+		# Enable or disable hidden=1 for the values which will be saved in the database
+		hidden = TEXT
+		hidden.value = 0
 	}
 	
 	
@@ -250,7 +254,7 @@ plugin.tx_powermail_pi1 {
 		# write only if field email is not yet filled with current value
 			# (update - update values of existing entry) 
 			# (none - no entry if field is filled)
-			# (disable – always add values – don't care about existing values)
+			# (disable always add values don't care about existing values)
 #		tt_address._ifUnique.email = update
 		
 		# add mm relation to uid 2 of tt_address_group (via mm table)
@@ -320,11 +324,14 @@ plugin.tx_powermail_pi1 {
 
 
 	# Add Javascript files to page header if a powermail plugin is on current page
-lib.powermail_dynJavascript = TEXT
+lib.powermail_dynJavascript = COA
 lib.powermail_dynJavascript {
-    wrap = <script src="|" type="text/javascript"></script>
-	typolink.parameter.dataWrap = {TSFE:id},3131
-    typolink.returnLast = url
+	10 = TEXT
+	10.typolink.parameter.dataWrap = {TSFE:id},3131
+	10.typolink.returnLast = url
+	
+	stdWrap.wrap = <script src="|" type="text/javascript"></script>
+	stdWrap.htmlSpecialChars = 1
 }
 	# userFunc to check if powermail is on current page
 		# powermail is on current page and prototype should be used
@@ -339,7 +346,7 @@ lib.powermail_dynJavascript {
 [end]
 		# powermail is on current page
 [userFunc = user_powermailOnCurrentPage]
-	page.includeJS.file31311 = EXT:powermail/js/checkbox/checkbox.js
+	page.includeJS.file31311 = EXT:powermail/js/misc/misc.js
 	page.headerData.31310 < lib.powermail_dynJavascript
 	seite.headerData.31310 < page.headerData.31310
 	seite.includeJS.31311 < page.includeJS.file31311
@@ -358,10 +365,12 @@ powermailJS {
 	typeNum = 3131
 	
 	config {
+		additionalHeaders = Content-Type: application/x-javascript
 		disableAllHeaderCode = 1
 		disablePrefixComment = 1
 		xhtml_cleaning = 0
 		admPanel = 0
+		index_enable = 0
 	}
 	
 	10 = TEMPLATE

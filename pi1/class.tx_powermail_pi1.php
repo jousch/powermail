@@ -66,7 +66,7 @@ class tx_powermail_pi1 extends tslib_pibase {
 		$this->sessions->deleteSession($this->conf, $this->cObj, $this->piVars['clearSession']); // If GET Param clearSession is set, delete complete Session
 		$this->sessions->setSession($this->conf, $this->piVars, $this->cObj, 0); // Set piVars to session (but don't overwrite old values)
 		$this->sessionfields = $this->sessions->getSession($this->conf, $this->cObj, 0); // give me all piVars from session (without not needed values)
-		$this->sessions->setSession($this->conf, $this->sessions->changeData($this->sessionfields), $this->cObj, 0); // manipulate data (upload fields, check email, etc..) and save it at once in the session
+		$this->sessions->setSession($this->conf, $this->sessions->changeData($this->sessionfields, $this->cObj->data), $this->cObj, 0); // manipulate data (upload fields, check email, etc..) and save it at once in the session
 		$this->sessionfields = $this->sessions->getSession($this->conf, $this->cObj, 0); // get values from session again
 		if ($this->conf['debug.']['output'] == 'all' || $this->conf['debug.']['output'] == 'session') { // if debug
 			$this->div->debug($this->sessionfields, 'Values from session'); // Debug function (Array from Session)
@@ -143,9 +143,6 @@ class tx_powermail_pi1 extends tslib_pibase {
 	// Function check() checks if all needed fields are filled in backend
 	function check() {
 		$error = ''; // init
-		if (!$this->cObj->data['tx_powermail_subject_r']) { // If subject of receiver is not set
-			$error .= $this->div->msg($this->pi_getLL('error_check_subject_r', '<strong>Email receiver subject</strong>'));
-		}
 		if (count($this->conf['template.']) == 0 || count($this->conf) < 10) { // check if powermail ts is not available
 			$error .= $this->div->msg($this->pi_getLL('error_check_noTS', 'ERROR: Typoscript for powermail missing!'));
 		}

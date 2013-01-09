@@ -88,6 +88,23 @@ $TCA['tx_powermail_fieldsets'] = array (
 				'default' => '0'
 			)
 		),
+		'fe_group' => array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.fe_group',
+			'config' => array (
+				'type'  => 'select',
+				'size' => 5,
+				'maxitems' => 20,
+				'items' => array (
+					array('LLL:EXT:lang/locallang_general.xml:LGL.hide_at_login', -1),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.any_login', -2),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.usergroups', '--div--')
+				),
+				'exclusiveKeys' => '-1,-2',
+				'foreign_table' => 'fe_groups',
+				'foreign_table_where' => 'ORDER BY fe_groups.title'
+			)
+		),
 		'tt_content' => array (		
 			'config' => array (
 				'type' => 'passthrough'
@@ -114,7 +131,7 @@ $TCA['tx_powermail_fieldsets'] = array (
 					'expandSingle' => 1,
 					'useSortable' => 1,
 					'newRecordLinkAddTitle' => 1,
-					'newRecordLinkPosition' => 'both',
+					'levelLinksPosition' => 'both',
 				    'showSynchronizationLink' => 0,
 				    'showAllLocalizationLink' => 1,
 				    'showPossibleLocalizationRecords' => 1,
@@ -178,13 +195,15 @@ if ($confArr['cssSelection'] == 0) { // selector box is not wanted
 		'config' => array (
 			'type' => 'input',
 			'size' => '10',
-			'eval' => 'trim,lower,alphanum_x'
+			'eval' => 'trim,lower'
 		)
 	);
 }
 
-// Make powermail available in older TYPO3 version (fieldsets)
-if (t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.1.0') || $confArr['useIRRE'] == 0) { // if current version older than 4.1 or IRRE deaktivated in ext manager
+/**
+ * If IRRE deactivated in extension manager
+ */
+if ($confArr['useIRRE'] == 0) {
 	$TCA['tx_powermail_fieldsets']['columns']['tt_content'] = array (
 		'label' => 'LLL:EXT:powermail/locallang_db.xml:tx_powermail_fieldsets.tt_content',
 		'config' => array (
@@ -279,6 +298,23 @@ $TCA['tx_powermail_fields'] = array (
 				'range' => array (
 					'upper' => 1609369200
 				)
+			)
+		),
+		'fe_group' => array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.fe_group',
+			'config' => array (
+				'type'  => 'select',
+				'size' => 5,
+				'maxitems' => 20,
+				'items' => array (
+					array('LLL:EXT:lang/locallang_general.xml:LGL.hide_at_login', -1),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.any_login', -2),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.usergroups', '--div--')
+				),
+				'exclusiveKeys' => '-1,-2',
+				'foreign_table' => 'fe_groups',
+				'foreign_table_where' => 'ORDER BY fe_groups.title'
 			)
 		),
 		'hidden' => array (		
@@ -440,7 +476,7 @@ if ($confArr['cssSelection'] == 0) { // selector box is not wanted
 		'config' => array (
 			'type' => 'input',
 			'size' => '10',
-			'eval' => 'trim,lower,alphanum_x'
+			'eval' => 'trim,lower'
 		)
 	);
 }
@@ -460,8 +496,10 @@ if (!t3lib_extMgm::isLoaded('date2cal',0)) {
 	$TCA['tx_powermail_fields']['columns']['flexform']['config']['ds']['datetime'] = 'FILE:EXT:powermail/lib/def/def_field_date2calversion_error.xml';
 }
 
-// Make powermail available in older TYPO3 version (fields)
-if(t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.1.0') || $confArr['useIRRE'] == 0) { // if current version older than 4.1 or IRRE deaktivated in ext manager
+/**
+ * If IRRE deactivated in extension manager
+ */
+if($confArr['useIRRE'] == 0) {
 	$TCA['tx_powermail_fields']['columns']['fieldset'] = array (
 		'label' => 'LLL:EXT:powermail/locallang_db.xml:tx_powermail_fields.fieldset',
 		'config' => array (
@@ -473,11 +511,6 @@ if(t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.1.0') || 
 	);
 	$TCA['tx_powermail_fields']['palettes']['1']['showitem'] = 'fieldset, ' . $TCA['tx_powermail_fields']['palettes']['1']['showitem']; // add "fieldset" field in front of the first palette
 }
-
-
-
-
-
 
 #######################################
 ### TABLE 3: tx_powermail_mails #######

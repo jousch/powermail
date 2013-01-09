@@ -38,6 +38,7 @@ class tx_powermail_submit extends tslib_pibase {
 	var $email_send = 1; // Enable email send function (disable for testing only)
 	var $dbInsert = 1; // Enable db insert of every sent item (disable for testing only)
 	var $ok = 0; // disallow sending (standard false)
+	var $PM_SubmitBeforeMarkerHook_return;
 
 	function main($conf, $sessionfields, $cObj) {
 		$this->conf = $conf;
@@ -68,7 +69,8 @@ class tx_powermail_submit extends tslib_pibase {
 		
 		
 		// 1. add hook for manipulation of data after E-Mails where sent
-		if(!$this->hook_submit_beforeEmails()) { // All is ok (no spam maybe)
+		$submitBeforeEmailsHookResult = $this->hook_submit_beforeEmails();
+		if (!$submitBeforeEmailsHookResult) { // All is ok (no spam maybe)
 			
 			$this->ok = 1; // sending allowed
 			if ($this->cObj->cObjGetSingle($this->conf['allow.']['email2receiver'], $this->conf['allow.']['email2receiver.'])) { // main email is allowed
@@ -84,7 +86,7 @@ class tx_powermail_submit extends tslib_pibase {
 			
 		} else { // Spam hook is true (maybe spam recognized)
 			$this->markerArray = array(); // clear markerArray
-			$this->markerArray['###POWERMAIL_THX_ERROR###'] = $this->hook_submit_beforeEmails(); // Fill ###POWERMAIL_THX_MESSAGE### with error message from Hook
+			$this->markerArray['###POWERMAIL_THX_ERROR###'] = $submitBeforeEmailsHookResult; // Fill ###POWERMAIL_THX_MESSAGE### with error message from Hook
 		}
 		
 		// 2. Return Message to FE
@@ -226,10 +228,11 @@ class tx_powermail_submit extends tslib_pibase {
 			'pid' => intval($this->save_PID), // PID
 			'tstamp' => time(), // save current time
 			'crdate' => time(), // save current time
+			'hidden' => $this->cObj->cObjGetSingle($this->conf['allow.']['hidden'], $this->conf['allow.']['hidden.']), // hidden = 0 or hidden = 1
 			'formid' => ($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']), // save pid
 			'recipient' => $this->MainReceiver, // save receiver mail
 			'cc_recipient' => (isset($this->CCReceiver) ? $this->CCReceiver : ''),
-			'subject_r' => $this->subject_r, // save subject of receiver mail
+			'subject_r' => $this->dynamicMarkers->main($this->conf, $this->cObj, $this->div->marker2value($this->subject_r, $this->sessiondata)),
 			'sender' => $this->sender, // save sender mail
 			'content' => trim($this->mailcontent['recipient_mail']), // save content of receiver mail
 			'piVars' => t3lib_div::array2xml($this->div->TSmanipulation($this->sessiondata, 'dblog', $this->conf, $this->cObj), '', 0, 'piVars'), // save values of session as xml
@@ -341,10 +344,13 @@ class tx_powermail_submit extends tslib_pibase {
 		if ($this->ok) { // only if spamhook is not set
 		
 			// 1. Get Target from Flexform or Typoscript
-			if (!empty($this->cObj->data['tx_powermail_redirect'])) {
-				$target = $this->cObj->data['tx_powermail_redirect']; // get target from flexform in Backend
+			$redirectPidFromFlexform = trim($this->cObj->data['tx_powermail_redirect']);
+			if (!empty($redirectPidFromFlexform)) {
+				$target = $redirectPidFromFlexform; // get target from flexform in Backend
+				
 			} elseif (is_array($this->conf['redirect.']) && count($this->conf['redirect.']) > 0) {
 				$target = $this->cObj->cObjGetSingle($this->conf['redirect'], $this->conf['redirect.']); // get target from TS
+				
 			} else {
 				$target = 0; // disable target
 			}
@@ -446,9 +452,9 @@ class tx_powermail_submit extends tslib_pibase {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitBeforeMarkerHook'])) { // Adds hook for processing of extra global markers
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitBeforeMarkerHook'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				$hookreturn = $_procObj->PM_SubmitBeforeMarkerHook($this, $this->markerArray, $this->sessiondata); // Get new marker Array from other extensions - if TRUE, don't send mails (maybe spam)
+				$this->PM_SubmitBeforeMarkerHook_return .= $_procObj->PM_SubmitBeforeMarkerHook($this, $this->markerArray, $this->sessiondata); // Get new marker Array from other extensions - if TRUE, don't send mails (maybe spam)
 			}
-			return $hookreturn; // Return value from hook if given
+			return $this->PM_SubmitBeforeMarkerHook_return; // Return value from hook if given
 		} else { // if hook is not set
 			return FALSE; // Return False is default (no spam, so emails could be sent)
 		}
