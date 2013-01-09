@@ -25,10 +25,12 @@
 // Function user_powermailOnCurrentPage() checks if a powermail plugin is inserted on current page
 function user_powermailOnCurrentPage() {
 	if (TYPO3_MODE == 'FE') { // only in Frontend
+		global $TCA;
+		
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery ( // DB query
 			'uid',
 			'tt_content',
-			$where_clause = 'pid = ' . ($GLOBALS['TSFE']->id ? $GLOBALS['TSFE']->id : 0) . ' AND CType = "powermail_pi1"' . $GLOBALS['TSFE']->sys_page->enableFields('tt_content'),
+			$where_clause = 'pid = ' . ($GLOBALS['TSFE']->id ? $GLOBALS['TSFE']->id : 0) . ' AND CType = "powermail_pi1"' . (!is_array($TCA['tt_content']) ? 'deleted = 0 AND hidden = 0' : $GLOBALS['TSFE']->sys_page->enableFields('tt_content')),
 			$groupBy = '',
 			$orderBy = '',
 			$limit = 1

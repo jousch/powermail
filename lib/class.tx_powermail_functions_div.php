@@ -78,9 +78,10 @@ class tx_powermail_functions_div {
 	
 	// Add debug view for any array
 	function debug($array, $msg = 'Debug output') {
-		echo '<b>'.$msg.':</b>'; // title output
-		t3lib_div::print_array($array); // debug output of sessiondata
-		echo '<hr /><br />'; // separator after debug output
+		#echo '<b>'.$msg.':</b>'; // title output
+		#t3lib_div::print_array($array); // debug output of sessiondata
+		#echo '<hr /><br />'; // separator after debug output
+		t3lib_div::debug($array, $this->extKey.': '.$msg); // debug output
 	}
 	
 	

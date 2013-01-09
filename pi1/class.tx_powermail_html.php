@@ -248,23 +248,23 @@ class tx_powermail_html extends tslib_pibase {
 	 * @return	[type]		...
 	 */
 	function html_check() {
-		$this->tmpl['html_check']['all'] = $this->cObj->getSubpart($this->tmpl['all'],'###POWERMAIL_FIELDWRAP_HTML_CHECK'. ($this->conf['field.']['checkboxJS']==1 ? 'JS' : '') .'###'); // work on subpart 1 (###POWERMAIL_FIELDWRAP_HTML_CHECK### OR ###POWERMAIL_FIELDWRAP_HTML_CHECKJS###)
-		$this->tmpl['html_check']['item'] = $this->cObj->getSubpart($this->tmpl['html_check']['all'],'###ITEM###'); // work on subpart 2
+		$this->tmpl['html_check']['all'] = $this->cObj->getSubpart($this->tmpl['all'], '###POWERMAIL_FIELDWRAP_HTML_CHECK'. ($this->conf['field.']['checkboxJS']==1 ? 'JS' : '') .'###'); // work on subpart 1 (###POWERMAIL_FIELDWRAP_HTML_CHECK### OR ###POWERMAIL_FIELDWRAP_HTML_CHECKJS###)
+		$this->tmpl['html_check']['item'] = $this->cObj->getSubpart($this->tmpl['html_check']['all'], '###ITEM###'); // work on subpart 2
 
-		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'options')) { // Only if options are set
+		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'options')) { // Only if options are set
 			$content_item = ''; $options = array(); // init
-			$optionlines = t3lib_div::trimExplode("\n",$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'options'),1); // Every row is a new option
-			for ($i=0;$i<count($optionlines);$i++) { // Every loop for every option
-				$options[$i] = t3lib_div::trimExplode("|",$optionlines[$i],0); // Every row is a new option
+			$optionlines = t3lib_div::trimExplode("\n", $this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'options'),1); // Every row is a new option
+			for ($i=0; $i<count($optionlines); $i++) { // Every loop for every option
+				$options[$i] = t3lib_div::trimExplode("|", $optionlines[$i], 0); // Every row is a new option
 			}
 
-			for($i=0;$i<count($optionlines);$i++) { // One tag for every option
+			for($i=0; $i < count($optionlines); $i++) { // One tag for every option
 				$markerArray['###NAME###'] = 'name="'.$this->prefixId.'[uid'.$this->uid.']['.$i.']" '; // add name to markerArray
 				$markerArray['###LABEL###'] = $this->dontAllow($options[$i][0]); // add label
 				$markerArray['###LABEL_NAME###'] = 'uid'.$this->uid.'_'.$i; // add labelname
 				$markerArray['###ID###'] = 'id="uid'.$this->uid.'_'.$i.'" '; // add labelname
 				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow(isset($options[$i][1])?$options[$i][1]:$options[$i][0]).'" '; // add value (take value after pipe symbol or all if no pipe: "red | rd")
-				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
+				$markerArray['###CLASS###'] = 'class="'.($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1 && $i == (count($optionlines) - 1) ? 'validate-one-required ' : '').'powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
 				$markerArray['###HIDDENVALUE###'] = 'value="'.$this->piVarsFromSession['uid'.$this->uid][$i].'"'; // add value for hidden field to markerArray
 				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $markerArray['###MANDATORY_SYMBOL###'] = $this->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
 				$this->turnedtabindex[$this->uid.'_'.$i] !== '' ? $markerArray['###TABINDEX###'] = 'tabindex="'.($this->turnedtabindex[$this->uid.'_'.$i] + 1).'" ' : $markerArray['###TABINDEX###'] = ''; // tabindex for every checkbox
@@ -273,7 +273,7 @@ class tx_powermail_html extends tslib_pibase {
 				// ###CHECKED###
 				if ($options[$i][2] == '*')  {
 				    $markerArray['###CHECKED###'] = 'checked="checked" '; // checked from backend
-    				$markerArray['###HIDDENVALUE###'] = 'value="'.$this->dontAllow(isset($options[$i][1])?$options[$i][1]:$options[$i][0]).'" '; // add value for hidden field to markerArray
+    				$markerArray['###HIDDENVALUE###'] = 'value="'.$this->dontAllow(isset($options[$i][1]) ? $options[$i][1] : $options[$i][0]).'" '; // add value for hidden field to markerArray
     			}
 				else $markerArray['###CHECKED###'] = ''; // clear
 				if (isset($this->piVarsFromSession['uid'.$this->uid])) { // Preselection from session
