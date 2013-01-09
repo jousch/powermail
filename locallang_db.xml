@@ -796,5 +796,141 @@
 			<label index="tx_powermail_forms.xml.date2calversion.error">Vaša ekstenzija date2cal je prestara, prosimo namestite verzijo 7.0.0 ali več.</label>
 			<label index="tx_powermail_forms.xml.clearSession">Osveži stran in počisti celotno sejo</label>
 		</languageKey>
+		<languageKey index="dk" type="array">
+			<!--General data -->
+			<label index="please_select">Vælg venligst...</label>
+			<label index="divider"></label>
+
+			<!--Formfields-->
+			<label index="tx_powermail_forms">Formularer</label>
+			<label index="tt_content.CType_pi1">powermail</label>
+			<label index="tx_powermail_forms.title">Form overskrift</label>
+			<label index="tx_powermail_forms.fieldsets">Form sider</label>
+			<label index="tx_powermail_forms.preview">Forhåndsvisning</label>
+			<label index="tx_powermail_forms.recipient">Modtager</label>
+			<label index="tx_powermail_forms.subject_r">Overskrift i modtaagers mail</label>
+			<label index="tx_powermail_forms.subject_s">Overskrift i afsenders mail</label>
+			<label index="tx_powermail_forms.sender">Afsenders email adresse</label>
+			<label index="tx_powermail_forms.sendername">Afsenders navn</label>
+			<label index="tx_powermail_forms.confirm">Aktiver bekræftelses side</label>
+			<label index="tx_powermail_forms.startingpoint">Gem mail i side</label>
+			<label index="tx_powermail_forms.multiple">Flere trin</label>
+			<label index="tx_powermail_forms.multiple.I.0">Ét trin</label>
+			<label index="tx_powermail_forms.multiple.I.1">Flere trin JS</label>
+			<label index="tx_powermail_forms.multiple.I.2">Flere trin PHP</label>
+			<label index="tx_powermail_forms.recip_table">Liste af modtagere</label>
+			<label index="tx_powermail_forms.recip_id">Modtagere fra denne tabel</label>
+			<label index="tx_powermail_forms.recip_field">Feltnavn hvor mail gemmes</label>
+			<label index="tx_powermail_forms.query">Alternativ SQL-forespørgsel</label>
+			<label index="tx_powermail_forms.thanks">Svar tekst (Vist på websitet)</label>
+			<label index="tx_powermail_forms.mailsender">Email tekst til afsender</label>
+			<label index="tx_powermail_forms.mailsender.default">Tak for din besked.
+
+			Din besked:
+			###POWERMAIL_ALL###</label>
+			<label index="tx_powermail_forms.mailreceiver">Email tekst til modtager</label>
+			<label index="tx_powermail_forms.mailreceiver.default">Dette er en mail fra dit website.
+
+			Beskeden:
+			###POWERMAIL_ALL###</label>
+			<label index="tx_powermail_forms.redirect">Videresend automatisk efter bekræftelses side</label>
+			<label index="tx_powermail_fieldsets">Felt sæt</label>
+			<label index="tx_powermail_fieldsets.form">Form</label>
+			<label index="tx_powermail_fieldsets.title">Titel</label>
+			<label index="tx_powermail_fieldsets.fields">Felter</label>
+			<label index="tx_powermail_fields">Felter</label>
+			<label index="tx_powermail_fields.fieldset">Felt sæt</label>
+			<label index="tx_powermail_fields.title">Titel</label>
+			<label index="tx_powermail_fields.name">Navn</label>
+			<label index="tx_powermail_fields.type">Felt type</label>
+			<label index="tx_powermail_fields.field">Indstillinger</label>
+			<label index="tx_powermail_fields.fe_field">Udfyld med fe_user felt</label>
+			<label index="tx_powermail_mails">Mail</label>
+			<label index="tx_powermail_mails.formid">Indhols-UID formularen ligger i</label>
+			<label index="tx_powermail_mails.recipient">Modtager</label>
+			<label index="tx_powermail_mails.subject_r">Overskrift</label>
+			<label index="tx_powermail_mails.sender">Afsender</label>
+			<label index="tx_powermail_mails.content">Indhold</label>
+			<label index="tx_powermail_mails.content_RTE">Fuldskærm RTE redigering</label>
+			<label index="tx_powermail_mails.piVars">Alle værdier</label>
+			<label index="tx_powermail_mails.senderIP">Afsenders IP adresse</label>
+			<label index="tx_powermail_mails.UserAgent">Afsenders User Agent</label>
+			<label index="tx_powermail_mails.Referer">Link siden med formular</label>
+			<label index="tx_powermail_mails.SP_TZ">Brugers placering</label>
+			<label index="tx_powermail_mails.Additional">Yderligere information</label>
+			<label index="tt_content.list_type_pi1">Powermail</label>
+
+			<!--For BE-Labels-->
+			<label index="tx_powermail_forms.div1">Formular data</label>
+			<label index="tx_powermail_forms.div2">Felter</label>
+			<label index="tx_powermail_forms.div4">Modtagere</label>
+			<label index="tx_powermail_forms.div3">Afsender</label>
+			<label index="tx_powermail_forms.div5">Svar side</label>
+			<label index="tx_powermail_forms.div6">Email-Tekst afsender</label>
+			<label index="tx_powermail_forms.div7">Email-Tekst modtager</label>
+			<label index="tx_powermail_forms.div8">Adgang</label>
+			<label index="tx_powermail_forms.fieldtitle.text">Tekst felt</label>
+			<label index="tx_powermail_forms.fieldtitle.textarea">Text boks</label>
+			<label index="tx_powermail_forms.fieldtitle.select">Valgmuligheder (rulleboks)</label>
+			<label index="tx_powermail_forms.fieldtitle.check">Check-boks(e)</label>
+			<label index="tx_powermail_forms.fieldtitle.radio">Radio knap(per)</label>
+			<label index="tx_powermail_forms.fieldtitle.password">Password felt</label>
+			<label index="tx_powermail_forms.fieldtitle.file">Fil upload</label>
+			<label index="tx_powermail_forms.fieldtitle.content">TYPO3 side indhold</label>
+			<label index="tx_powermail_forms.fieldtitle.hidden">Skjult felt</label>
+			<label index="tx_powermail_forms.fieldtitle.label">Vis en tekst</label>
+			<label index="tx_powermail_forms.fieldtitle.html">Indtast egen HTML</label>
+			<label index="tx_powermail_forms.fieldtitle.submit">Send knap</label>
+			<label index="tx_powermail_forms.fieldtitle.reset">Nulstil button</label>
+			<label index="tx_powermail_forms.fieldtitle.datetime">Dato og tid felt</label>
+			<label index="tx_powermail_forms.fieldtitle.date">Dato felt</label>
+			<label index="tx_powermail_forms.fieldtitle.button">Knap</label>
+			<label index="tx_powermail_forms.fieldtitle.submitgraphic">Grafisk send knap</label>
+			<label index="tx_powermail_forms.fieldtitle.countryselect">Lande valg</label>
+			<label index="tx_powermail_forms.fieldtitle.captcha">Captcha felt</label>
+			<label index="tx_powermail_forms.fieldtitle.typoscript">Tilføj Typoscript objekt</label>
+			<label index="tx_powermail_forms.fieldtitle.div1">Standard</label>
+			<label index="tx_powermail_forms.fieldtitle.div2">Ekstra</label>
+			<label index="tx_powermail_forms.fieldtitle.div3">Udvidelser</label>
+			<label index="tx_powermail_forms.mailsender">Email-Tekst til afsender</label>
+			<label index="tx_powermail_forms.mailreceiver">Email-Tekst til modtager</label>
+			<label index="tx_powermail_forms.redirect">Videresend automatisk efter bekræftelses-side</label>
+			<label index="tx_powermail_forms.xml.name">Navn på skabeloner</label>
+			<label index="tx_powermail_forms.xml.label">Beskrivelse</label>
+			<label index="tx_powermail_forms.xml.size">Størrelse</label>
+			<label index="tx_powermail_forms.xml.maxlength">Maks. længde</label>
+			<label index="tx_powermail_forms.xml.readonly">Kun læsbar</label>
+			<label index="tx_powermail_forms.xml.mandatory">Påkrævet felt</label>
+			<label index="tx_powermail_forms.xml.cols">Antal kolonner</label>
+			<label index="tx_powermail_forms.xml.rows">Antal rækker</label>
+			<label index="tx_powermail_forms.xml.wrap">Linjeskift tilladt</label>
+			<label index="tx_powermail_forms.xml.wrap.0">Ingen linjeskift</label>
+			<label index="tx_powermail_forms.xml.wrap.1">Linjeskift tilladt</label>
+			<label index="tx_powermail_forms.xml.multiple">Flere samtidige valg muligt</label>
+			<label index="tx_powermail_forms.xml.options">Indtast dine egenskaber</label>
+			<label index="tx_powermail_forms.xml.relation">TYPO3 indhold</label>
+			<label index="tx_powermail_forms.xml.send">Send indhold med email</label>
+			<label index="tx_powermail_forms.xml.value">Standard værdi</label>
+			<label index="tx_powermail_forms.xml.src">Grafik</label>
+			<label index="tx_powermail_forms.xml.alt">Alt tekst til billede</label>
+			<label index="tx_powermail_forms.xml.preselect">Forud valgt land</label>
+			<label index="tx_powermail_forms.xml.within">Vis kun disse lande</label>
+			<label index="tx_powermail_forms.xml.without">Vis liste med disse lande</label>
+			<label index="tx_powermail_forms.xml.typoscript">Typoscript objekt</label>
+			<label index="tx_powermail_forms.xml.validate">Valider felt for</label>
+			<label index="tx_powermail_forms.xml.validate.1">email-address</label>
+			<label index="tx_powermail_forms.xml.validate.2">URL</label>
+			<label index="tx_powermail_forms.xml.validate.3">kun tal</label>
+			<label index="tx_powermail_forms.xml.validate.4">kun tal (uden komma og punktum)</label>
+			<label index="tx_powermail_forms.xml.validate.5">kun bogstaver</label>
+			<label index="tx_powermail_forms.xml.validate.6">kun tal og bogstaver</label>
+			<label index="tx_powermail_forms.xml.example">Felt eksempel</label>
+			<label index="tx_powermail_forms.xml.countryzone">Tilføj Vælg Landezone (XAJAX påkrævet)</label>
+			<label index="tx_powermail_forms.xml.error">Vælg venligst en felt type for at fortsætte.</label>
+			<label index="tx_powermail_forms.xml.countryselect.error">Installer venligst static_info_tables extension for at bruge denne funktion.</label>
+			<label index="tx_powermail_forms.xml.date.error">Installer venligst date2cal extension for at bruge denne funktion.</label>
+			<label index="tx_powermail_forms.xml.date2calversion.error">Versionen af date2cal extension er for gammel, installer venligst 7.0.0 eller nyere.</label>
+			<label index="tx_powermail_forms.xml.clearSession">Genindlæs siden og slet hele session.</label>
+		</languageKey>
 	</data>
 </T3locallang>

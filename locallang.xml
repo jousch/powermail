@@ -13,6 +13,10 @@
 			<label index="pi1_title">powermail</label>
 			<label index="pi1_plus_wiz_description">Umfangreiche Kontaktformular Erweiterung mit Datenbank Speicherung, Feldüberprüfung und vielem mehr...</label>
 		</languageKey>
+		<languageKey index="dk" type="array">
+			<label index="pi1_title">powermail</label>
+			<label index="pi1_plus_wiz_description">Kraftfuld og nem mail-form udvidelse med mulighed for at gemme i databasen, javascript validering og meget mere...</label>
+		</languageKey>
 		<languageKey index="en" type="array">
 			<label index="pi1_title">powermail</label>
 			<label index="pi1_plus_wiz_description">Powerful mailform extension with database storing, javascript validation and many more...</label>

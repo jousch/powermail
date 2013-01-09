@@ -63,6 +63,35 @@
 			<label index="del_sure">Soll dieser Datensatz gelöscht werden?</label>
 			<label index="del_message">Mail mit der uid %s erfolgreich gelöscht!</label>
 		</languageKey>
+		<languageKey index="dk" type="array">
+			<label index="title">Powermail</label>
+			<label index="function1">Powermail liste og eksport</label>
+			<label index="nopowermails1">Ingen powermails i nuværende side!</label>
+			<label index="nopowermails2">Vælg venligst en side med powermails fra sidetræet eller skift filtreringen på tid.</label>
+			<label index="title_no">#</label>
+			<label index="title_date">Dato</label>
+			<label index="title_sender">Afsender</label>
+			<label index="title_IP">Afsender IP</label>
+			<label index="title_receiver">Modtager</label>
+			<label index="title_details">Detaljer</label>
+			<label index="title_delete">Slet</label>
+			<label index="export_download_success">Success!</label>
+			<label index="export_download_download">Hent CSV Fil</label>
+			<label index="export_download_downloadZIP">Hent komprimeret CSV Fil</label>
+			<label index="export_icon_excel">Eksporter i Excel format</label>
+			<label index="export_icon_csv">Exporter i csv format</label>
+			<label index="export_icon_html">Exporter i HTML tabel</label>
+			<label index="icon_deloff">Slet efter eksport er slået fra! Klik for at slå slet efter eksport til</label>
+			<label index="icon_delon">Slet efter eksport er slået til! Klik for at slå slet efter eksport fra</label>
+			<label index="delall_sure">Alle mails vil blive slettet efter eksport, hvis du fortsætter. Vil du fortsætte?</label>
+			<label index="pagebrowser_page">side</label>
+			<label index="pagebrowser_upto">op til</label>
+			<label index="pagebrowser_within">i</label>
+			<label index="filter_start">Start</label>
+			<label index="filter_end">Slut</label>
+			<label index="del_sure">Vil du slette denne?</label>
+			<label index="del_message">Mail med uid %s er slettet!</label>
+		</languageKey>
 		<languageKey index="en" type="array">
 			<label index="title">Powermail</label>
 			<label index="function1">Powermail list and export</label>
