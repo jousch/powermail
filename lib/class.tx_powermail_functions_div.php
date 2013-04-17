@@ -80,12 +80,12 @@ class tx_powermail_functions_div {
 			foreach ($array as $key => $value) { // one loop for every key in first level
 				
 				if(!is_numeric(str_replace('UID','',$key)) && !is_array($value)) { // all others piVars than UID34
-					$array[$key] = intval($value); // the value should be integer
+					$array[$key] = intval(trim($value)); // the value should be integer
 				}
 					
 				if(!is_array($value)) {	// if value is not an array
 				
-					$array[$key] = strip_tags($value); // strip_tags removes html and php code
+					$array[$key] = strip_tags(trim($value)); // strip_tags removes html and php code
 					if(function_exists('mysql_real_escape_string')) $array[$key] = mysql_real_escape_string($value); // check against sql injection
 					
 				} else { // value is still an array (second level)
@@ -93,7 +93,7 @@ class tx_powermail_functions_div {
 					if(!is_array($key2)) {	// if value is not an array
 						foreach ($value as $key2 => $value2) { // one loop for every key in second level
 						
-							$array[$key][$key2] = strip_tags($value2); // strip_tags removes html and php code
+							$array[$key][$key2] = strip_tags(trim($value2)); // strip_tags removes html and php code
 							if(function_exists('mysql_real_escape_string')) $array[$key][$key2] = mysql_real_escape_string($value2); // check against sql injection
 							
 						}
@@ -101,7 +101,6 @@ class tx_powermail_functions_div {
 					
 				}
 			}
-			$array = array_map("trim", $array); // trim values
 			
 			return $array;
 			
