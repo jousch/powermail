@@ -15,5 +15,15 @@
 			<label index="mlang_labels_tabdescr">Liste aller empfangenen E-Mails in der Datenbank. Es besteht die Möglichkeit die Liste zu filtern und als CSV zu exportieren (Excel)</label>
 			<label index="mlang_labels_tablabel">Powermail Liste</label>
 		</languageKey>
+		<languageKey index="en" type="array">
+			<label index="mlang_tabs_tab">Powermail</label>
+			<label index="mlang_labels_tabdescr">List of all registered mails in database. Possibility to filter and export to CSV (Excel).</label>
+			<label index="mlang_labels_tablabel">Powermail list</label>
+		</languageKey>
+		<languageKey index="nl" type="array">
+			<label index="mlang_tabs_tab">Powermail</label>
+			<label index="mlang_labels_tabdescr">Een opsomming van alle e-mails in de database. Mogelijkheid tot filteren en te exporteren naar CSV (Excel).</label>
+			<label index="mlang_labels_tablabel">Powermail lijst</label>
+		</languageKey>
 	</data>
 </T3locallang>

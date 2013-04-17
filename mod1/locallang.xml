@@ -35,5 +35,35 @@
 			<label index="export_download_download">CSV Datei Download</label>
 			<label index="export_download_downloadZIP">CSV Datei Download (komprimiert)</label>
 		</languageKey>
+		<languageKey index="en" type="array">
+			<label index="title">Powermail</label>
+			<label index="function1">Powermail list and export</label>
+			<label index="nopowermails1">No powermails on current page!</label>
+			<label index="nopowermails2">Please choose a page with powermails inside from the pagetree.</label>
+			<label index="title_no">#</label>
+			<label index="title_date">Date</label>
+			<label index="title_sender">Sender</label>
+			<label index="title_IP">Sender IP</label>
+			<label index="title_receiver">Receiver</label>
+			<label index="title_details">Details</label>
+			<label index="export_download_success">Success!</label>
+			<label index="export_download_download">Download CSV File</label>
+			<label index="export_download_downloadZIP">Download compressed CSV File</label>
+		</languageKey>
+		<languageKey index="nl" type="array">
+			<label index="title">Powermail</label>
+			<label index="function1">Powermail lijst en export</label>
+			<label index="nopowermails1">Geen powermails op de huidige pagina!</label>
+			<label index="nopowermails2">Selecteer een pagina waar powermail(s) in staan.</label>
+			<label index="title_no">#</label>
+			<label index="title_date">Datum</label>
+			<label index="title_sender">Verzender</label>
+			<label index="title_IP">IP</label>
+			<label index="title_receiver">Ontvanger</label>
+			<label index="title_details">Details</label>
+			<label index="export_download_success">Succes!</label>
+			<label index="export_download_download">Download een CSV bestand</label>
+			<label index="export_download_downloadZIP">Download een gecomprimeerd CSV bestand</label>
+		</languageKey>
 	</data>
 </T3locallang>

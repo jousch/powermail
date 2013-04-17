@@ -257,5 +257,260 @@
 			<label index="tx_powermail_forms.xml.date.error">Bitte installieren Sie date2cal um dieses Feature nutzen zu können.</label>
 
 		</languageKey>
+		<languageKey index="en" type="array">
+			<!--General data -->
+			<label index="please_select">Please select...</label>
+			<label index="divider"></label>
+
+			<!--Formfields-->
+			<label index="tx_powermail_forms">Forms</label>
+			<label index="tt_content.CType_pi1">powermail</label>
+			<label index="tx_powermail_forms.title">Formtitle</label>
+			<label index="tx_powermail_forms.fieldsets">Formpages</label>
+			<label index="tx_powermail_forms.preview">Preview</label>
+			<label index="tx_powermail_forms.recipient">Recipient</label>
+			<label index="tx_powermail_forms.subject_r">Subject for recipient's mail</label>
+			<label index="tx_powermail_forms.subject_s">Subject for sender's mail</label>
+			<label index="tx_powermail_forms.sender">Sender field</label>
+			<label index="tx_powermail_forms.confirm">Activate confirmation page</label>
+			<label index="tx_powermail_forms.multiple">Muliple steps</label>
+			<label index="tx_powermail_forms.multiple.I.0">Single step</label>
+			<label index="tx_powermail_forms.multiple.I.1">Muliple steps JS</label>
+			<label index="tx_powermail_forms.multiple.I.2">Muliple steps PHP</label>
+			<label index="tx_powermail_forms.recip_table">Table of recipients</label>
+			<label index="tx_powermail_forms.recip_id">Recipients from upper table</label>
+			<label index="tx_powermail_forms.recip_field">Fieldname where mail is stored</label>
+			<label index="tx_powermail_forms.query">Alternative SQL-Query</label>
+			<label index="tx_powermail_forms.thanks">ResponseText (shown on website)</label>
+			<label index="tx_powermail_forms.mailsender">Email-Text for sender</label>
+			<label index="tx_powermail_forms.mailsender.default">Thank you for your message.
+
+			Your text:
+			###POWERMAIL_ALL###</label>
+			<label index="tx_powermail_forms.mailreceiver">Email-Text for receiver</label>
+			<label index="tx_powermail_forms.mailreceiver.default">This is an email from your website.
+
+			The text:
+			###POWERMAIL_ALL###</label>
+			<label index="tx_powermail_forms.redirect">Auto-redirect after confirmation-page</label>
+			<label index="tx_powermail_fieldsets">Fieldsets</label>
+			<label index="tx_powermail_fieldsets.form">Form</label>
+			<label index="tx_powermail_fieldsets.title">Title</label>
+			<label index="tx_powermail_fieldsets.fields">Fields</label>
+			<label index="tx_powermail_fields">Fields</label>
+			<label index="tx_powermail_fields.fieldset">Fieldset</label>
+			<label index="tx_powermail_fields.title">Title</label>
+			<label index="tx_powermail_fields.name">Name</label>
+			<label index="tx_powermail_fields.type">Fieldtype</label>
+			<label index="tx_powermail_fields.field">Settings</label>
+			<label index="tx_powermail_fields.fe_field">Fill out this field with fe_user field</label>
+			<label index="tx_powermail_mails">Mails</label>
+			<label index="tx_powermail_mails.formid">Content UID where form is in</label>
+			<label index="tx_powermail_mails.recipient">Recipient</label>
+			<label index="tx_powermail_mails.subject_r">Subject</label>
+			<label index="tx_powermail_mails.sender">Sender</label>
+			<label index="tx_powermail_mails.content">Content</label>
+			<label index="tx_powermail_mails.content_RTE">Full screen Rich Text Editing</label>
+			<label index="tx_powermail_mails.piVars">All values</label>
+			<label index="tx_powermail_mails.senderIP">IP address of sender</label>
+			<label index="tx_powermail_mails.UserAgent">User agent of sender</label>
+			<label index="tx_powermail_mails.Referer">Link to page with form</label>
+			<label index="tx_powermail_mails.SP_TZ">User location</label>
+			<label index="tt_content.list_type_pi1">Powermail</label>
+
+			<!--For BE-Labels-->
+			<label index="tx_powermail_forms.div1">Formdata</label>
+			<label index="tx_powermail_forms.div2">Fields</label>
+			<label index="tx_powermail_forms.div4">Recipients</label>
+			<label index="tx_powermail_forms.div3">Sender</label>
+			<label index="tx_powermail_forms.div5">Answerpage</label>
+			<label index="tx_powermail_forms.div6">Email-Text sender</label>
+
+			<label index="tx_powermail_forms.div7">Email-Text receiver</label>
+			<label index="tx_powermail_forms.div8">Access</label>
+			<label index="tx_powermail_forms.fieldtitle.text">Textfield</label>
+			<label index="tx_powermail_forms.fieldtitle.textarea">Textarea</label>
+			<label index="tx_powermail_forms.fieldtitle.select">Select box</label>
+			<label index="tx_powermail_forms.fieldtitle.check">Checkbox(s)</label>
+			<label index="tx_powermail_forms.fieldtitle.radio">Radiobutton(s)</label>
+			<label index="tx_powermail_forms.fieldtitle.password">Password field</label>
+			<label index="tx_powermail_forms.fieldtitle.file">File upload</label>
+			<label index="tx_powermail_forms.fieldtitle.content">TYPO3 pagecontent</label>
+			<label index="tx_powermail_forms.fieldtitle.hidden">Hidden field</label>
+			<label index="tx_powermail_forms.fieldtitle.label">Show some text</label>
+			<label index="tx_powermail_forms.fieldtitle.html">Enter your own HTML code</label>
+			<label index="tx_powermail_forms.fieldtitle.submit">Submit button</label>
+			<label index="tx_powermail_forms.fieldtitle.reset">Reset button</label>
+			<label index="tx_powermail_forms.fieldtitle.datetime">Date and time field</label>
+			<label index="tx_powermail_forms.fieldtitle.date">Date field</label>
+			<label index="tx_powermail_forms.fieldtitle.time">Time field</label>
+			<label index="tx_powermail_forms.fieldtitle.button">Button</label>
+			<label index="tx_powermail_forms.fieldtitle.submitgraphic">Graphic as submit</label>
+			<label index="tx_powermail_forms.fieldtitle.countryselect">Country selection</label>
+			<label index="tx_powermail_forms.fieldtitle.captcha">Captcha request</label>
+			<label index="tx_powermail_forms.mailsender">Email-Text for sender</label>
+			<label index="tx_powermail_forms.mailreceiver">Email-Text for receiver</label>
+			<label index="tx_powermail_forms.redirect">Auto-redirect after confirmation-page</label>
+			<label index="tx_powermail_forms.xml.name">Name for Templates</label>
+			<label index="tx_powermail_forms.xml.label">Description</label>
+			<label index="tx_powermail_forms.xml.size">Size</label>
+			<label index="tx_powermail_forms.xml.maxlength">Max. Length</label>
+			<label index="tx_powermail_forms.xml.readonly">Read only</label>
+			<label index="tx_powermail_forms.xml.mandatory">Mandatory field</label>
+			<label index="tx_powermail_forms.xml.cols">Number of columns</label>
+			<label index="tx_powermail_forms.xml.rows">Number of rows</label>
+			<label index="tx_powermail_forms.xml.wrap">Break allowed</label>
+			<label index="tx_powermail_forms.xml.wrap.0">No break</label>
+			<label index="tx_powermail_forms.xml.wrap.1">Break allowed</label>
+			<label index="tx_powermail_forms.xml.multiple">Multiple select allowed</label>
+			<label index="tx_powermail_forms.xml.options">Enter your options</label>
+			<label index="tx_powermail_forms.xml.relation">TYPO3 content</label>
+			<label index="tx_powermail_forms.xml.send">Send this content via email</label>
+			<label index="tx_powermail_forms.xml.value">Default value</label>
+			<label index="tx_powermail_forms.xml.src">Grafic source</label>
+			<label index="tx_powermail_forms.xml.alt">Alternative text for image</label>
+			<label index="tx_powermail_forms.xml.preselect">Country shortage for preselect</label>
+			<label index="tx_powermail_forms.xml.within">Only show this countries</label>
+			<label index="tx_powermail_forms.xml.without">Show list without this countries</label>
+			<label index="tx_powermail_forms.xml.validate">Validate this field for</label>
+			<label index="tx_powermail_forms.xml.validate.1">email-address</label>
+			<label index="tx_powermail_forms.xml.validate.2">URL</label>
+			<label index="tx_powermail_forms.xml.validate.3">digits only</label>
+			<label index="tx_powermail_forms.xml.validate.4">digits only (without comma or point)</label>
+			<label index="tx_powermail_forms.xml.validate.5">letters only</label>
+			<label index="tx_powermail_forms.xml.validate.6">letters and digits only</label>
+			<label index="tx_powermail_forms.xml.example">Field example</label>
+			<label index="tx_powermail_forms.xml.error">Please select a fieldtype to continue.</label>
+			<label index="tx_powermail_forms.xml.countryselect.error">Please install the extension static_info_tables to use this feature.</label>
+			<label index="tx_powermail_forms.xml.date.error">Please install the extension date2cal to use this feature.</label>
+
+		</languageKey>
+		<languageKey index="nl" type="array">
+			<!--General data -->
+			<label index="please_select">Maak een keuze...</label>
+			<label index="divider"></label>
+
+			<!--Formfields-->
+			<label index="tx_powermail_forms">Formulieren</label>
+			<label index="tt_content.CType_pi1">powermail</label>
+			<label index="tx_powermail_forms.title">Titel</label>
+			<label index="tx_powermail_forms.fieldsets">Pagina's</label>
+			<label index="tx_powermail_forms.preview">Preview</label>
+			<label index="tx_powermail_forms.recipient">Ontvanger</label>
+			<label index="tx_powermail_forms.subject_r">Onderwerp voor de email aan de ontvanger</label>
+			<label index="tx_powermail_forms.subject_s">Onderwerp voor de email aan de verzender</label>
+			<label index="tx_powermail_forms.sender">Verzender</label>
+			<label index="tx_powermail_forms.confirm">Activeer de bevestigingspagina</label>
+			<label index="tx_powermail_forms.multiple">Meerdere stappen</label>
+			<label index="tx_powermail_forms.multiple.I.0">Een stap</label>
+			<label index="tx_powermail_forms.multiple.I.1">Meerdere stappen JS</label>
+			<label index="tx_powermail_forms.multiple.I.2">Meerdere stappen PHP</label>
+			<label index="tx_powermail_forms.recip_table">Tabel van ontvangers</label>
+			<label index="tx_powermail_forms.recip_id">Ontvangers van bovenste tabel</label>
+			<label index="tx_powermail_forms.recip_field">Veldnaam waar de mail wordt opgeslagen</label>
+			<label index="tx_powermail_forms.query">Alternatieve SQL-Query</label>
+			<label index="tx_powermail_forms.thanks">ResponseTekst (getoond op de website)</label>
+			<label index="tx_powermail_forms.mailsender">Email-Tekst voor de verzender</label>
+			<label index="tx_powermail_forms.mailsender.default">Bedankt voor uw bericht.
+
+			Uw tekst:
+			###POWERMAIL_ALL###</label>
+			<label index="tx_powermail_forms.mailreceiver">Email-Tekst voor de ontvanger</label>
+			<label index="tx_powermail_forms.mailreceiver.default">Dit is een email van uw website.
+
+			The tekst:
+			###POWERMAIL_ALL###</label>
+			<label index="tx_powermail_forms.redirect">Auto-redirect na de bevestiginspagina</label>
+			<label index="tx_powermail_fieldsets">Fieldsets</label>
+			<label index="tx_powermail_fieldsets.form">Formulier</label>
+			<label index="tx_powermail_fieldsets.title">Titel</label>
+			<label index="tx_powermail_fieldsets.fields">Velden</label>
+			<label index="tx_powermail_fields">Velden</label>
+			<label index="tx_powermail_fields.fieldset">Fieldset</label>
+			<label index="tx_powermail_fields.title">Titel</label>
+			<label index="tx_powermail_fields.name">Naam</label>
+			<label index="tx_powermail_fields.type">Veldtype</label>
+			<label index="tx_powermail_fields.field">Instellingen</label>
+			<label index="tx_powermail_fields.fe_field">Vul dit veld met het fe_user veld</label>
+			<label index="tx_powermail_mails">Mails</label>
+			<label index="tx_powermail_mails.formid">Content UID waar het formulier staat</label>
+			<label index="tx_powermail_mails.recipient">Ontvanger</label>
+			<label index="tx_powermail_mails.subject_r">Onderwerp</label>
+			<label index="tx_powermail_mails.sender">Verzender</label>
+			<label index="tx_powermail_mails.content">Content</label>
+			<label index="tx_powermail_mails.content_RTE">Volledig scherm Rich Text bewerking</label>
+			<label index="tx_powermail_mails.piVars">Alle waarden</label>
+			<label index="tx_powermail_mails.senderIP">IP adres van de verzender</label>
+			<label index="tx_powermail_mails.UserAgent">User agent van de verzender</label>
+			<label index="tx_powermail_mails.Referer">Link naar de pagina met formulier</label>
+			<label index="tx_powermail_mails.SP_TZ">Gebruikers lokatie</label>
+			<label index="tt_content.list_type_pi1">Powermail</label>
+
+			<!--For BE-Labels-->
+			<label index="tx_powermail_forms.div1">Formulier data</label>
+			<label index="tx_powermail_forms.div2">Velden</label>
+			<label index="tx_powermail_forms.div4">Ontangers</label>
+			<label index="tx_powermail_forms.div3">Verzender</label>
+			<label index="tx_powermail_forms.div5">Antwoordpagina</label>
+			<label index="tx_powermail_forms.div6">Email-Tekst verzender</label>
+			<label index="tx_powermail_forms.div7">Email-Tekst ontvanger</label>
+			<label index="tx_powermail_forms.div8">Toegang</label>
+			<label index="tx_powermail_forms.fieldtitle.text">Tekstveld</label>
+			<label index="tx_powermail_forms.fieldtitle.textarea">Tekst vak</label>
+			<label index="tx_powermail_forms.fieldtitle.select">Keuze selector</label>
+			<label index="tx_powermail_forms.fieldtitle.check">Checkbox(en)</label>
+			<label index="tx_powermail_forms.fieldtitle.radio">Radio knop(pen)</label>
+			<label index="tx_powermail_forms.fieldtitle.password">Wachtwoord veld</label>
+			<label index="tx_powermail_forms.fieldtitle.file">Bestandsupload</label>
+			<label index="tx_powermail_forms.fieldtitle.content">TYPO3 pagina content</label>
+			<label index="tx_powermail_forms.fieldtitle.hidden">Verborgen veld</label>
+			<label index="tx_powermail_forms.fieldtitle.label">Toon tekst</label>
+			<label index="tx_powermail_forms.fieldtitle.html">Voer uw eigen HTML code in</label>
+			<label index="tx_powermail_forms.fieldtitle.submit">Verzend knop</label>
+			<label index="tx_powermail_forms.fieldtitle.reset">Reset knop</label>
+			<label index="tx_powermail_forms.fieldtitle.datetime">Datum en tijd veld</label>
+			<label index="tx_powermail_forms.fieldtitle.date">Datum veld</label>
+			<label index="tx_powermail_forms.fieldtitle.time">Tijd veld</label>
+			<label index="tx_powermail_forms.fieldtitle.button">Knop</label>
+			<label index="tx_powermail_forms.fieldtitle.submitgraphic">Plaatje als verzendknop</label>
+			<label index="tx_powermail_forms.fieldtitle.countryselect">Land selectie</label>
+			<label index="tx_powermail_forms.fieldtitle.captcha">Captcha verzoek</label>
+			<label index="tx_powermail_forms.mailsender">Email-Tekst voor de verzender</label>
+			<label index="tx_powermail_forms.mailreceiver">Email-Tekst voor de ontvanger</label>
+			<label index="tx_powermail_forms.redirect">Auto-redirect na de bevestigingspagina</label>
+			<label index="tx_powermail_forms.xml.name">Naam voor de templates</label>
+			<label index="tx_powermail_forms.xml.label">Omschrijving</label>
+			<label index="tx_powermail_forms.xml.size">Grootte</label>
+			<label index="tx_powermail_forms.xml.maxlength">Max. lengte</label>
+			<label index="tx_powermail_forms.xml.readonly">Alleen lezen</label>
+			<label index="tx_powermail_forms.xml.mandatory">Verplicht veld</label>
+			<label index="tx_powermail_forms.xml.cols">Aantal kolommen</label>
+			<label index="tx_powermail_forms.xml.rows">Aantal rijen</label>
+			<label index="tx_powermail_forms.xml.wrap">Break toegestaan</label>
+			<label index="tx_powermail_forms.xml.wrap.0">Geen break</label>
+			<label index="tx_powermail_forms.xml.wrap.1">Break toegestaan</label>
+			<label index="tx_powermail_forms.xml.multiple">Meerkeuze toegestaan</label>
+			<label index="tx_powermail_forms.xml.options">Voer uw opties in</label>
+			<label index="tx_powermail_forms.xml.relation">TYPO3 content</label>
+			<label index="tx_powermail_forms.xml.send">Verzend deze content via email</label>
+			<label index="tx_powermail_forms.xml.value">Standaard waarde</label>
+			<label index="tx_powermail_forms.xml.src">Grafische bron</label>
+			<label index="tx_powermail_forms.xml.alt">Alternatieve tekst voor het plaatje</label>
+			<label index="tx_powermail_forms.xml.preselect">Verkorte landweergave voor voorselectie</label>
+			<label index="tx_powermail_forms.xml.within">Toon alleen deze landen</label>
+			<label index="tx_powermail_forms.xml.without">Toon de lijst zonder deze landen</label>
+			<label index="tx_powermail_forms.xml.validate">Valideer dit veld voor</label>
+			<label index="tx_powermail_forms.xml.validate.1">email-adres</label>
+			<label index="tx_powermail_forms.xml.validate.2">URL</label>
+			<label index="tx_powermail_forms.xml.validate.3">alleen cijfers</label>
+			<label index="tx_powermail_forms.xml.validate.4">alleen cijfers (zonder komma of punt)</label>
+			<label index="tx_powermail_forms.xml.validate.5">alleen letters</label>
+			<label index="tx_powermail_forms.xml.validate.6">alleen letters en cijfers</label>
+			<label index="tx_powermail_forms.xml.example">Voorbeeld veld</label>
+			<label index="tx_powermail_forms.xml.error">Selecteer een veldtype om verder te gaan.</label>
+			<label index="tx_powermail_forms.xml.countryselect.error">Installeer de module static_info_tables om deze feature te gebruiken.</label>
+			<label index="tx_powermail_forms.xml.date.error">Installeer de module date2cal om deze feature te gebruiken.</label>
+
+		</languageKey>
 	</data>
 </T3locallang>
