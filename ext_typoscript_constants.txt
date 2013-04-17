@@ -97,7 +97,7 @@ plugin.powermail {
 	countryselect.charset = 
 	
 	# cat=plugin.powermail_additionalconfig//0500; type=text; label= Description wrap: Define the wrap for the field description
-	description.wrap = <a href="#"><img src="/typo3conf/ext/powermail/img/icon_info.gif" alt="Description" class="icon icon_info" style="border: none;" /><dfn>|</dfn></a>
+	description.wrap = <a href="#" onclick="return false;"><img src="/typo3conf/ext/powermail/img/icon_info.gif" alt="Description" class="icon icon_info" style="border: none;" /><dfn>|</dfn></a>
 	
 	# cat=plugin.powermail_additionalconfig//0510; type=boolean; label= Mandatory message above form: You can switch between mandatory messages above form or show this messages on an extra page with backtoform button (default)
 	mandatory.messages = 0
@@ -119,6 +119,9 @@ plugin.powermail {
 	
 	# cat=plugin.powermail_additionalconfig//0570; type=text; label= Allow files for upload: If you are using min. one upload field in frontend, you can set the allowed extension of this files (use small letters)
 	upload.file_extensions = jpg,jpeg,gif,png,tif,txt,doc,xls,sxw,html,swf,pdf
+	
+	# cat=plugin.powermail_additionalconfig//0580; type=boolean; label= Mime check for upload: Checks if uploaded file is realy the file which it should be (mime check)
+	upload.mimecheck = 1
 	
 	# cat=plugin.powermail_additionalconfig//0600; type=int; label= Allow filesize for upload: If you are using min. one upload field in frontend, you can set the allowed filesize of the files (in kB)
 	upload.filesize = 1000

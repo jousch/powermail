@@ -152,16 +152,22 @@ class tx_powermail_sessions extends tslib_pibase {
 							foreach ($_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']] as $key => $file) {
 								if ($file != '') {
 									$fileinfo = pathinfo($file); // get info about uploaded file
-									$newfilename = str_replace('.'.$fileinfo['extension'],'',$file).'_'.t3lib_div::md5int($file.time()).'.'.$fileinfo['extension']; // filename like name_md5ofnameandtime.ext
+									$newfilename = str_replace('.'.$fileinfo['extension'], '', $file).'_'.t3lib_div::md5int($file.time()).'.'.$fileinfo['extension']; // filename like name_md5ofnameandtime.ext
 
 									if (filesize($_FILES['tx_powermail_pi1']['tmp_name']['uid'.$row['uid']][$key]) < ($this->conf['upload.']['filesize'] * 1024)) { // filesize check
 										if (in_array(strtolower($fileinfo['extension']), $this->allowedFileExtensions)) { // if current fileextension is allowed
-											// upload copy move uploaded files to destination
-											if (t3lib_div::upload_copy_move($_FILES['tx_powermail_pi1']['tmp_name']['uid'.$row['uid']][$key], t3lib_div::getFileAbsFileName($this->div->correctPath($this->conf['upload.']['folder']).$newfilename))) {
-												$piVars['uid'.$row['uid']] = $newfilename; // write new filename to session (area for normal fields)
-												$piVars['FILE'][] = $newfilename; // write new filename to session (area for files)
-											} else { // could not be copied (maybe write permission error or wrong path)
-												$piVars['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_error_file_main').' <b>'.$_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']][$key].'</b>'; // write error to session
+											if (($this->conf['upload.']['mimecheck'] && $this->div->mimecheck($_FILES['tx_powermail_pi1']['tmp_name']['uid'.$row['uid']][$key], $newfilename)) || $this->conf['upload.']['mimecheck'] != 1) { // mimecheck off OR mimecheck true
+												
+												// upload copy move uploaded files to destination
+												if (t3lib_div::upload_copy_move($_FILES['tx_powermail_pi1']['tmp_name']['uid'.$row['uid']][$key], t3lib_div::getFileAbsFileName($this->div->correctPath($this->conf['upload.']['folder']).$newfilename))) {
+													$piVars['uid'.$row['uid']] = $newfilename; // write new filename to session (area for normal fields)
+													$piVars['FILE'][] = $newfilename; // write new filename to session (area for files)
+												} else { // could not be copied (maybe write permission error or wrong path)
+													$piVars['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_error_file_main').' <b>'.$_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']][$key].'</b>'; // write error to session
+												}
+												
+											} else { // mimecheck don't fit
+												$piVars['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_error_file_mimetype'). ' <b>'.$_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']][$key].'</b>'; // write error to session
 											}
 										} else { // fileextension is not allowed
 											$piVars['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_error_file_extension').' <b>'.$_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']][$key].'</b>'; // write error to session
@@ -171,22 +177,27 @@ class tx_powermail_sessions extends tslib_pibase {
 									}
 								}
 							}
-						}
-						else { // if no array given use files instead
+						} else { // if no array given use files instead
 							$fileinfo = pathinfo($_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']]); // get info about uploaded file
 							$newfilename = str_replace('.'.$fileinfo['extension'],'',$_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']]).'_'.t3lib_div::md5int($_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']].time()).'.'.$fileinfo['extension']; // filename like name_md5ofnameandtime.ext
 
 							if (filesize($_FILES['tx_powermail_pi1']['tmp_name']['uid'.$row['uid']]) < ($this->conf['upload.']['filesize'] * 1024)) { // filesize check
 								if (in_array(strtolower($fileinfo['extension']), $this->allowedFileExtensions)) { // if current fileextension is allowed
-									// upload copy move uploaded files to destination
-									if (t3lib_div::upload_copy_move($_FILES['tx_powermail_pi1']['tmp_name']['uid'.$row['uid']], t3lib_div::getFileAbsFileName($this->div->correctPath($this->conf['upload.']['folder']).$newfilename))) {
-										$piVars['uid'.$row['uid']] = $newfilename; // write new filename to session (area for normal fields)
-										$piVars['FILE'][] = $newfilename; // write new filename to session (area for files)
-									} else { // could not be copied (maybe write permission error or wrong path)
-										$piVars['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_error_file_main').' <b>'.$_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']].'</b>'; // write error to session
+									if (($this->conf['upload.']['mimecheck'] && $this->div->mimecheck($_FILES['tx_powermail_pi1']['tmp_name']['uid'.$row['uid']], $newfilename)) || $this->conf['upload.']['mimecheck'] != 1) { // mimecheck off OR mimecheck true
+										
+										// upload copy move uploaded files to destination
+										if (t3lib_div::upload_copy_move($_FILES['tx_powermail_pi1']['tmp_name']['uid'.$row['uid']], t3lib_div::getFileAbsFileName($this->div->correctPath($this->conf['upload.']['folder']).$newfilename))) {
+											$piVars['uid'.$row['uid']] = $newfilename; // write new filename to session (area for normal fields)
+											$piVars['FILE'][] = $newfilename; // write new filename to session (area for files)
+										} else { // could not be copied (maybe write permission error or wrong path)
+											$piVars['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_error_file_main').' <b>'.$_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']].'</b>'; // write error to session
+										}
+										
+									} else { // mimecheck don't fit
+										$piVars['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_error_file_mimetype'). ' <b>'.$_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']].'</b>'; // write error to session
 									}
 								} else { // fileextension is not allowed
-									$piVars['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_error_file_extension').' <b>'.$_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']].'</b>'; // write error to session
+									$piVars['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_error_file_extension'). ' <b>'.$_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']].'</b>'; // write error to session
 								}
 							} else { // filesize to large
 								$piVars['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_error_file_toolarge').' <b>'.$_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']].'</b>'; // write error to session

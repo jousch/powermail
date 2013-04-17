@@ -37,6 +37,7 @@ plugin.tx_powermail_pi1 {
 	pagebrowser.wrap = {$plugin.powermail.pagebrowser.wrap}
 	upload.folder = {$plugin.powermail.upload.folder}
 	upload.file_extensions = {$plugin.powermail.upload.file_extensions}
+	upload.mimecheck = {$plugin.powermail.upload.mimecheck}
 	upload.filesize = {$plugin.powermail.upload.filesize}
 	upload.attachment = {$plugin.powermail.upload.attachment}
 	clear.session = {$plugin.powermail.clear.session}
@@ -70,6 +71,10 @@ plugin.tx_powermail_pi1 {
 			# Return path (if not set, sender will be used)
 			returnpath = TEXT
 			returnpath.value = 
+			
+			# stdWrap for uploaded attachments
+			attachment = TEXT
+			attachment.field = file
 			
 			# Add some attachments to the email (wrap every attachment with , if you want to add more than only one)
 			addAttachment = COA

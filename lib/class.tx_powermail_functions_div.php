@@ -163,20 +163,27 @@ class tx_powermail_functions_div {
 	
 	// Function uidReplace is used for the callback function to replace ###UID55## with value
 	function uidReplaceIt($uid) {
-		if (isset($this->sessiondata['uid'.$uid[1]])) {
-			if (!is_array($this->sessiondata['uid'.$uid[1]])) { // value is not an array
+		if (strpos($uid[1], '_')  === false) { // if this is a field like ###UID55### and not like ###UID55_1###
+			if (isset($this->sessiondata['uid'.$uid[1]])) { // if there is a value in the session like uid32 = bla
+				if (!is_array($this->sessiondata['uid'.$uid[1]])) { // value is not an array
+					
+					return $this->sessiondata['uid'.$uid[1]]; // return bla (e.g.)
+					
+				} else { // value is an array
 				
-				return $this->sessiondata['uid'.$uid[1]]; // return 44 (e.g.)
-				
-			} else { // value is an array
-			
-				$return = ''; $i=0; // init counter
-				foreach ($this->sessiondata['uid'.$uid[1]] as $key => $value) { // one loop for every value
-					$return .= ($i!=0?',':'').$value; // add a value (commaseparated)
-					$i++; // increase counter
+					$return = ''; $i=0; // init counter
+					foreach ($this->sessiondata['uid'.$uid[1]] as $key => $value) { // one loop for every value
+						$return .= ($i!=0?',':'').$value; // add a value (commaseparated)
+						$i++; // increase counter
+					}
+					return $return; // return 44,45,46 (e.g.)
+					
 				}
-				return $return; // return 44,45,46 (e.g.)
-				
+			}
+		} else { // if this is a field like ###UID55_1###
+			$tmp_uid = t3lib_div::trimExplode('_', $uid[1], 1); // spilt at _ to get 55 and 1
+			if ($this->sessiondata['uid'.$tmp_uid[0]][$tmp_uid[1]]) { // value is not an array
+				return $this->sessiondata['uid'.$tmp_uid[0]][$tmp_uid[1]]; // return bla (e.g.)
 			}
 		}
 	}
@@ -333,6 +340,85 @@ class tx_powermail_functions_div {
 			return false; // return false
 		} else { 
 			return true; // return true
+		}
+	}
+	
+	
+	// Function mimecheck() returns true or false if file fits mime check
+	function mimecheck($filename, $origfilename) {
+		$ext = strtolower(array_pop(explode('.', $origfilename))); // get the extension of the upload
+
+		$mime_types = array( // define basic mime-types
+			'txt' => 'text/plain',
+			'htm' => 'text/html',
+			'html' => 'text/html',
+			'php' => 'text/html',
+			'css' => 'text/css',
+			'js' => 'application/javascript',
+			'json' => 'application/json',
+			'xml' => 'application/xml',
+			'swf' => 'application/x-shockwave-flash',
+			'flv' => 'video/x-flv',
+
+			// images
+			'png' => 'image/png',
+			'jpe' => 'image/jpeg',
+			'jpeg' => 'image/jpeg',
+			'jpg' => 'image/jpeg',
+			'gif' => 'image/gif',
+			'bmp' => 'image/bmp',
+			'ico' => 'image/vnd.microsoft.icon',
+			'tiff' => 'image/tiff',
+			'tif' => 'image/tiff',
+			'svg' => 'image/svg+xml',
+			'svgz' => 'image/svg+xml',
+
+			// archives
+			'zip' => 'application/zip',
+			'rar' => 'application/x-rar-compressed',
+			'exe' => 'application/x-msdownload',
+			'msi' => 'application/x-msdownload',
+			'cab' => 'application/vnd.ms-cab-compressed',
+
+			// audio/video
+			'mp3' => 'audio/mpeg',
+			'qt' => 'video/quicktime',
+			'mov' => 'video/quicktime',
+
+			// adobe
+			'pdf' => 'application/pdf',
+			'psd' => 'image/vnd.adobe.photoshop',
+			'ai' => 'application/postscript',
+			'eps' => 'application/postscript',
+			'ps' => 'application/postscript',
+
+			// ms office
+			'doc' => 'application/msword',
+			'rtf' => 'application/rtf',
+			'xls' => 'application/vnd.ms-excel',
+			'ppt' => 'application/vnd.ms-powerpoint',
+
+			// open office
+			'odt' => 'application/vnd.oasis.opendocument.text',
+			'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+		);
+		
+		if (function_exists('finfo_open')) { // Get mimetype via finfo (PECL-Extension needed)
+			$finfo = finfo_open(FILEINFO_MIME);
+			$mimetype = finfo_file($finfo, $filename);
+			finfo_close($finfo);
+		} elseif (function_exists('mime_content_type')) { // Get mimetype via mime_content_type (Deprecated function, but sometimes still active)
+			$mimetype = mime_content_type($filename);
+		} elseif (file_exists("/usr/bin/file")) { // Use file-command with unix to determine
+			$mimetype = exec("/usr/bin/file -bi $filename");
+		} else { // If no method above applies, shrug with your shoulders and make the result true
+			$mimetype = $mime_types[$ext]; 
+		}
+		
+		if ($mimetype != $mime_types[$ext]) { // If the mimetype doesn't match the file extension
+			return false;
+		} else { // Well, if it does - HOORAY!
+			return true;
 		}
 	}
 	

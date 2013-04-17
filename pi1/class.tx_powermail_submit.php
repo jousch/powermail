@@ -162,7 +162,18 @@ class tx_powermail_submit extends tslib_pibase {
 			if (is_array($this->sessiondata['FILE']) && $this->subpart == 'recipient_mail') { // only if array and mail to receiver
 				foreach ($this->sessiondata['FILE'] as $file) { // one loop for every file
 					if (is_file(t3lib_div::getFileAbsFileName($this->div->correctPath($this->conf['upload.']['folder']).$file))) { // If file exists
-						$this->htmlMail->addAttachment($this->div->correctPath($this->conf['upload.']['folder']).$file); // add attachment
+						
+						// stdWrap for each file
+						$localCObj = t3lib_div::makeInstance('tslib_cObj'); // local cObj
+						$row = array ( // $row for using .field in typoscript
+							'file' => $this->div->correctPath($this->conf['upload.']['folder']) . $file, // whole file with path
+							'filename' => $file, // filename
+							'path' => $this->div->correctPath($this->conf['upload.']['folder']) // path
+						);
+						$localCObj->start($row, 'tx_powermail_fields'); // enable .field in typoscript
+						$this->htmlMail->addAttachment($localCObj->cObjGetSingle($this->conf['email.']['recipient_mail.']['attachment'], $this->conf['email.']['recipient_mail.']['attachment.'])); // add attachment
+						#$this->htmlMail->addAttachment($this->div->correctPath($this->conf['upload.']['folder']).$file); // add attachment
+						
 					}
 				}
 			}
