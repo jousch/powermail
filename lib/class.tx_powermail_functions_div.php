@@ -52,18 +52,7 @@ class tx_powermail_functions_div {
 		if(isset($string)) return $string;
 	}
 	
-	// Function validateValue() removes all vorbidden signs in piVars
-	function validateValue($string) {
-		//echo $this->conf['allow.']['signs'];
-		//$string = htmlentities($string);
-		//$string = preg_replace('/[^'.$this->conf['allow.']['signs'].']/','',$string); // replace not allowed letters with nothing
-		echo $string;
-		$string = preg_replace('/[^a-zA-Z0-9_ -,.;@!?=()§$%:+*äöüÄÖÜß]/','',$string); // replace not allowed letters with nothing
-		echo $string;
-		if(isset($string)) return $string;
-	}
-	
-	// Function linker() generates link from pure email or url string
+	// Function linker() generates link (email and url) from pure text string within an email or url ('test www.test.de test' => 'test <a href="http://www.test.de">www.test.de</a> test')
     function linker($link,$additinalParams = '') {
         $link = str_replace("http://www.","www.",$link);
         $link = str_replace("www.","http://www.",$link);
@@ -73,9 +62,20 @@ class tx_powermail_functions_div {
         return $link;
     }
 	
+	// Function nl2br2() changes breakes to html breakes
+	function nl2br2($string) {
+		return str_replace('\r\n',"<br />",$string);
+	}
+	
+	// Function nl2br2() changes breakes to real breakes
+	function nl2nl2($string) {
+		return str_replace('\r\n',"\r\n",$string);
+	}
+	
 	// Function sec() is a security function against all bad guys :) 
 	function sec($array) {
 		if(isset($array) && is_array($array)) { // if array
+			t3lib_div::addSlashesOnArray($array); // addslashes for every piVar (He'l"lo => He\'l\"lo)
 			
 			foreach ($array as $key => $value) { // one loop for every key in first level
 				
@@ -97,11 +97,10 @@ class tx_powermail_functions_div {
 							if(function_exists('mysql_real_escape_string')) $array[$key][$key2] = mysql_real_escape_string($value2); // check against sql injection
 							
 						}
-					} else unset($array[$key][$key2]); // if array with 3 dimensions - delete this value
+					} else unset($array[$key][$key2]); // if array with 3 or more dimensions - delete this value
 					
 				}
 			}
-			t3lib_div::addSlashesOnArray($array); // addslashes for every piVar (He'l"lo => He\'l\"lo)
 			
 			return $array;
 			

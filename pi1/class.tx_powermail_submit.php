@@ -151,19 +151,19 @@ class tx_powermail_submit extends tslib_pibase {
 			$subject = $this->subject_s; // set subject
 		}
 		
-		$this->htmlMail->start(); // start mail function
-		$this->htmlMail->recipient = $receiver; // receiver
-		$this->htmlMail->subject = $subject; // subject
-		$this->htmlMail->charset = 'latin-1';
-		//$this->htmlMail->from_email = $sender; // sender
-		//$this->htmlMail->from_name = $sender; // sender name
-		//$this->htmlMail->replyto_email = ''; // clear replyto email
-		//$this->htmlMail->replyto_name = ''; // clear replyto name
-		//$this->htmlMail->setHTML(nl2br($this->mailcontent[$subpart])); // content
-		//if($this->email_send) $this->htmlMail->send($receiver); // send mail
-		$this->htmlMail->headers = "MIME-Version: 1.0\nFrom: $sender\nReply-To: $sender\nErrors-To: $sender\nContent-Type: text/html; charset=latin-1\nContent-Transfer-Encoding: 8bit\n";
-		$this->htmlMail->message = $this->mailcontent[$subpart];
-		if($this->email_send) $this->htmlMail->sendTheMail();
+		$this->htmlMail->start();
+		$this->htmlMail->recipient = $receiver;
+		$this->htmlMail->subject = $subject;
+		$this->htmlMail->from_email = $sender;
+		$this->htmlMail->from_name = $sender;
+		$this->htmlMail->returnPath = $sender;
+		$this->htmlMail->replyto_email = ''; // clear replyto email
+		$this->htmlMail->replyto_name = ''; // clear replyto name
+		$this->htmlMail->charset = 'utf-8';
+		$this->htmlMail->defaultCharset = 'utf-8';
+		$this->htmlMail->addPlain($this->mailcontent[$subpart]);
+		$this->htmlMail->setHTML($this->htmlMail->encodeMsg($this->mailcontent[$subpart]));
+		$this->htmlMail->send($receiver);
 	}
 	
 	

@@ -1,16 +1,16 @@
 # TYPO3 Extension "powermail"
 Powermail is a well-known, powerful and easy to use mailform extension with a lots of features (spam prevention, marketing, double-optin, etc...)
 
-## Version 0.5.0
+## Version 0.5.1
 ** BE AWARE: This extension has been marked as insecure by the security team! **.
 
 
 
 <table>
-	<tr><td>Version</td><td>0.5.0 beta</td></tr>
-	<tr><td>Release date</td><td>22. January 2008</td></tr>
+	<tr><td>Version</td><td>0.5.1 beta</td></tr>
+	<tr><td>Release date</td><td>24. January 2008</td></tr>
 	<tr><td>Author</td><td>Mischa Heissmann, Alexander Kellner</td></tr>
-	<tr><td>Comment</td><td>Redirect instead of thx message possible, Marker of each field will be displayed in backend, Small security fix, Bug in countryselect fixed, Additional RTE fields for both emails in backend (can be used with existing HTML template)</td></tr>
+	<tr><td>Comment</td><td>Linebreaks in textarea possible, Umlauts in email possible, You can turn of the iframe with frontend view and some more improvements...</td></tr>
 </table>
 
 ## !! Attention !!

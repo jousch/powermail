@@ -174,13 +174,13 @@ $TCA["tx_powermail_fields"] = array (
 if(!t3lib_extMgm::isLoaded('static_info_tables',0)) {
 	$TCA["tx_powermail_fields"]["columns"]["flexform"]["config"]["ds"]["countryselect"] = 'FILE:EXT:powermail/lib/def/def_field_countryselect_error.xml';
 }
+
 // Check if date2cal is loaded. If not, show a note
 if(!t3lib_extMgm::isLoaded('date2cal',0)) {
 	$TCA["tx_powermail_fields"]["columns"]["flexform"]["config"]["ds"]["date"] = 'FILE:EXT:powermail/lib/def/def_field_date_error.xml';
 	$TCA["tx_powermail_fields"]["columns"]["flexform"]["config"]["ds"]["datetime"] = 'FILE:EXT:powermail/lib/def/def_field_date_error.xml';
 	$TCA["tx_powermail_fields"]["columns"]["flexform"]["config"]["ds"]["time"] = 'FILE:EXT:powermail/lib/def/def_field_date_error.xml';
 }
-
 
 // Make powermail available in older TYPO3 version (fields)
 if($GLOBALS['TYPO_VERSION'] < '4.0' || $confArr['useIRRE'] == 0) {
@@ -192,6 +192,10 @@ if($GLOBALS['TYPO_VERSION'] < '4.0' || $confArr['useIRRE'] == 0) {
 	$TCA["tx_powermail_fields"]["columns"]["fieldset"]['label'] = "LLL:EXT:powermail/locallang_db.xml:tx_powermail_fields.fieldset";
 	$TCA["tx_powermail_fields"]["types"]["0"]['showitem'] = "title;;;;1-1-1,fieldset,formtype;;;;2-2-2,flexform;;;;3-3-3, fe_field;;;;4-4-4";
 }
+
+
+
+
 
 $TCA["tx_powermail_mails"] = array (
 	"ctrl" => $TCA["tx_powermail_mails"]["ctrl"],

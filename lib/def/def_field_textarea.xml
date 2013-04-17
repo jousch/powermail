@@ -24,6 +24,7 @@
 					</config>
 				</TCEforms>
 			</rows>
+			<!--
 			<wrap>
 				<TCEforms>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.wrap</label>
@@ -45,6 +46,7 @@
 					</config>
 				</TCEforms>
 			</wrap>
+			-->
 			<readonly>
 				<TCEforms>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.readonly</label>

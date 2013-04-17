@@ -27,43 +27,6 @@ require_once('class.tx_powermail_renderWizard.php');
 require_once(str_replace('../','',t3lib_extMgm::extRelPath('powermail')).'lib/class.tx_powermail_functions_div.php'); // file for div functions
 require_once(str_replace('../','',t3lib_extMgm::extRelPath('powermail')).'lib/class.tx_powermail_sessions.php'); // load session class
 
-/**
- * Plugin 'Powermail' for the 'powermail' extension.
- *
- * @author	Mischa Heißmann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@einpraegsam.net>
- * @package	TYPO3
- * @subpackage	tx_powermail
- */
-
-/**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- *
- *
- *
- *   66: class tx_powermail_pi1_html extends tslib_pibase
- *   81:     function init(&$conf,&$pibase)
- *   94:     function main($content, $conf, $row)
- *  173:     function html_text()
- *  186:     function html_textarea()
- *  201:     function html_select()
- *  226:     function html_check()
- *  259:     function html_radio()
- *  291:     function html_submit()
- *  306:     function html_reset()
- *  321:     function html_label()
- *  339:     function html_content()
- *  361:     function html_password()
- *  374:     function html_file()
- *  387:     function html_hidden()
- *  400:     function html_datetime()
- *  439:     function html_date()
- *  477:     function html_time()
- *  579:     function GetSessionValue($name)
- *
- * TOTAL FUNCTIONS: 18
- * (This index is automatically created/updated by the extension "extdeveval")
- *
- */
 class tx_powermail_html extends tslib_pibase {
 	var $prefixId      = 'tx_powermail_pi1';		// Same as class name
 	var $scriptRelPath = 'pi1/class.tx_powermail_form.php';	// Path to this script relative to the extension dir.
@@ -71,14 +34,6 @@ class tx_powermail_html extends tslib_pibase {
 	var $pi_checkCHash = true;
 
 
-	/**
-	 * Main function selects what kind of html tag is needed
-	 *
-	 * @param	[type]		$content: ...
-	 * @param	[type]		$conf: ...
-	 * @param	[type]		$row: ...
-	 * @return	[type]		...
-	 */
 	function main($conf, $row) {
 		$this->pibase->pi_initPIflexForm();
 		$this->xml = $row['f_field'];
@@ -245,7 +200,7 @@ class tx_powermail_html extends tslib_pibase {
 				$markerArray['###LABEL_NAME###'] = $this->div_functions->clearName($optionlines[$i]); // add labelname
 				$markerArray['###ID###'] = 'id="'.$this->div_functions->clearName($optionlines[$i]).'" '; // add labelname
 				$markerArray['###VALUE###'] = 'value="'.$optionlines[$i].'" '; // add labelname
-				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
+				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.'powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
 				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
 				
 				// ###CHECKED###
@@ -288,7 +243,7 @@ class tx_powermail_html extends tslib_pibase {
 				$markerArray['###LABEL_NAME###'] = $this->div_functions->clearName($optionlines[$i]); // add labelname
 				$markerArray['###ID###'] = 'id="'.$this->div_functions->clearName($optionlines[$i]).'" '; // add labelname
 				$markerArray['###VALUE###'] = 'value="'.$optionlines[$i].'" '; // add labelname
-				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
+				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
 				
 				// ###CHECKED###
 				if(isset($this->piVarsFromSession['uid'.$this->uid])) { // if there is a preselection in the session
@@ -322,7 +277,7 @@ class tx_powermail_html extends tslib_pibase {
 	function html_submit() {
 		$this->tmpl['html_submit'] = tslib_cObj::getSubpart($this->tmpl['all'],'###POWERMAIL_FIELDWRAP_HTML_SUBMIT###'); // work on subpart
 
-		$this->markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_submit" '; // add class name to markerArray
+		$this->markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_submit_uid'.$this->uid.'" '; // add class name to markerArray
 
 		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_submit'],$this->markerArray); // substitute Marker in Template
 		$content = preg_replace("|###.*###|i","",$content); // Finally clear not filled markers
@@ -338,7 +293,7 @@ class tx_powermail_html extends tslib_pibase {
 	function html_reset() {
 		$this->tmpl['html_reset'] = tslib_cObj::getSubpart($this->tmpl['all'],'###POWERMAIL_FIELDWRAP_HTML_RESET###'); // work on subpart
 
-		$this->markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_reset" '; // add class name to markerArray
+		$this->markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_reset_uid'.$this->uid.'" '; // add class name to markerArray
 
 		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_reset'],$this->markerArray); // substitute Marker in Template
 		$content = preg_replace("|###.*###|i","",$content); // Finally clear not filled markers
@@ -755,7 +710,7 @@ class tx_powermail_html extends tslib_pibase {
 		// ###VALUE###
 		$this->markerArray['###VALUE###'] = 'value="'.strip_tags($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')).'" '; // add value to markerArray (don't allow html/php tags)
 		if($this->fe_field && $GLOBALS['TSFE']->fe_user->user[$this->fe_field]) $this->markerArray['###VALUE###'] = 'value="'.strip_tags($GLOBALS['TSFE']->fe_user->user[$this->fe_field]).'" '; // add value to markerArray if should filled from feuser data
-		if(isset($this->piVarsFromSession['uid'.$this->uid])) $this->markerArray['###VALUE###'] = 'value="'.$this->piVarsFromSession['uid'.$this->uid].'" '; // Overwrite value from session value
+		if(isset($this->piVarsFromSession['uid'.$this->uid])) $this->markerArray['###VALUE###'] = 'value="'.$this->div_functions->nl2nl2($this->piVarsFromSession['uid'.$this->uid]).'" '; // Overwrite value from session value
 		
 		// ###LABEL###
 		$this->markerArray['###LABEL###'] = $this->title; // add label to markerArray
@@ -774,11 +729,6 @@ class tx_powermail_html extends tslib_pibase {
 		// ###ROWS###
 		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'rows')) {
 			$this->markerArray['###ROWS###'] = 'rows="'.intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'rows')).'" '; // add number of rows to markerArray
-		}
-		
-		// ###WRAP###
-		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'wrap')) {
-			$this->markerArray['###WRAP###'] = 'wrap="hard" '; // add wrap to markerArray
 		}
 		
 		// ###ONCHANGE###
