@@ -4,6 +4,13 @@
 
 
 ## Powermail version 1.4.x stable ##
+- Update on 08.10.2009 version 1.4.18
+Bugfix #4946: Additional settings in the default CSS
+Bugfix #4851: uidReplaceIt() check session for real values now
+Feature #4926: Don't send mail to sender if subject and body empty
+Feature #4925: Overwrite Senderemail and -name via typoscript
+Feature #4912: File upload: filenames without space now
+
 - Update on 18.09.2009 version 1.4.17
 Bugfix #4651: Add css class for checkboxes
 Bugfix #4400: SQL Error if eID Feature is in use

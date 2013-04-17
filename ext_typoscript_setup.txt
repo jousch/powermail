@@ -18,7 +18,6 @@ plugin.tx_powermail_pi1 {
 	enable.unique = {$plugin.powermail.enable.unique}
 	email.noreply = {$plugin.powermail.email.noreply}
 	email.checkMX = {$plugin.powermail.email.checkMX}
-	email.overwritesender = {$plugin.powermail.email.overwritesender}
 	hiddenfields.show = {$plugin.powermail.hiddenfields.show}
 	markerALL.hideLabel = {$plugin.powermail.markerALL.hideLabel}
 	markerALL.notIn = {$plugin.powermail.markerALL.notIn}
@@ -61,6 +60,14 @@ plugin.tx_powermail_pi1 {
 	
 		# Settings for mail to the default receiver(s)
 		recipient_mail {
+			# Sender name (overwrite)
+			sender.name = TEXT
+			sender.name.value =
+			
+			# Sender email (overwrite)
+			sender.email = TEXT
+			sender.email.value =
+			
 			# Reply name
 			reply.name = TEXT
 			reply.name.value = 
@@ -86,8 +93,16 @@ plugin.tx_powermail_pi1 {
 			}
 		}
 		
-		# Settings for mail to the user
+		# Settings for (confirmation) mail to the user
 		sender_mail {
+			# Sender name (overwrite)
+			sender.name = TEXT
+			sender.name.value =
+			
+			# Sender email (overwrite)
+			sender.email = TEXT
+			sender.email.value =
+			
 			# Reply name
 			reply.name = TEXT
 			reply.name.value = 

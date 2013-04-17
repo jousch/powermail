@@ -161,20 +161,27 @@ class tx_powermail_functions_div {
 	}
 	
 	
-	// Function uidReplaceIt is used for the callback function to replace ###UID55## with value
+	/**
+	 * Function uidReplaceIt is used for the callback function to replace ###UID55## with it's value
+	 *
+	 * @param	string		$uid: field uid
+	 * @return	string		it's value from the session
+	 */
 	function uidReplaceIt($uid) {
 		if (strpos($uid[1], '_')  === false) { // if this is a field like ###UID55### and not like ###UID55_1###
-			if (isset($this->sessiondata['uid'.$uid[1]])) { // if there is a value in the session like uid32 = bla
-				if (!is_array($this->sessiondata['uid'.$uid[1]])) { // value is not an array
+			if (isset($this->sessiondata['uid' . $uid[1]])) { // if there is a value in the session like uid32 = bla
+				if (!is_array($this->sessiondata['uid' . $uid[1]])) { // value is not an array
 					
-					return $this->sessiondata['uid'.$uid[1]]; // return bla (e.g.)
+					return $this->sessiondata['uid' . $uid[1]]; // return bla (e.g.)
 					
 				} else { // value is an array
 				
 					$return = ''; $i=0; // init counter
-					foreach ($this->sessiondata['uid'.$uid[1]] as $key => $value) { // one loop for every value
-						$return .= ($i!=0?',':'').$value; // add a value (commaseparated)
-						$i++; // increase counter
+					foreach ($this->sessiondata['uid' . $uid[1]] as $key => $value) { // one loop for every value
+						if ($value != '') {
+							$return .= ($return != '' ? ',' : '') . $value; // add a value (commaseparated)
+							$i++; // increase counter
+						}
 					}
 					return $return; // return 44,45,46 (e.g.)
 					
@@ -182,8 +189,8 @@ class tx_powermail_functions_div {
 			}
 		} else { // if this is a field like ###UID55_1###
 			$tmp_uid = t3lib_div::trimExplode('_', $uid[1], 1); // spilt at _ to get 55 and 1
-			if ($this->sessiondata['uid'.$tmp_uid[0]][$tmp_uid[1]]) { // value is not an array
-				return $this->sessiondata['uid'.$tmp_uid[0]][$tmp_uid[1]]; // return bla (e.g.)
+			if ($this->sessiondata['uid' . $tmp_uid[0]][$tmp_uid[1]]) { // value is not an array
+				return $this->sessiondata['uid' . $tmp_uid[0]][$tmp_uid[1]]; // return bla (e.g.)
 			}
 		}
 	}
