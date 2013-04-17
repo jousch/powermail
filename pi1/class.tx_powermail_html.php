@@ -23,9 +23,13 @@
 ***************************************************************/
 
 require_once(PATH_tslib.'class.tslib_pibase.php');
-if(file_exists(t3lib_extMgm::siteRelPath('date2cal').'src/class.jscalendar.php')) include_once(t3lib_extMgm::siteRelPath('date2cal').'src/class.jscalendar.php');
 require_once(str_replace('../','',t3lib_extMgm::extRelPath('powermail')).'lib/class.tx_powermail_functions_div.php'); // file for div functions
 require_once(str_replace('../','',t3lib_extMgm::extRelPath('powermail')).'lib/class.tx_powermail_sessions.php'); // load session class
+if(t3lib_extMgm::isLoaded('date2cal',0)) { // if date2cal is loaded
+	if(file_exists(t3lib_extMgm::siteRelPath('date2cal').'src/class.jscalendar.php')) { // if file exists (date2cal 7.0.0 or newer)
+		include_once(t3lib_extMgm::siteRelPath('date2cal').'src/class.jscalendar.php'); // include calendar class
+	}
+}
 
 class tx_powermail_html extends tslib_pibase {
 	var $prefixId      = 'tx_powermail_pi1';		// Same as class name
