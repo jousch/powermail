@@ -355,6 +355,8 @@ powermailJS {
 		subparts.VALIDATE_SELECTION.data = LLL:EXT:powermail/pi1/locallang.xml:JSvalidation_label_validate_selection
 		subparts.VALIDATE_ONE_REQUIRED = TEXT
 		subparts.VALIDATE_ONE_REQUIRED.data = LLL:EXT:powermail/pi1/locallang.xml:JSvalidation_label_validate_one_required
+		subparts.DIV_CLASS = TEXT
+		subparts.DIV_CLASS.value = {$plugin.powermail.js.mandatorydivclass}
 	}
 }
 

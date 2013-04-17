@@ -39,8 +39,8 @@ $TCA['tx_powermail_fieldsets'] = array (
 				'items' => array (
 					array('', 0),
 				),
-				'foreign_table'       => 'tx_dgp_inlinelinks',
-				'foreign_table_where' => 'AND tx_dgp_inlinelinks.pid=###CURRENT_PID### AND tx_dgp_inlinelinks.sys_language_uid IN (-1,0)',
+				'foreign_table'       => 'tx_powermail_fieldsets',
+				'foreign_table_where' => 'AND tx_powermail_fieldsets.pid=###CURRENT_PID### AND tx_powermail_fieldsets.sys_language_uid IN (-1,0)',
 			)
 		),
 		'l18n_diffsource' => array (		
@@ -199,8 +199,8 @@ $TCA['tx_powermail_fields'] = array (
 				'items' => array (
 					array('', 0),
 				),
-				'foreign_table'       => 'tx_dgp_inlinelinks',
-				'foreign_table_where' => 'AND tx_dgp_inlinelinks.pid=###CURRENT_PID### AND tx_dgp_inlinelinks.sys_language_uid IN (-1,0)',
+				'foreign_table'       => 'tx_powermail_fields',
+				'foreign_table_where' => 'AND tx_powermail_fields.pid=###CURRENT_PID### AND tx_powermail_fields.sys_language_uid IN (-1,0)',
 			)
 		),
 		'l18n_diffsource' => array (		

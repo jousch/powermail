@@ -4,6 +4,17 @@
 
 
 ## Powermail version 1.4.x stable ##
+- Update on 18.09.2009 version 1.4.17
+Bugfix #4651: Add css class for checkboxes
+Bugfix #4400: SQL Error if eID Feature is in use
+Bugfix #4253: Wrong foreign table in TCA
+Bugfix #4237: SQL Query for receivers too strong
+Bugfix #4090: SQL Warning in Backend
+Bugfix #3709: Select Box preselection via typoscript enabled
+Bugfix #3256: No more hardcoding of the css class of "JS Error DIV"
+Feature #4612: Italian translation
+Feature #3914: Default sendername if no sendername was set
+
 - Update on 15.07.2009 version 1.4.16
 Bugfix #3112: Don't use onfocus javascript with readonly fields
 Bugfix #3632: Recipient Table shouldn't list deleted records

@@ -35,7 +35,7 @@ class user_powermail_tx_powermail_forms_recip_id {
 	// function main() lists email addresses of chosen tables
 	function main(&$params, &$pObj)	{
 							
-		if ($params['row']['tx_powermail_recip_table'] != '') { // if a table was selected in flexform
+		if (!empty($params['row']['tx_powermail_recip_table'])) { // if a table was selected in flexform
 		
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery( // db query - get all of selected table
 				$select = '*', // get all fields

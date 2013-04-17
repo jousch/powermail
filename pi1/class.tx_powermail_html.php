@@ -207,22 +207,32 @@ class tx_powermail_html extends tslib_pibase {
 			for ($i=0; $i < count($optionlines); $i++) { // Every loop for every option
 				$options[$i] = t3lib_div::trimExplode('|', $optionlines[$i], 0); // Every row is a new option
 			}
+			
+			// preparing an array for preselection of multi fields
+			if ($this->conf['prefill.']['uid' . $this->uid . '.']['selectedIndexes'] || is_array($this->conf['prefill.']['uid' . $this->uid . '.']['selectedIndexes.'])) { // if there are values in the array selectedIndexes.
+				$selected = t3lib_div::intExplode(',', $this->cObj->stdWrap($this->conf['prefill.']['uid' . $this->uid . '.']['selectedIndexes'], $this->conf['prefill.']['uid' . $this->uid . '.']['selectedIndexes.']));
+			} elseif ($this->conf['prefill.']['uid' . $this->uid . '.']['selectedValues'] || is_array($this->conf['prefill.']['uid' . $this->uid . '.']['selectedValues.'])) {
+				$selected = t3lib_div::trimExplode(',', $this->cObj->stdWrap($this->conf['prefill.']['uid' . $this->uid . '.']['selectedValues'], $this->conf['prefill.']['uid' . $this->uid . '.']['selectedValues.']));
+			} else {
+				$selected = array();
+			}
+
 
 			for ($i=0; $i < count($optionlines); $i++) { // One tag for every option
 				$markerArray['###LABEL###'] = $this->dontAllow($options[$i][0]); // fill label marker with label
 				$markerArray['###VALUE###'] = $this->dontAllow(isset($options[$i][1]) ? $options[$i][1] : $options[$i][0]); // fill value marker with value
 				
 				// ###SELECTED###
-				if (!is_array($this->piVarsFromSession['uid'.$this->uid])) { // no multiple
+				if (!is_array($this->piVarsFromSession['uid' . $this->uid])) { // no multiple
 					if ($options[$i][2] == '*') $markerArray['###SELECTED###'] = ' selected="selected"'; // selected from backend
 					else $markerArray['###SELECTED###'] = ''; // clear
-					if (isset($this->piVarsFromSession['uid'.$this->uid])) { // if session was set
-						if ($this->piVarsFromSession['uid'.$this->uid] == ($options[$i][1] ? $options[$i][1] : $options[$i][0])) $markerArray['###SELECTED###'] = 'selected="selected" '; // mark as selected
+					if (isset($this->piVarsFromSession['uid' . $this->uid])) { // if session was set
+						if ($this->piVarsFromSession['uid' . $this->uid] == ($options[$i][1] ? $options[$i][1] : $options[$i][0])) $markerArray['###SELECTED###'] = 'selected="selected" '; // mark as selected
 						else $markerArray['###SELECTED###'] = ''; // clear
 					}
 				} else { // multiple
-					for ($j=0; $j<count($this->piVarsFromSession['uid'.$this->uid]); $j++) {
-						if ($this->piVarsFromSession['uid'.$this->uid][$j] == ($options[$i][1] ? $options[$i][1] : $options[$i][0])) {
+					for ($j=0; $j<count($this->piVarsFromSession['uid' . $this->uid]); $j++) {
+						if ($this->piVarsFromSession['uid' . $this->uid][$j] == ($options[$i][1] ? $options[$i][1] : $options[$i][0])) {
 							$markerArray['###SELECTED###'] = ' selected="selected"'; // mark as selected
 							$set[$i] = 1;
 						}
@@ -230,12 +240,22 @@ class tx_powermail_html extends tslib_pibase {
 					if (!$set[$i]) $markerArray['###SELECTED###'] = ''; // clear
 				}
 				
+				// Preselection from typoscript
+				if (!$set[$i] && !empty($this->conf['prefill.'])) {
+					if ($this->isPrefilled($i, $selected, ($options[$i][1] ? $options[$i][1] : $options[$i][0])) != false) {
+						$markerArray['###SELECTED###'] = ' selected="selected"'; // mark as selected
+					} else {
+						$markerArray['###SELECTED###'] = ''; // clear
+					}
+				}
+
+
 				$this->html_hookwithinfieldsinner($markerArray); // adds hook to manipulate the markerArray for any field
 				$content_item .= $this->cObj->substituteMarkerArrayCached($this->tmpl['html_select']['item'], $markerArray);
 			}
 		}
 		$subpartArray['###CONTENT###'] = $content_item; // subpart 3
-		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'multiple')) $this->markerArray['###NAME###'] = 'name="'.$this->prefixId.'[uid'.$this->uid.'][]" '; // overwrite name to markerArray like tx_powermail_pi1[55][]
+		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'multiple')) $this->markerArray['###NAME###'] = 'name="' . $this->prefixId . '[uid' . $this->uid . '][]" '; // overwrite name to markerArray like tx_powermail_pi1[55][]
 
 		$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 		$content = $this->cObj->substituteMarkerArrayCached($this->tmpl['html_select']['all'], $this->markerArray, $subpartArray); // substitute Marker in Template
@@ -261,15 +281,21 @@ class tx_powermail_html extends tslib_pibase {
 				$options[$i] = t3lib_div::trimExplode('|', $optionlines[$i], 0); // Every row is a new option
 			}
 
-			for($i=0; $i < count($optionlines); $i++) { // One tag for every option
+			for ($i=0; $i < count($optionlines); $i++) { // One tag for every option
 				$markerArray['###NAME###'] = 'name="'.$this->prefixId.'[uid'.$this->uid.']['.$i.']" '; // add name to markerArray
 				$markerArray['###LABEL###'] = $this->dontAllow($this->div->parseFunc($options[$i][0], $this->cObj, $this->conf['label.']['parse'])); // add label
 				$markerArray['###LABEL_NAME###'] = 'uid'.$this->uid.'_'.$i; // add labelname
 				$markerArray['###ID###'] = 'id="uid'.$this->uid.'_'.$i.'" '; // add labelname
 				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow(isset($options[$i][1])?$options[$i][1]:$options[$i][0]).'" '; // add value (take value after pipe symbol or all if no pipe: "red | rd")
-				//$markerArray['###CLASS###'] = 'class="'.($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1 && $i == (count($optionlines) - 1) ? 'validate-one-required ' : '').'powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
-				$markerArray['###CLASS###'] = 'class="'.($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1 ? 'validate-one-required ' : '').'powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
-				$markerArray['###HIDDENVALUE###'] = 'value="'.$this->piVarsFromSession['uid'.$this->uid][$i].'"'; // add value for hidden field to markerArray
+				$markerArray['###CLASS###'] = 'class="'; // start class tag
+				$markerArray['###CLASS###'] .= ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'mandatory') == 1 ? 'validate-one-required ' : ''); // add required class if needed
+				$markerArray['###CLASS###'] .= 'powermail_' . $this->formtitle; // add form title
+				$markerArray['###CLASS###'] .= ' powermail_' . $this->type; // add input type
+				$markerArray['###CLASS###'] .= ' powermail_uid' . $this->uid; // add input uid
+				$markerArray['###CLASS###'] .= ' powermail_subuid' . $this->uid . '_' . $i; // add input subuid
+				$markerArray['###CLASS###'] .= ($this->class_f != '' ? ' ' . $this->class_f : ''); // add manual class
+				$markerArray['###CLASS###'] .= '" '; // close tag
+				$markerArray['###HIDDENVALUE###'] = 'value="' . $this->piVarsFromSession['uid' . $this->uid][$i] . '"'; // add value for hidden field to markerArray
 				if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $markerArray['###MANDATORY_SYMBOL###'] = $this->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
 				$this->turnedtabindex[$this->uid.'_'.$i] !== '' ? $markerArray['###TABINDEX###'] = 'tabindex="'.($this->turnedtabindex[$this->uid.'_'.$i] + 1).'" ' : $markerArray['###TABINDEX###'] = ''; // tabindex for every checkbox
 				isset($this->newaccesskey[$this->uid][$i]) ? $markerArray['###ACCESSKEY###'] = 'accesskey="'.$this->newaccesskey[$this->uid][$i].'" ' : $markerArray['###ACCESSKEY###'] = ''; // accesskey for every checkbox
@@ -902,18 +928,18 @@ class tx_powermail_html extends tslib_pibase {
 		$this->markerArray = array(); // init
 		
 		// ###NAME###
-		$this->markerArray['###NAME###'] = 'name="'.$this->prefixId.'[uid'.$this->uid.']" '; // add name to markerArray like tx_powermail_pi1[55]
+		$this->markerArray['###NAME###'] = 'name="' . $this->prefixId . '[uid' . $this->uid . ']" '; // add name to markerArray like tx_powermail_pi1[55]
 		
 		// ###LABEL_NAME###
-		$this->markerArray['###LABEL_NAME###'] = 'uid'.$this->uid; // add label name to markerArray
+		$this->markerArray['###LABEL_NAME###'] = 'uid' . $this->uid; // add label name to markerArray
 		
 		// ###ID###
-		$this->markerArray['###ID###'] = 'id="uid'.$this->uid.'" '; // add id to markerArray
+		$this->markerArray['###ID###'] = 'id="uid' . $this->uid . '" '; // add id to markerArray
 		
 		// ###CLASS###
 		$this->required = '';
 		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'mandatory') == 1 || $this->type == 'captcha') $this->required = 'required '; // add class="required" if javascript mandatory should be activated and in captcha fields
-		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'validate') != '' && $this->type == 'text') $this->required .= $this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'validate').' '; // add another key in class if javascript mandatory should be activated
+		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'validate') != '' && $this->type == 'text') $this->required .= $this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'validate') . ' '; // add another key in class if javascript mandatory should be activated
 		// class="required powermail_title powermail_text powermail_uid12"
 		$this->markerArray['###CLASS###'] = 'class="'; // open tag
 		$this->markerArray['###CLASS###'] .= $this->required; // if required class for JS
@@ -1113,6 +1139,29 @@ class tx_powermail_html extends tslib_pibase {
 	function dontAllow($string) {
 		return $string;
 		#return str_replace(array('"'), '', $string); // return value without don't allowed signs
+	}
+	
+	
+	
+	/**
+	* Function isPrefilled returns whether a option is prefilled or not
+	*
+	* @param  	int		current index
+	* @param  	array	array of values or indexes to select/check
+	* @param  	value	current value
+	*
+	* @return	boolean
+	*/
+	function isPrefilled($index, $selected, $value) {
+		if ($this->cObj->stdWrap($this->conf['prefill.']['uid' . $this->uid . '_' . $index], $this->conf['prefill.']['uid' . $this->uid . '_' . $index . '.'])) {
+			return true; // by field
+		} elseif (is_int($selected[0]) && in_array($index, (array) $selected)) {
+			return true; // by index
+		} elseif (in_array($value, (array) $selected)) {
+			return true; // by value
+		}
+		
+		return false; // default
 	}
 
 }

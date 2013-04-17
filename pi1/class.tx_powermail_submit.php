@@ -231,9 +231,11 @@ class tx_powermail_submit extends tslib_pibase {
 	
 	// Function emailReceiver() returns comma-separated list of email receivers
 	function emailReceiver() {
-		$emails = ''; $this->sendername = ''; // init
+		// config
+		$emails = ''; 
+		$this->sendername = '';
 		
-		// 1. Field receiver
+		// 1. Field receiver (and sendername!)
 		if ($this->cObj->data['tx_powermail_recipient']) { // If receivers are listed in field receiver
 			$emails = str_replace(array("\r\n", "\n\r", "\n", "\r", ";", "|", "+"), ',', $this->cObj->data['tx_powermail_recipient']); // commaseparated list of emails
 			$emails = $this->dynamicMarkers->main($this->conf, $this->cObj, $emails); // set dynamic markers receiver
@@ -284,8 +286,11 @@ class tx_powermail_submit extends tslib_pibase {
 			}
 		}
 		
-		// 5. If Sendername is not set, take sender email address instead of name
-		if (empty($this->sendername)) $this->sendername = $this->MainReceiver;
+		// 5. If Sendername is not set, take default value
+		if (empty($this->sendername)) { // if no sendername was defined (see 1.)
+			//$this->sendername = $this->MainReceiver; // take mail address
+			$this->sendername = $this->extKey; // take "powermail" as sendername
+		}
 		
 		return false;
 	}
@@ -468,7 +473,7 @@ class tx_powermail_submit extends tslib_pibase {
 		$notAllowed = array ( // list of all not allowed strings for querycheck
 			'UPDATE',
 			'TRUNCATE',
-			'DELETE',
+			'DELETE ', // deleted with space at the end (to allow "... where deleted = 0")
 			'INSERT',
 			'REPLACE',
 			'HANDLER',
@@ -489,8 +494,10 @@ class tx_powermail_submit extends tslib_pibase {
 		if (is_array($notAllowed)) { // only if array
 			foreach ($notAllowed as $key => $value) { // one loop for every not allowed string
 				if (strpos(strtolower($string), strtolower($value)) !== false) { // search for (e.g.) "delete" in string
-					$error = 1; // set error if found
-					$failure .= '"'.$value.'", '; // Save error string
+					if (1) {
+						$error = 1; // set error if found
+						$failure .= '"'.$value.'", '; // Save error string
+					}
 				}
 			}
 		}
