@@ -30,9 +30,9 @@ require_once(str_replace('../','',t3lib_extMgm::extRelPath('powermail')).'lib/cl
 
 
 class tx_powermail_form extends tslib_pibase {
-	var $prefixId      = 'tx_powermail_pi1';		// Same as class name
+	var $prefixId      = 'tx_powermail_pi1'; // Same as class name
 	var $scriptRelPath = 'pi1/class.tx_powermail_form.php';	// Path to this script relative to the extension dir.
-	var $extKey        = 'powermail';	// The extension key.
+	var $extKey        = 'powermail'; // The extension key.
 	var $pi_checkCHash = true;
 
 	// Function main chooses what to show
@@ -73,7 +73,13 @@ class tx_powermail_form extends tslib_pibase {
 			if(isset($this->piVars['multiple'])) $limitArray[0] = ($this->piVars['multiple'] - 1); // Set current fieldset
 			$limit = $limitArray[0].','.$limitArray[1]; // e.g. 0,1
 		
-		} elseif ($this->pibase->cObj->data['tx_powermail_multiple'] == 0 || $this->pibase->cObj->data['tx_powermail_multiple'] == 1) { // Standardmode
+		} elseif ($this->pibase->cObj->data['tx_powermail_multiple'] == 1) { // If multiple (JS) active
+			
+			// add css for multiple javascript
+			$GLOBALS['TSFE']->additionalHeaderData[$this->extKey] .= "\t".'<link rel="stylesheet" type="text/css" href="typo3conf/ext/powermail/css/multipleJS.css" />';
+			$limit = ''; // no limit for SQL select
+			
+		} elseif ($this->pibase->cObj->data['tx_powermail_multiple'] == 0) { // Standardmode
 			
 			$limit = ''; // no limit for SQL select
 			
@@ -92,6 +98,7 @@ class tx_powermail_form extends tslib_pibase {
 		$this->tmpl['all'] = tslib_cObj::fileResource($this->conf['template.']['formWrap']); // Load HTML Template
 		$this->tmpl['formwrap']['all'] = $this->pibase->cObj->getSubpart($this->tmpl['all'],'###POWERMAIL_FORMWRAP###'); // work on subpart 1
 		$this->tmpl['formwrap']['item'] = $this->pibase->cObj->getSubpart($this->tmpl['formwrap']['all'],'###POWERMAIL_ITEM###'); // work on subpart 2
+		$this->tmpl['multiplejs']['all'] = $this->pibase->cObj->getSubpart(tslib_cObj::fileResource($this->conf['template.']['MultipleJS']),'###POWERMAIL_MULTIPLEJS_PAGEBROWSER###'); // Load HTML Template for multiple JS (work on subpart)
 
 		// Form tag generation
 		$this->InnerMarkerArray = array(); $this->OuterMarkerArray = array(); $this->content_item = ''; // init
@@ -100,13 +107,15 @@ class tx_powermail_form extends tslib_pibase {
 		$this->OuterMarkerArray['###POWERMAIL_METHOD###'] = $this->conf['form.']['method']; // Form method
 		$this->OuterMarkerArray['###POWERMAIL_FORM_UID###'] = $this->pibase->cObj->data['uid']; // Form method
 		$this->OuterMarkerArray['###POWERMAIL_MANDATORY_JS###'] = $this->AddMandatoryJS();
-		if($limit) { // If multiple is set
+		if($this->pibase->cObj->data['tx_powermail_multiple'] == 2) { // If multiple PHP is set
 			$this->OuterMarkerArray['###POWERMAIL_MULTIPLE_BACKLINK###'] = $this->multipleLink(-1); // Backward Link (-1)
 			$this->OuterMarkerArray['###POWERMAIL_MULTIPLE_FORWARDLINK###'] = $this->multipleLink(1); // Forward Link (+1)
 			$this->OuterMarkerArray['###POWERMAIL_MULTIPLE_PAGEBROWSER###'] = $this->multipleLink(0); // Pagebrowser
 			if($this->multiple['numberoffieldsets'] != $this->multiple['currentpage']) { // On last fieldset, don't overwrite Target
-				$this->OuterMarkerArray['###POWERMAIL_TARGET###'] = $this->pibase->cObj->typolink('x',array("returnLast"=>"url","parameter"=>$GLOBALS['TSFE']->id,"additionalParams"=>'&tx_powermail_pi1[mailID]='.$this->pibase->cObj->data['uid'].'&tx_powermail_pi1[multiple]='.($this->multiple['currentpage'] + 1),"useCacheHash"=>1)); // Overwrite Target
+				$this->OuterMarkerArray['###POWERMAIL_TARGET###'] = htmlentities($this->pibase->cObj->typolink('x',array("returnLast"=>"url","parameter"=>$GLOBALS['TSFE']->id,"additionalParams"=>'&tx_powermail_pi1[mailID]='.$this->pibase->cObj->data['uid'].'&tx_powermail_pi1[multiple]='.($this->multiple['currentpage'] + 1),"useCacheHash"=>1))); // Overwrite Target
 			}
+		} elseif ($this->pibase->cObj->data['tx_powermail_multiple'] == 1) { // If multiple JS is set
+			$this->OuterMarkerArray['###POWERMAIL_MULTIPLE_PAGEBROWSER###'] = $this->multipleLink('js'); // JavaScript switch
 		}
 		
 		// UID of the last fieldset to current tt_content
@@ -178,13 +187,13 @@ class tx_powermail_form extends tslib_pibase {
 		if(isset($this->piVars['multiple'])) $this->multiple['currentpage'] = $this->piVars['multiple']; // Currentpage
 		else $this->multiple['currentpage'] = 1; // Currentpage = 1 if not set
 		
-		if ($add > 0) { // Forward link
+		if ($add === 1) { // Forward link
 		
 			if($this->multiple['numberoffieldsets'] != $this->multiple['currentpage']) { // If current fieldset is not the latest
 				$content = '<input type="submit" value="'.$this->pi_getLL('multiple_forward').'" class="tx_powermail_pi1_submitmultiple_forward" />';
 			} else $content = ''; // clear it if it's not needed
 			
-		} elseif ($add < 0) { // Backward link
+		} elseif ($add === -1) { // Backward link
 		
 			if($this->multiple['currentpage'] > 1) { // If current fieldset is not the first
 				$link = $this->baseurl.$this->pibase->cObj->typolink('x',array('parameter'=>$GLOBALS['TSFE']->id,'returnLast'=>'url', 'additionalParams'=>'&tx_powermail_pi1[multiple]='.($this->multiple['currentpage'] + $add).'&tx_powermail_pi1[mailID]='.$this->pibase->cObj->data['uid'],'useCacheHash' => 1)); // Create target url
@@ -192,10 +201,10 @@ class tx_powermail_form extends tslib_pibase {
 			}
 			else $content = ''; // clear it if it's not needed
 		
-		} elseif ($add == 0) { // show pagebrowser
+		} elseif ($add === 0) { // show pagebrowser
 			
 			/*
-			// page1 page2 page3 page4
+			// e.g. page1 page2 page3 page4
 			$content = '';			
 			for($i=0;$i<$this->multiple['numberoffieldsets'];$i++) {
 				if(($i+1) == $this->multiple['currentpage']) $classadd = ' powermail_bagebrowser_current'; else $classadd = '';
@@ -203,9 +212,33 @@ class tx_powermail_form extends tslib_pibase {
 			}
 			*/
 			
-			// 3 of 8
+			// e.g. 3 of 8
 			$content = $this->multiple['currentpage'].$this->pi_getLL('pagebrowser_inner').$this->multiple['numberoffieldsets']; // 1 of 4
 			$content = $this->pibase->cObj->wrap($content,$this->conf['pagebrowser.']['wrap'],'|'); // wrap this
+		
+		} elseif ($add === 'js') { // Pagebrowser Multiple JS
+			
+			$this->tmpl['multiplejs']['item'] = $this->pibase->cObj->getSubpart($this->tmpl['multiplejs']['all'],'###POWERMAIL_ITEM###');
+			$content_item = '';
+			
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
+				'uid,title',
+				'tx_powermail_fieldsets',
+				$where_clause = 'tt_content = '.$this->pibase->cObj->data['uid'].tslib_cObj::enableFields('tx_powermail_fieldsets'),
+				$groupBy = '',
+				$orderBy = '',
+				''
+			);
+			if ($res) { // If there is a result
+				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every fieldset
+					$markerArray['###POWERMAIL_MULTIPLEJS_PAGEBROWSER_LINK###'] = htmlentities($this->pibase->cObj->typolink('x',array('parameter'=>$GLOBALS['TSFE']->id, 'returnLast'=>'url', 'useCacheHash' => 1)).'#tx-powermail-pi1_fieldset_'.$row['uid']);             
+ 					$markerArray['###POWERMAIL_MULTIPLEJS_PAGEBROWSER_TITLE###'] = $row['title'];
+					$content_item .= $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['multiplejs']['item'], $markerArray);
+				}
+				$subpartArray['###POWERMAIL_CONTENT###'] = $content_item; 
+				$content = $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['multiplejs']['all'], array(), $subpartArray);
+				$content = preg_replace("|###.*###|i","",$content); // Finally clear not filled markers
+			}
 		
 		} else { // Error
 		

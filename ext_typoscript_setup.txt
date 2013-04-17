@@ -6,8 +6,8 @@ plugin.tx_powermail_pi1 {
 	template.emails = {$plugin.powermail.template.emails}
 	template.confirmation = {$plugin.powermail.template.confirmation}
 	template.all = {$plugin.powermail.template.all}
-	template.multiple = {$plugin.powermail.template.multiple}
 	template.mandatory = {$plugin.powermail.template.mandatory}
+	template.MultipleJS = {$plugin.powermail.template.MultipleJS}
 	allow.email2receiver = {$plugin.powermail.allow.email2receiver}
 	allow.email2sender = {$plugin.powermail.allow.email2sender}
 	allow.dblog = {$plugin.powermail.allow.dblog}
