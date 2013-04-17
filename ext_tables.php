@@ -4,9 +4,10 @@ if (!defined ('TYPO3_MODE')) die ('Access denied.');
 $confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['powermail']); // Get backandconfig
 t3lib_extMgm::allowTableOnStandardPages('tx_powermail_fieldsets');
 
+// including files
+include_once(t3lib_extMgm::extPath("powermail")."lib/class.user_powermail_tx_powermail_forms_recip_id.php");
 if (TYPO3_MODE=="BE") {
 	include_once(t3lib_extMgm::extPath("powermail")."lib/class.user_powermail_tx_powermail_forms_recip_table.php");
-	include_once(t3lib_extMgm::extPath("powermail")."lib/class.user_powermail_tx_powermail_forms_recip_id.php");
 	include_once(t3lib_extMgm::extPath("powermail")."lib/class.user_powermail_tx_powermail_forms_preview.php");
 	include_once(t3lib_extMgm::extPath("powermail")."lib/class.user_powermail_tx_powermail_forms_sender_field.php");
 	include_once(t3lib_extMgm::extPath("powermail")."lib/class.user_powermail_tx_powermail_fields_fe_field.php");

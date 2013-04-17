@@ -21,6 +21,7 @@
 					</config>
 				</TCEforms>
 			</value>
+			<!--
 			<send>
 				<TCEforms>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.send</label>
@@ -29,6 +30,7 @@
 					</config>
 				</TCEforms>
 			</send>
+			-->
 			<name>
 				<TCEforms>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.name</label>

@@ -7,15 +7,15 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="pi1_title">powermail</label>
-			<label index="pi1_plus_wiz_description">Powerful mailform extension</label>
+			<label index="pi1_plus_wiz_description">Powerful and easy mailform extension with database storing, javascript validation and many more...</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="pi1_title">powermail</label>
-			<label index="pi1_plus_wiz_description">Umfangreiche E-Mail-Formular Erweiterung</label>
+			<label index="pi1_plus_wiz_description">Umfangreiche E-Mail-Formular Erweiterung mit Datenbank Speicherung, Feldüberprüfung und vielem mehr...</label>
 		</languageKey>
 		<languageKey index="en" type="array">
 			<label index="pi1_title">powermail</label>
-			<label index="pi1_plus_wiz_description">Powerful mailform extension</label>
+			<label index="pi1_plus_wiz_description">Powerful mailform extension with database storing, javascript validation and many more...</label>
 		</languageKey>
 		<data type="array">
 			<languageKey index="fr" type="array">
