@@ -27,7 +27,13 @@ class tx_powermail_bedetails {
 			
 			if(isset($values) && is_array($values)) {
 				foreach ($values as $key => $value) { // one loop for every piVar
-					if(!is_array($value)) $this->content .= '<tr>'.'<td><strong>'.$this->GetLabelfromBackend($key,$value).':</strong></td>'.'<td style="padding-left: 10px;">'.$value.'</td><td style="padding-left: 10px; color: #888;">('.$key.')</td></tr>';
+					if(!is_array($value)) { // non array (first level)
+						$this->content .= '<tr>'.'<td><strong>'.$this->GetLabelfromBackend($key,$value).':</strong></td>'.'<td style="padding-left: 10px;">'.$value.'</td><td style="padding-left: 10px; color: #888;">('.$key.')</td></tr>';
+					} else { // is array (second level)
+						foreach ($values[$key] as $key2 => $value2) { // one loop for every piVar in second level
+							$this->content .= '<tr>'.'<td><strong>'.$this->GetLabelfromBackend($key,$value).':</strong></td>'.'<td style="padding-left: 10px;">'.$value2.'</td><td style="padding-left: 10px; color: #888;">('.$key.'_'.$key2.')</td></tr>';
+						}
+					}
 				}
 			}
 		}
@@ -46,7 +52,7 @@ class tx_powermail_bedetails {
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery ( // GET title where fields.flexform LIKE <value index="vDEF">vorname</value>
 				'f.title',
 				'tx_powermail_fields f LEFT JOIN tx_powermail_fieldsets fs ON (f.fieldset = fs.uid) LEFT JOIN tt_content c ON (c.uid = fs.tt_content)',
-				$where_clause .= ' AND f.uid = '.$uid.' AND f.hidden = 0 AND f.deleted = 0',
+				$where_clause .= ' AND f.uid = '.$uid.' AND f.deleted = 0',
 				$groupBy = '',
 				$orderBy = '',
 				$limit = ''

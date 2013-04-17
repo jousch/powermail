@@ -96,7 +96,7 @@ class tx_powermail_functions_div {
 						
 							$array[$key][$key2] = strip_tags(trim($value2)); // strip_tags removes html and php code
 							if(function_exists('mysql_real_escape_string')) $array[$key][$key2] = mysql_real_escape_string($value2); // check against sql injection
-							else $array[$key] = addslashes($value); // use addslashes if escape_string is not available
+							else $array[$key][$key2] = addslashes($value2); // use addslashes if escape_string is not available
 							
 						}
 					} else unset($array[$key][$key2]); // if array with 3 or more dimensions - delete this value

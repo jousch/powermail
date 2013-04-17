@@ -9,7 +9,7 @@
 			<label index="title">Powermail</label>
 			<label index="function1">Powermail list and export</label>
 			<label index="nopowermails1">No powermails on current page!</label>
-			<label index="nopowermails2">Please choose a page with powermails inside from the pagetree.</label>
+			<label index="nopowermails2">Please choose a page with powermails inside from the pagetree or change the time filter.</label>
 			<label index="title_no">#</label>
 			<label index="title_date">Date</label>
 			<label index="title_sender">Sender</label>
@@ -19,6 +19,9 @@
 			<label index="export_download_success">Success!</label>
 			<label index="export_download_download">Download CSV File</label>
 			<label index="export_download_downloadZIP">Download compressed CSV File</label>
+			<label index="export_icon_excel">Export to excel file format</label>
+			<label index="export_icon_csv">Export to csv file format</label>
+			<label index="export_icon_html">Export to HTML table</label>
 			<label index="pagebrowser_page">page</label>
 			<label index="pagebrowser_upto">up to</label>
 			<label index="pagebrowser_within">within</label>
@@ -27,7 +30,7 @@
 			<label index="title">Powermail</label>
 			<label index="function1">Powermail Liste und Export</label>
 			<label index="nopowermails1">Keine Powermails auf aktueller Seite!</label>
-			<label index="nopowermails2">Bitte wählen Sie eine Seite mit Powermails aus dem Seitenbaum aus.</label>
+			<label index="nopowermails2">Bitte wählen Sie eine Seite mit Powermails aus dem Seitenbaum aus oder verändern Sie den Zeitfilter.</label>
 			<label index="title_no">#</label>
 			<label index="title_date">Datum</label>
 			<label index="title_sender">Absender</label>
@@ -37,6 +40,9 @@
 			<label index="export_download_success">Erfolg!</label>
 			<label index="export_download_download">CSV Datei Download</label>
 			<label index="export_download_downloadZIP">CSV Datei Download (komprimiert)</label>
+			<label index="export_icon_excel">Export im Excel Format</label>
+			<label index="export_icon_csv">Export im CSV Format</label>
+			<label index="export_icon_html">Export im HTML Format</label>
 			<label index="pagebrowser_page">Seite</label>
 			<label index="pagebrowser_upto">bis</label>
 			<label index="pagebrowser_within">von insgesamt</label>
@@ -45,7 +51,7 @@
 			<label index="title">Powermail</label>
 			<label index="function1">Powermail list and export</label>
 			<label index="nopowermails1">No powermails on current page!</label>
-			<label index="nopowermails2">Please choose a page with powermails inside from the pagetree.</label>
+			<label index="nopowermails2">Please choose a page with powermails inside from the pagetree or change the time filter.</label>
 			<label index="title_no">#</label>
 			<label index="title_date">Date</label>
 			<label index="title_sender">Sender</label>
@@ -55,6 +61,9 @@
 			<label index="export_download_success">Success!</label>
 			<label index="export_download_download">Download CSV File</label>
 			<label index="export_download_downloadZIP">Download compressed CSV File</label>
+			<label index="export_icon_excel">Export to excel file format</label>
+			<label index="export_icon_csv">Export to csv file format</label>
+			<label index="export_icon_html">Export to HTML table</label>
 			<label index="pagebrowser_page">page</label>
 			<label index="pagebrowser_upto">up to</label>
 			<label index="pagebrowser_within">within</label>

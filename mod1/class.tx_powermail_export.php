@@ -53,15 +53,29 @@ class tx_powermail_export {
 							elseif ($key == 'uid') { // if current row should show all dynamic values (piVars)
 								if(isset($values) && is_array($values)) {
 									foreach ($values as $key => $value) { // one loop for every piVar
-										if(!is_array($value)) $table .= '<td>'.$value.'</td>';
+										if (!is_array($value)) $table .= '<td>'.$value.'</td>';
+										else {
+											foreach ($values[$key] as $key2 => $value2) { // one loop for every piVar in second level
+												$table .= '<td>'.$value2.'</td>';
+											}
+										}
 									}
 								}
 							}
-							elseif (intval(str_replace('uid','',$key)) > 0) { // dynamic value like uid45
-								if (!empty($values[$key])) { // if is set
-									$table .= '<td>'.$values[$key].'</td>'; // fill cell with content
-								} else {
-									$table .= '<td></td>'; // empty cell
+							elseif (is_numeric(str_replace(array('uid','_'),'',$key))) { // dynamic value like uid45
+								$newkey = explode('_',$key); // explode uid44_0 to uid44 and 0
+								if (!is_array($values[$newkey[0]])) { // piVars in first level
+									if (!empty($values[$key])) { // if is set
+										$table .= '<td>'.$values[$key].'</td>'; // fill cell with content
+									} else {
+										$table .= '<td></td>'; // empty cell
+									}
+								} else { // piVars in second level
+									if (!empty($values[$newkey[0]][$newkey[1]])) { // if is set
+										$table .= '<td>'.$values[$newkey[0]][$newkey[1]].'</td>'; // fill cell with content
+									} else {
+										$table .= '<td></td>'; // empty cell
+									}
 								}
 							}
 							else $table .= '<td>'.$row[$key].'</td>';
@@ -88,14 +102,28 @@ class tx_powermail_export {
 								if(isset($values) && is_array($values)) {
 									foreach ($values as $key => $value) { // one loop for every piVar
 										if(!is_array($value)) $table .= '"'.str_replace('"',"'",str_replace(array("\n\r","\r\n","\n","\r"),'',$value)).'"'.$this->seperator;
+										else {
+											foreach ($values[$key] as $key2 => $value2) { // one loop for every piVar in second level
+												$table .= '"'.str_replace('"',"'",str_replace(array("\n\r","\r\n","\n","\r"),'',$value2)).'"'.$this->seperator;
+											}
+										}
 									}
 								}
 							}
-							elseif (intval(str_replace('uid','',$key)) > 0) { // dynamic value like uid45
-								if (!empty($values[$key])) { // if is set
-									$table .= '"'.$values[$key].'"'.$this->seperator; // fill cell with content
-								} else {
-									$table .= '" "'.$this->seperator; // empty cell
+							elseif (is_numeric(str_replace(array('uid','_'),'',$key))) { // dynamic value like uid45
+								$newkey = explode('_',$key); // explode uid44_0 to uid44 and 0
+								if (!is_array($values[$newkey[0]])) { // piVars in first level
+									if (!empty($values[$key])) { // if is set
+										$table .= '"'.$values[$key].'"'.$this->seperator; // fill cell with content
+									} else {
+										$table .= '" "'.$this->seperator; // empty cell
+									}
+								} else { // piVars in second level
+									if (!empty($values[$newkey[0]][$newkey[1]])) { // if is set
+										$table .= '"'.$values[$newkey[0]][$newkey[1]].'"'.$this->seperator; // fill cell with content
+									} else {
+										$table .= '" "'.$this->seperator; // empty cell
+									}
 								}
 							}
 							else $table .= '"'.$row[$key].'"'.$this->seperator;
@@ -156,10 +184,11 @@ class tx_powermail_export {
 	}
 	
 	
-	// Set title
+	// Set title (TODO: extend to dynamic Titles)
 	function setTitle($export, $row) {
 		if ($this->useTitle == 1 && isset($this->rowconfig)) {	// if title should be used
 			$values = t3lib_div::xml2array($row['piVars'],'pivars'); // xml2array
+			
 			($export == 'csv' ? $table = '' : $table = '<tr>'); // init
 			foreach ($this->rowconfig as $key => $value) { // one loop for every row
 				if ($key != 'uid') { // static values
@@ -171,7 +200,7 @@ class tx_powermail_export {
 				} else {
 					if(isset($values) && is_array($values)) {
 						foreach ($values as $key => $value) { // one loop for every piVar
-							echo $key.': '.$value;
+							//echo $key.': '.$value;
 							if (!is_array($value) && $export == 'csv') $table .= '"'.str_replace('"',"'",str_replace(array("\n\r","\r\n","\n","\r"),'', $this->GetLabelfromBackend($key, $value))).'"'.$this->seperator;
 							elseif (!is_array($value)) $table .= '<td>'.$this->GetLabelfromBackend($key, $value).'</td>';
 						}

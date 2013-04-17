@@ -56,73 +56,73 @@ class tx_powermail_html extends tslib_pibase {
 		if($this->type) { // If type exists
 			switch($this->type) {
 				case 'text':
-					$content = $this->html_text(); // generate text field <input type="text"...
+					$this->content = $this->html_text(); // generate text field <input type="text"...
 				break;
 				case 'textarea':
-					$content = $this->html_textarea(); // generate textarea <textarea...
+					$this->content = $this->html_textarea(); // generate textarea <textarea...
 				break;
 				case 'check':
-					$content = $this->html_check(); // generate textarea <input type="checkbox"
+					$this->content = $this->html_check(); // generate textarea <input type="checkbox"
 				break;
 				case 'select':
-					$content = $this->html_select(); // generate selectorbox <select><option>...
+					$this->content = $this->html_select(); // generate selectorbox <select><option>...
 				break;
 				case 'captcha':
-					$content = $this->html_captcha(); // generate captcha request
+					$this->content = $this->html_captcha(); // generate captcha request
 				break;
 				case 'radio':
-					$content = $this->html_radio(); // generate radio buttons <input type="radio"...
+					$this->content = $this->html_radio(); // generate radio buttons <input type="radio"...
 				break;
 				case 'submit':
-					$content = $this->html_submit(); // generate submitbutton <input type="submit"...
+					$this->content = $this->html_submit(); // generate submitbutton <input type="submit"...
 				break;
 				case 'reset':
-					$content = $this->html_reset(); // generate resetbutton <input type="reset"...
+					$this->content = $this->html_reset(); // generate resetbutton <input type="reset"...
 				break;
 				case 'label':
-					$content = $this->html_label(); // generate textlabel
+					$this->content = $this->html_label(); // generate textlabel
 				break;
 				case 'html':
-					$content = $this->html_html(); // generate pure html
+					$this->content = $this->html_html(); // generate pure html
 				break;
 				case 'content':
-					$content = $this->html_content(); // returns page content
+					$this->content = $this->html_content(); // returns page content
 				break;
 				case 'file':
-					$content = $this->html_file(); // generate file field
+					$this->content = $this->html_file(); // generate file field
 				break;
 				case 'password':
-					$content = $this->html_password(); // generate password field
+					$this->content = $this->html_password(); // generate password field
 				break;
 				case 'hidden':
-					$content = $this->html_hidden(); // generate hidden field
+					$this->content = $this->html_hidden(); // generate hidden field
 				break;
 				case 'datetime':
-					$content = $this->html_datetime(); // generate datetime field
+					$this->content = $this->html_datetime(); // generate datetime field
 				break;
 				case 'date':
-					$content = $this->html_date(); // generate date field
+					$this->content = $this->html_date(); // generate date field
 				break;
 				case 'button':
-					$content = $this->html_button(); // generate button field
+					$this->content = $this->html_button(); // generate button field
 				break;
 				case 'submitgraphic':
-					$content = $this->html_submitgraphic(); // generate submitgraphic button
+					$this->content = $this->html_submitgraphic(); // generate submitgraphic button
 				break;
 				case 'countryselect':
-					$content = $this->html_countryselect(); // generate select fields with countries from static_info_tables
+					$this->content = $this->html_countryselect(); // generate select fields with countries from static_info_tables
 				break;
 				default: // errormessage if undefined tag needed
-					$content = 'POWERMAIL: wrong input field required: <strong>'.$row['f_type'].'</strong> in tx_powermail_pi1_html (field uid '.$row['f_uid'].')<br />'; // errormessage
+					$this->content = 'POWERMAIL: wrong input field required: <strong>'.$row['f_type'].'</strong> in tx_powermail_pi1_html (field uid '.$row['f_uid'].')<br />'; // errormessage
 				break;
 			}
 		} else { // no type selected
-			$content = 'POWERMAIL: <strong>no field type</strong> in backend selected (field uid '.$row['f_uid'].')<br />'; // errormessage
+			$this->content = 'POWERMAIL: <strong>no field type</strong> in backend selected (field uid '.$row['f_uid'].')<br />'; // errormessage
 		}
 		
-		$this->html_hook($content); // adds hook
+		$this->html_hook(); // adds hook
 		
-		if(isset($content)) return $content;
+		if(isset($this->content)) return $this->content;
 	}
 
 
@@ -783,7 +783,7 @@ class tx_powermail_html extends tslib_pibase {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FieldWrapMarkerHook'])) { // Adds hook for processing of extra global markers
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FieldWrapMarkerHook'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				$this->markerArray = $_procObj->PM_FieldWrapMarkerHook($this->uid,$this->xml,$this->type,$this->title,$this->markerArray,$content,$this); // Get new marker Array from other extensions
+				$this->markerArray = $_procObj->PM_FieldWrapMarkerHook($this->uid,$this->xml,$this->type,$this->title,$this->markerArray,$this->content,$this); // Get new marker Array from other extensions
 			}
 		}
 	}

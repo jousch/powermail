@@ -84,8 +84,10 @@ Fieldwrap for checkboxen like <input type="checkbox" />
 		 <p class="tx_powermail_pi1_fieldwrap_html_checkbox_title">###LABEL_MAIN######MANDATORY_SYMBOL###</p>
 		 <!-- ###CONTENT### begin -->
 		 	<!-- ###ITEM### begin -->
-		 		<label for="###LABEL_NAME###">###LABEL###</label>
-				<input type="checkbox" ###NAME######VALUE######CLASS######ID######CHECKED###/>
+				<div class="powermail_check_inner powermail_check_inner_###LABEL_NAME###">
+					<label for="###LABEL_NAME###">###LABEL###</label>
+					<input type="checkbox" ###NAME######VALUE######CLASS######ID######CHECKED###/>
+				</div>
 		 	<!-- ###ITEM### end -->
 		 <!-- ###CONTENT### end -->
 	</div>
@@ -105,8 +107,10 @@ Fieldwrap for radiobuttons like <input type="radio" />
 		<p class="tx_powermail_pi1_fieldwrap_html_radio_title">###LABEL_MAIN######MANDATORY_SYMBOL###</p>
 		 <!--###CONTENT### begin -->
 		 	<!--###ITEM### begin-->
-		 		<label for="###LABEL_NAME###">###LABEL###</label>
-				<input type="radio" ###NAME######VALUE######CLASS######ID######CHECKED###/>
+				<div class="powermail_radio_inner powermail_radio_inner_###LABEL_NAME###">
+					<label for="###LABEL_NAME###">###LABEL###</label>
+					<input type="radio" ###NAME######VALUE######CLASS######ID######CHECKED###/>
+				</div>
 		 	<!--###ITEM### end-->
 		 <!--###CONTENT### end-->
 	</div>

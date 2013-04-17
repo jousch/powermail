@@ -62,7 +62,7 @@ class tx_powermail_sessions extends tslib_pibase {
 		if($all == 0) { // delete not allowed values from piVars
 			if(isset($piVars) && is_array($piVars)) {
 				foreach($piVars as $key => $value) { // one loop for every piVar
-					if(!is_numeric(str_replace('uid','',$key)) && $key != 'FILE') {
+					if(!is_numeric(str_replace('uid','',$key)) && $key != 'FILE' && $key != 'ERROR') {
 						unset($piVars[$key]); // delete current value (like mailID or sendnow)
 					}
 				}

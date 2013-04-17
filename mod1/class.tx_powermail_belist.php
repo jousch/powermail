@@ -55,7 +55,6 @@ class tx_powermail_belist {
 				$this->content .= $this->inputFields(); // Show input fields for date filter
 				$this->content .= $this->exportIcons(); // Show export images
 			}
-			//$this->content .= '<div style="width: 470px; overflow: auto;">';
 			$this->content .= '<table style="background-color: #7d838c;" border="1" cellpadding="0" cellspacing="0">';
 			$this->content .= '
 				<tr>
@@ -78,17 +77,17 @@ class tx_powermail_belist {
 				$this->content .= '<td style="color: white; padding: 0 5px;">'.$this->divfunctions->linker($row['sender'],' style="color: white; text-decoration: underline;"').'</td>'; // sender email
 				$this->content .= '<td style="color: white; padding: 0 5px;">'.$this->divfunctions->linker($row['recipient'],' style="color: white; text-decoration: underline;"').'</td>'; // receiver email
 				$this->content .= '<td style="color: white; padding: 0 5px;">'.$row['senderIP'].'</td>'; // sender IP
-				$this->content .= '<td style="color: white;" align="center"><a href="index.php?id='.$pid.'&mailID='.$row['uid'].'" onclick="vHWin=window.open(\'index.php?id='.$pid.'&mailID='.$row['uid'].'\',\'FEopenLink\',\'width=500,height=600,scrollbars=yes,resize=yes\');vHWin.focus();return false;"><img src="'.(is_file($this->backpath.'sysext/t3skin/icons/gfx/zoom.gif') ? $this->backpath.'sysext/t3skin/icons/gfx/zoom.gif' : $this->backpath.'gfx/zoom.gif').'" title="Open mail details" /></a></td>';
+				$this->content .= '<td style="color: white; padding: 0 5px; text-align: center;">'.($_GET['mailID'] > 0 ? '<img src="'.(is_file($this->backpath.'sysext/t3skin/icons/gfx/i/pages.gif') ? $this->backpath.'sysext/t3skin/icons/gfx/i/pages.gif' : $this->backpath.'gfx/i/pages.gif').'" title="Not available in detail view" alt="detail" />' : '<a href="index.php?id='.$pid.'&mailID='.$row['uid'].'" onclick="vHWin=window.open(\'index.php?id='.$pid.'&mailID='.$row['uid'].'\',\'FEopenLink\',\'width=510,height=600,scrollbars=yes,resize=yes\');vHWin.focus();return false;"><img src="'.(is_file($this->backpath.'sysext/t3skin/icons/gfx/zoom.gif') ? $this->backpath.'sysext/t3skin/icons/gfx/zoom.gif' : $this->backpath.'gfx/zoom.gif').'" title="Open mail details" alt="detail" /></a>').'</td>';
 				
 				$this->content .= '</tr>'."\n";
 			}
-			$this->content .= '</table>'."\n";	
-			//$this->content .= '</div>'."\n";
-			$this->content .= $this->pageBrowser($this->num, $this->num2, $this->pointer, $this->perpage); // show pagebrowser below table
+			$this->content .= '</table>'."\n";
+			if (!isset($_GET['mailID'])) $this->content .= $this->pageBrowser($this->num, $this->num2, $this->pointer, $this->perpage); // show pagebrowser below table
 		}
 		
 		if(!$i) { // if on current page is no result
-			$this->content = '<strong>'.$this->LANG->getLL('nopowermails1').'</strong><br />';
+			if (!isset($_GET['mailID'])) $this->content = $this->inputFields(); // Show input fields for date filter
+			$this->content .= '<br /><br /><br /><br /><strong>'.$this->LANG->getLL('nopowermails1').'</strong><br />';
 			$this->content .= $this->LANG->getLL('nopowermails2').'<br />';
 		}
 		
@@ -122,8 +121,8 @@ class tx_powermail_belist {
 	// Show input fields for filtering
 	function inputFields() {
 		$content = '<div style="float: left;">'."\n";
-		$content .= '<input type="text" name="startdate" value="'.$this->startdate.'" /><br />'."\n";
-		$content .= '<input type="text" name="enddate" value="'.$this->enddate.'" />'."\n";
+		$content .= '<label for="startdate" style="font-weight: bold; display: block; float: left; width: 40px;">Start:</label><input type="text" name="startdate" id="startdate" value="'.$this->startdate.'" /><br />'."\n";
+		$content .= '<label for="enddate" style="font-weight: bold; display: block; float: left; width: 40px; clear: both;">End:</label><input type="text" name="enddate" id="enddate" value="'.$this->enddate.'" />'."\n";
 		if(isset($_GET['id'])) $content .= '<input type="hidden" name="id" value="'.$_GET['id'].'" />'."\n";
 		$content .= '<input type="submit" value="Filter" />'."\n";
 		$content .= '</div>'."\n";
@@ -134,9 +133,9 @@ class tx_powermail_belist {
 	// Show links for export methods
 	function exportIcons() {
 		$content = '<div style="float: right;">';
-		$content .= '<a href="index.php?id='.$this->pid.'&export=xls&startdate='.urlencode($this->startdate).'&enddate='.urlencode($this->enddate).'"><img src="../img/icon_xls.gif" style="margin: 5px;" title="Export to excel file format" /></a>';
-		$content .= '<a href="index.php?id='.$this->pid.'&export=csv&startdate='.urlencode($this->startdate).'&enddate='.urlencode($this->enddate).'"><img src="../img/icon_csv.gif" style="margin: 5px;" title="Export to CSV file format" /></a>';
-		$content .= '<a href="index.php?id='.$this->pid.'&export=table&startdate='.urlencode($this->startdate).'&enddate='.urlencode($this->enddate).'" target="_blank"><img src="../img/icon_table.gif" style="margin: 5px;" title="Export to HTML table" /></a>';
+		$content .= '<a href="index.php?id='.$this->pid.'&export=xls&startdate='.urlencode($this->startdate).'&enddate='.urlencode($this->enddate).'"><img src="../img/icon_xls.gif" style="margin: 5px;" title="'.$this->LANG->getLL('export_icon_excel').'" /></a>';
+		$content .= '<a href="index.php?id='.$this->pid.'&export=csv&startdate='.urlencode($this->startdate).'&enddate='.urlencode($this->enddate).'"><img src="../img/icon_csv.gif" style="margin: 5px;" title="'.$this->LANG->getLL('export_icon_csv').'" /></a>';
+		$content .= '<a href="index.php?id='.$this->pid.'&export=table&startdate='.urlencode($this->startdate).'&enddate='.urlencode($this->enddate).'" target="_blank"><img src="../img/icon_table.gif" style="margin: 5px;" title="'.$this->LANG->getLL('export_icon_html').'" /></a>';
 		$content .= '</div>';
 		$content .= '<div style="clear: both;"></div>';
 		$content .= '<br />';
