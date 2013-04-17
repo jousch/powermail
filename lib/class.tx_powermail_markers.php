@@ -98,14 +98,10 @@ class tx_powermail_markers extends tslib_pibase {
 		if(strpos($name,'uid') !== FALSE) { // $name like uid55
 			$uid = str_replace('uid','',$name);
 
-			// additional where clause for tt_content table
-			$where_clause = 'c.deleted=0 AND c.t3ver_state!=1 AND c.hidden=0 AND (c.starttime<='.time().') AND (c.endtime=0 OR c.endtime>'.time().') AND (c.fe_group="" OR c.fe_group IS NULL OR c.fe_group="0" OR (c.fe_group LIKE "%,0,%" OR c.fe_group LIKE "0,%" OR c.fe_group LIKE "%,0" OR c.fe_group="0") OR (c.fe_group LIKE "%,-1,%" OR c.fe_group LIKE "-1,%" OR c.fe_group LIKE "%,-1" OR c.fe_group="-1"))'; // enable fields for tt_content
-			if($GLOBALS['TYPO_VERSION'] < '4.0') $where_clause = 'c.deleted=0 AND c.hidden=0 AND (c.starttime<='.time().') AND (c.endtime=0 OR c.endtime>'.time().') AND (c.fe_group="" OR c.fe_group IS NULL OR c.fe_group="0" OR (c.fe_group LIKE "%,0,%" OR c.fe_group LIKE "0,%" OR c.fe_group LIKE "%,0" OR c.fe_group="0") OR (c.fe_group LIKE "%,-1,%" OR c.fe_group LIKE "-1,%" OR c.fe_group LIKE "%,-1" OR c.fe_group="-1"))'; // enable fields for tt_content
-
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery ( // GET title where fields.flexform LIKE <value index="vDEF">vorname</value>
-				'f.title',
-				'tx_powermail_fields f LEFT JOIN tx_powermail_fieldsets fs ON (f.fieldset = fs.uid) LEFT JOIN tt_content c ON (c.uid = fs.tt_content)',
-				$where_clause .= ' AND c.uid = '.$this->pibase->pibase->cObj->data['uid'].' AND f.uid = '.$uid.' AND f.hidden = 0 AND f.deleted = 0',
+				'tx_powermail_fields.title',
+				'tx_powermail_fields LEFT JOIN tx_powermail_fieldsets ON (tx_powermail_fields.fieldset = tx_powermail_fieldsets.uid) LEFT JOIN tt_content ON (tt_content.uid = tx_powermail_fieldsets.tt_content)',
+				$where_clause = 'tt_content.uid = '.$this->pibase->pibase->cObj->data['uid'].' AND tx_powermail_fields.uid = '.$uid.' AND tx_powermail_fields.hidden = 0 AND tx_powermail_fields.deleted = 0'.tslib_cObj::enableFields('tt_content'),
 				$groupBy = '',
 				$orderBy = '',
 				$limit = ''

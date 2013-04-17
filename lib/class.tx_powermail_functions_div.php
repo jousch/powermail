@@ -118,6 +118,41 @@ class tx_powermail_functions_div {
 		
 		if ($value) return $value;
 	}
+	
+	
+	// Function marker2value() replaces ###UID3### with its value from session
+	function marker2value($string,$sessiondata) {
+		$this->sessiondata = $sessiondata; // make session array available in other functions
+		
+		$string = preg_replace_callback ( // Automaticly replace ###UID55### with value from session to use markers in query strings
+			'#\#\#\#UID(.*)\#\#\##Uis', // regulare expression
+			array($this,'uidReplaceIt'), // open function
+			$string // current string
+		);
+	
+		return $string;
+	}
+	
+	
+	// Function uidReplace is used for the callback function to replace ###UID55## with value
+	function uidReplaceIt($uid) {
+		if (isset($this->sessiondata['uid'.$uid[1]])) {
+			if (!is_array($this->sessiondata['uid'.$uid[1]])) { // value is not an array
+				
+				return $this->sessiondata['uid'.$uid[1]]; // return 44 (e.g.)
+				
+			} else { // value is an array
+			
+				$return = ''; $i=0; // init counter
+				foreach ($this->sessiondata['uid'.$uid[1]] as $key => $value) { // one loop for every value
+					$return .= ($i!=0?',':'').$value; // add a value (commaseparated)
+					$i++; // increase counter
+				}
+				return $return; // return 44,45,46 (e.g.)
+				
+			}
+		}
+	}
 
 
 	// Function for initialisation.

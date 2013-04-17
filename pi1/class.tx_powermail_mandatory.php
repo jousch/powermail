@@ -23,6 +23,7 @@
 ***************************************************************/
 
 require_once(PATH_tslib.'class.tslib_pibase.php');
+require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_functions_div.php'); // file for div functions
 require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_markers.php'); // file for marker functions
 
 class tx_powermail_mandatory extends tslib_pibase {
@@ -38,6 +39,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 		$this->pi_initPIflexform(); // Init and get the flexform data of the plugin
 		
 		// Instances
+		$this->div_functions = t3lib_div::makeInstance('tx_powermail_functions_div'); // New object: div functions
 		$this->markers = t3lib_div::makeInstance('tx_powermail_markers'); // New object: TYPO3 mail functions
 		$this->markers->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions.
 		
@@ -137,7 +139,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 					if ($this->sessionfields[str_replace('.','',$key)]) { // if there is a value in the field, which to check
 						
 						// Check
-						if (!preg_match($this->conf['validate.'][$key]['expression'], $this->sessionfields[str_replace('.','',$key)])) { // If check failed
+						if (!preg_match($this->div_functions->marker2value($this->conf['validate.'][$key]['expression'],$this->sessionfields), $this->sessionfields[str_replace('.','',$key)])) { // If check failed
 							$this->sessionfields['ERROR'][str_replace('.','',$key)][] = ($this->conf['validate.'][$key]['errormsg']?$this->conf['validate.'][$key]['errormsg']:$this->pi_getLL('error_expression_validation')); // write errormessage
 						}
 						

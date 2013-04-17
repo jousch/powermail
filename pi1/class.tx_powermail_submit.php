@@ -136,7 +136,7 @@ class tx_powermail_submit extends tslib_pibase {
 		$this->htmlMail->start(); // start htmlmail
 		$this->htmlMail->recipient = $receiver; // main receiver email address
 		$this->htmlMail->recipient_copy = $cc; // cc field (other email addresses)
-		$this->htmlMail->subject = $subject; // mail subject
+		$this->htmlMail->subject = $this->div_functions->marker2value($subject,$this->sessiondata); // mail subject
 		$this->htmlMail->from_email = $sender; // sender email address
 		$this->htmlMail->from_name = $sendername; // sender email name
 		$this->htmlMail->returnPath = $sender; // return path
@@ -225,14 +225,11 @@ class tx_powermail_submit extends tslib_pibase {
 			
 			if ($res && $query) { // If there is a result
 				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every result
-					//$i = 0; // init
 					if (is_array($row)) { // if $row is an array
 						foreach ($row as $key => $value) { // give me the key
-							//if ($i == 0) { // take only first result
-								if(t3lib_div::validEmail($row[$key])) { // only if result is a valid email address
-									$emails .= $row[$key].', '; // add email address with comma at the end
-								}
-							//}
+							if(t3lib_div::validEmail($row[$key])) { // only if result is a valid email address
+								$emails .= $row[$key].', '; // add email address with comma at the end
+							}
 						}
 					}
 				}
@@ -329,12 +326,8 @@ class tx_powermail_submit extends tslib_pibase {
 		
 		if(is_array($notAllowed)) { // only if array
 			foreach ($notAllowed as $key => $value) { // one loop for every not allowed string
-				if (strpos($string, $value) !== false) { // search for (e.g.) "DELETE" in string
-					$error = 1; // set error
-					$failure .= '"'.$value.'", '; // Save error string
-				}
-				if (strpos($string, strtolower($value)) !== false) { // search for (e.g.) "delete" in string
-					$error = 1; // set error
+				if (strpos(strtolower($string), strtolower($value)) !== false) { // search for (e.g.) "delete" in string
+					$error = 1; // set error if found
 					$failure .= '"'.$value.'", '; // Save error string
 				}
 			}
