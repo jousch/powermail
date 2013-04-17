@@ -44,6 +44,7 @@ plugin.tx_powermail_pi1 {
 	js.mandatorydivclass = {$plugin.powermail.js.mandatorydivclass}
 	js.onfocus = {$plugin.powermail.js.onfocus}
 	field.checkboxJS = {$plugin.powermail.field.checkboxJS}
+	field.checkboxSplitSign.noTrimWrap = |, ||
 	rte.parse = {$plugin.powermail.rte.parse}
 	label.parse = {$plugin.powermail.label.parse}
 	input.style = {$plugin.powermail.input.style}

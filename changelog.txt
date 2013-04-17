@@ -3,67 +3,7 @@
 ###############################
 
 
-## Powermail version 1.5.x stable ##
-- Update on 17.01.2010 version 1.5.3
-Bugfix #4998: Countryselector fallback
-Bugfix #5000: TabIndex in date fields
-Bugfix #5093: Cronjob Export outputs L
-Bugfix #5371: DBAL suggested
-Bugfix #5588: Mime Type check
-Bugfix #5596: PHP5 needed
-Bugfix #5821: No time filter when no mails in selection
-Bugfix #5957: Redirection with absRefPrefix and mailto
-Bugfix #6039: SQL query with text marker
-Bugfix #6031: Typo in NL part of locallang.xml
-Feature #6010: Jump to anchor if error
-Feature #5614: CC receiver in db table
-
-- Update on 10.01.2010 version 1.5.2
-Security Update: Moving SQL selection field to typoscript - admins only
-
-- Update on 13.11.2009 version 1.5.1
-Bugfix #5265: Refill fields if user go back from confirmation page to form in other FE languages
-Bugfix #5076: Add CSS class does not affect Radiobuttons
-Feature #5323: Redirect target via typoscript stdWrap enabled
-Feature #5271: Show fe_user in list view of mails
-Feature #5228: Custom server side validation of field inputs (via userFunc)
-Feature #5089: Using selectorboxes to choose Field design in Backend
-
-- Update on 21.10.2009 version 1.5.0
-Major Feature #5071: Charts to BE added
-Bugfix #4998: Countryselector Fallback to english
-
-
-
 ## Powermail version 1.4.x stable ##
-- Update on 08.10.2009 version 1.4.18
-Bugfix #4946: Additional settings in the default CSS
-Bugfix #4851: uidReplaceIt() check session for real values now
-Feature #4926: Don't send mail to sender if subject and body empty
-Feature #4925: Overwrite Senderemail and -name via typoscript
-Feature #4912: File upload: filenames without space now
-
-- Update on 18.09.2009 version 1.4.17
-Bugfix #4651: Add css class for checkboxes
-Bugfix #4400: SQL Error if eID Feature is in use
-Bugfix #4253: Wrong foreign table in TCA
-Bugfix #4237: SQL Query for receivers too strong
-Bugfix #4090: SQL Warning in Backend
-Bugfix #3709: Select Box preselection via typoscript enabled
-Bugfix #3256: No more hardcoding of the css class of "JS Error DIV"
-Feature #4612: Italian translation
-Feature #3914: Default sendername if no sendername was set
-
-- Update on 15.07.2009 version 1.4.16
-Bugfix #3112: Don't use onfocus javascript with readonly fields
-Bugfix #3632: Recipient Table shouldn't list deleted records
-Bugfix #3638: "Missing argument 6 for tx_powermail_html::main() fixed
-Bugfix #3652: Additional CSS class for submit and reset
-Bugfix #3696: Backlink on confirmation page
-Bugfix #3724: Mime check fix for ZIP files
-Bugfix #3853: Set Additional CSS classes without IRRE
-Feature #2697: Mootools instead of Prototype
-
 - Update on 28.05.2009 version 1.4.15
 Feature #3493: Add own classes to fields and fieldsets
 Feature #3108: JS in form.html to add own regEx

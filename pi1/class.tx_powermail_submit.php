@@ -317,23 +317,25 @@ class tx_powermail_submit extends tslib_pibase {
 				$typolink_conf = array (
 				  'returnLast' => 'url', // Give me only the string
 				  'parameter' => $this->cObj->data['tx_powermail_redirect'], // target pid
-				  'useCacheHash' => 0 // Don't use cache
+				  'useCacheHash' => 0, // Don't use cache
+				  'section' => '' // clear section value if any
 				);
 				$link = $this->cObj->typolink('x', $typolink_conf); // Create target url
 				
 				if (intval($this->cObj->data['tx_powermail_redirect']) > 0 || strpos($this->cObj->data['tx_powermail_redirect'], 'fileadmin/') !== false) { // PID (intern link) OR file
-					//if ($GLOBALS['TSFE']->tmpl->setup['config.']['absRefPrefix'] == '') { // only if absRefPrefix is not in use
-					if ($GLOBALS['TSFE']->tmpl->setup['config.']['absRefPrefix'] == '' && strpos('://', $link) !== false ) { // only if absRefPrefix is not in use AND if the link didn't already have a HTTP-Host
-						$link = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')) . $link; // Add baseurl to link
+					// if ($GLOBALS['TSFE']->tmpl->setup['config.']['absRefPrefix'] == '') { // only if absRefPrefix is not in use
+					// if ($GLOBALS['TSFE']->tmpl->setup['config.']['absRefPrefix'] == '' && strpos('://', $link) !== false ) { // only if absRefPrefix is not in use AND if the link didn't already have a HTTP-Host
+					if (!strstr($link, '://')) { // if no http:// could be found in current link
+						$link = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')) . $link; // Add baseurl or host in front of the link
 					} 
-				} 
-				elseif (t3lib_div::validEmail($this->cObj->data['tx_powermail_redirect'])) { // if email recognized
+				
+				} elseif (t3lib_div::validEmail($this->cObj->data['tx_powermail_redirect'])) { // if email recognized
 					$link = 'mailto:'.$link; // add mailto: 
 				}
 				
 				$link = preg_replace('#([^:])//#', '$1/', $link); // strip out "//"
 				
-				// Header for redirect
+				// Set Header for redirect
 				header('Location: '.$link); 
 				header('Connection: close');
 		

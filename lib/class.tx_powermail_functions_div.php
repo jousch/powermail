@@ -39,8 +39,7 @@ class tx_powermail_functions_div {
 	
 	// Function sec() is a security function against all bad guys :) 
 	function sec($array) {
-		
-		if (isset($array) && is_array($array)) { // if array
+		if(isset($array) && is_array($array)) { // if array
 			//$this->removeXSS = t3lib_div::makeInstance('tx_powermail_removexss'); // New object: removeXSS function
 			//t3lib_div::addSlashesOnArray($array); // addslashes for every piVar (He'l"lo => He\'l\"lo)
 			
@@ -50,9 +49,9 @@ class tx_powermail_functions_div {
 					$array[$key] = intval(trim($value)); // the value should be integer
 				}
 					
-				if (!is_array($value)) { // if value is not an array
-					
-					$array[$key] = strip_tags($value); // strip_tags removes html and php code
+				if (!is_array($value)) {	// if value is not an array
+				
+					$array[$key] = strip_tags(trim($value)); // strip_tags removes html and php code
 					$array[$key] = addslashes($array[$key]); // use addslashes
 					//$array[$key] = $this->removeXSS->RemoveXSS($array[$key]); // use remove XSS for piVars
 					

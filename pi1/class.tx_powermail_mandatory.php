@@ -234,13 +234,13 @@ class tx_powermail_mandatory extends tslib_pibase {
 	
 	// Function emailCheck() checks if sender email address is a real email address, if not write error to session
 	function emailCheck() {
-		if($this->cObj->data['tx_powermail_sender'] && is_array($this->sessionfields)) { // If email address from sender is set in backend
-			if($this->sessionfields[$this->cObj->data['tx_powermail_sender']]) { // if there is content in the email sender field
-				if(!t3lib_div::validEmail($this->sessionfields[$this->cObj->data['tx_powermail_sender']])) { // Value is not an email address
-					$this->sessionfields['ERROR'][str_replace('uid','',$this->cObj->data['tx_powermail_sender'])][] = $this->pi_getLL('error_validemail'); // write error message to session
+		if ($this->cObj->data['tx_powermail_sender'] && is_array($this->sessionfields)) { // If email address from sender is set in backend
+			if ($this->sessionfields[$this->cObj->data['tx_powermail_sender']]) { // if there is content in the email sender field
+				if (!t3lib_div::validEmail($this->sessionfields[$this->cObj->data['tx_powermail_sender']])) { // Value is not an email address
+					$this->sessionfields['ERROR'][str_replace('uid', '', $this->cObj->data['tx_powermail_sender'])][] = $this->pi_getLL('error_validemail'); // write error message to session
 				} else { // Syntax of email address is correct - check for MX Record (if activated via constants)
-					if( !$this->div->checkMX( $this->sessionfields[$this->cObj->data['tx_powermail_sender']] ) && $this->conf['email.']['checkMX'] ) {
-                        $this->sessionfields['ERROR'][str_replace('uid','',$this->cObj->data['tx_powermail_sender'])][] = $this->pi_getLL('error_nomx'); // write error message to session
+					if ($this->conf['email.']['checkMX'] && !$this->div->checkMX($this->sessionfields[$this->cObj->data['tx_powermail_sender']] )) {
+                        $this->sessionfields['ERROR'][str_replace('uid', '', $this->cObj->data['tx_powermail_sender'])][] = $this->pi_getLL('error_nomx'); // write error message to session
                     }
 				}
 			}

@@ -56,6 +56,8 @@ class tx_powermail_html extends tslib_pibase {
 		$this->uid = $row['f_uid']; // get uid of current field
 		$this->fe_field = $row['f_fefield']; // Get frontend user field if related to
 		$this->description = $row['f_description']; // Get frontend user field if related to
+		$this->class_f = $row['f_class']; // Get css class of current field
+		$this->class_fs = $row['fs_class']; // Get css class of current fieldset
 		$this->tabindex = $tabindex; // get current tabindex
 		$this->counter = $counter; // counter for alternate function
 		$this->pi_loadLL();
@@ -903,7 +905,15 @@ class tx_powermail_html extends tslib_pibase {
 		$this->required = '';
 		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'mandatory') == 1 || $this->type == 'captcha') $this->required = 'required '; // add class="required" if javascript mandatory should be activated and in captcha fields
 		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'validate') != '' && $this->type == 'text') $this->required .= $this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'validate').' '; // add another key in class if javascript mandatory should be activated
-		$this->markerArray['###CLASS###'] = 'class="'.$this->required.'powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.'" '; // add class name to markerArray
+		// class="required powermail_title powermail_text powermail_uid12"
+		$this->markerArray['###CLASS###'] = 'class="'; // open tag
+		$this->markerArray['###CLASS###'] .= $this->required; // if required class for JS
+		$this->markerArray['###CLASS###'] .= 'powermail_' . $this->formtitle; // add formtitle
+		$this->markerArray['###CLASS###'] .= ' powermail_' . $this->type; // add type of field
+		$this->markerArray['###CLASS###'] .= ' powermail_uid' . $this->uid; // add uid of field
+		$this->markerArray['###CLASS###'] .= ($this->class_f != '' ? ' ' . $this->class_f : ''); // Add manual class
+		$this->markerArray['###CLASS###'] .= '" '; // close tag
+		//$this->markerArray['###CLASS###'] = 'class="'.$this->required.'powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.'" '; // add class name to markerArray
 		
 		// ###SIZE###
 		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'size')) { // if size is set in flexform
