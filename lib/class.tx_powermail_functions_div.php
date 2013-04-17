@@ -22,6 +22,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_removeXSS.php'); // file for removeXSS function
+
 /**
  * Class with collection of different functions (like string and array functions)
  *
@@ -75,7 +77,7 @@ class tx_powermail_functions_div {
 	// Function sec() is a security function against all bad guys :) 
 	function sec($array) {
 		if(isset($array) && is_array($array)) { // if array
-			//t3lib_div::addSlashesOnArray($array); // addslashes for every piVar (He'l"lo => He\'l\"lo)
+			$this->removeXSS = t3lib_div::makeInstance('tx_powermail_RemoveXSS'); // New object: function for removing XSS
 			
 			foreach ($array as $key => $value) { // one loop for every key in first level
 				
@@ -86,8 +88,8 @@ class tx_powermail_functions_div {
 				if(!is_array($value)) {	// if value is not an array
 				
 					$array[$key] = strip_tags(trim($value)); // strip_tags removes html and php code
-					if(function_exists('mysql_real_escape_string')) $array[$key] = mysql_real_escape_string($value); // check against sql injection
-					else $array[$key] = addslashes($value); // use addslashes if escape_string is not available
+					$array[$key] = $this->removeXSS->RemoveXSS($array[$key]); // remove XSS
+					$array[$key] = addslashes($array[$key]); // use addslashes
 					
 				} else { // value is still an array (second level)
 					
@@ -95,8 +97,8 @@ class tx_powermail_functions_div {
 						foreach ($value as $key2 => $value2) { // one loop for every key in second level
 						
 							$array[$key][$key2] = strip_tags(trim($value2)); // strip_tags removes html and php code
-							if(function_exists('mysql_real_escape_string')) $array[$key][$key2] = mysql_real_escape_string($value2); // check against sql injection
-							else $array[$key][$key2] = addslashes($value2); // use addslashes if escape_string is not available
+							$array[$key][$key2] = $this->removeXSS->RemoveXSS($array[$key][$key2]); // remove XSS
+							$array[$key][$key2] = addslashes($array[$key][$key2]); // use addslashes
 							
 						}
 					} else unset($array[$key][$key2]); // if array with 3 or more dimensions - delete this value
