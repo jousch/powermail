@@ -91,6 +91,7 @@ CREATE TABLE tx_powermail_mails (
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	formid int(11) DEFAULT '0' NOT NULL,
 	recipient tinytext NOT NULL,
+	cc_recipient text NOT NULL,
 	subject_r tinytext NOT NULL,
 	sender tinytext NOT NULL,
 	content text NOT NULL,
