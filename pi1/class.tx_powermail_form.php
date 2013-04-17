@@ -41,7 +41,7 @@ class tx_powermail_form extends tslib_pibase {
 		global $TSFE;
 		$this->cObj = $TSFE->cObj; // cObject
 		$this->conf = $conf;
-		$this->baseurl = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : 'http://'.$_SERVER['HTTP_HOST'].'/'); // set baseurl
+		$this->baseurl = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')); // set baseurl
 		$this->dynamicMarkers = t3lib_div::makeInstance('tx_powermail_dynamicmarkers'); // New object: TYPO3 marker function
 		$this->div = t3lib_div::makeInstance('tx_powermail_functions_div'); // New object: div functions
 		$this->html_input_field = t3lib_div::makeInstance('tx_powermail_html'); // New object: html generation of input fields

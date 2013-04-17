@@ -389,7 +389,7 @@ class tx_powermail_html extends tslib_pibase {
 		
 		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'clearSession')) { // if checkbox clearSession is checked
 			//$this->markerArray['###JS###'] = 'onclick="location=\'/'.$this->pibase->pi_linkTP_keepPIvars_url(array('clearSession' => 1)).'\'" '; // Fill marker ###JS### with eventhandler
-			$this->markerArray['###JS###'] = 'onclick="location=\'/'.$this->pibase->cObj->typolink('x',array("returnLast"=>"url", "parameter"=>$GLOBALS['TSFE']->id, "additionalParams"=>'&tx_powermail_pi1[clearSession]=-1'), 1).'\'" '; // Fill marker ###JS### with eventhandler
+			$this->markerArray['###JS###'] = 'onclick="location=\'/'.t3lib_div::getIndpEnv('TYPO3_SITE_URL').$this->pibase->cObj->typolink('x',array("returnLast"=>"url", "parameter"=>$GLOBALS['TSFE']->id, "additionalParams"=>'&tx_powermail_pi1[clearSession]=-1'), 1).'\'" '; // Fill marker ###JS### with eventhandler
 		}
 		
 		$this->markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_reset_uid'.$this->uid.'" '; // add class name to markerArray

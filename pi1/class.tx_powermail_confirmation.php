@@ -48,7 +48,7 @@ class tx_powermail_confirmation extends tslib_pibase {
 		$this->tmpl['all'] = $this->pibase->cObj->getSubpart(tslib_cObj::fileResource($this->conf['template.']['confirmation']),'###POWERMAIL_CONFIRMATION###'); // Load HTML Template (work on subpart)
 		
 		// Fill Markers
-		$this->markerArray = $this->markers->GetMarkerArray(); // Fill markerArray
+		$this->markerArray = $this->markers->GetMarkerArray('confirmation'); // Fill markerArray
 		$this->markerArray['###POWERMAIL_NAME_BACK###'] = $this->pibase->cObj->data['tx_powermail_title'].'_confirmation_back'; // Fill Marker with formname
 		$this->markerArray['###POWERMAIL_NAME_SUBMIT###'] = $this->pibase->cObj->data['tx_powermail_title'].'_confirmation_submit'; // Fill Marker with formname
 		$this->markerArray['###POWERMAIL_METHOD###'] = $this->conf['form.']['method']; // Form method
