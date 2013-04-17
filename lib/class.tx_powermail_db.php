@@ -58,7 +58,11 @@ class tx_powermail_db extends tslib_pibase {
 					// 2. Insert static values
 					if (isset($this->conf['dbEntryDefault.'][$key]) && is_array($this->conf['dbEntryDefault.'][$key])) { // Only if any dbEntryDefault is set per typoscript
 						foreach ($this->conf['dbEntryDefault.'][$key] as $sk => $sv) { // One loop for every field to insert in current table
-							if( $this->fieldExists($sk, str_replace('.','',$key)) ) $db_values[$sk] = $this->conf['dbEntryDefault.'][$key][$sk];
+							if( $this->fieldExists($sk, str_replace('.','',$key)) ) { // If database table exists
+								if ($sv == '[pid]') $db_values[$sk] = $GLOBALS['TSFE']->id; // add current pid
+								elseif ($sv == '[tstamp]') $db_values[$sk] = time(); // add current timestamp
+								else $db_values[$sk] = $this->conf['dbEntryDefault.'][$key][$sk]; // add static value from ts
+							}
 						}
 					}
 					
