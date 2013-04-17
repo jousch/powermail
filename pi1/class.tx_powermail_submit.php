@@ -128,7 +128,7 @@ class tx_powermail_submit extends tslib_pibase {
 			$this->maildata['cc'] = (isset($this->CCReceiver) ? $this->CCReceiver : ''); // carbon copy (take email addresses or nothing if not available)
 		} elseif ($this->subpart == 'sender_mail') { // extended settings: mail to sender
 			$this->maildata['receiver'] = $this->sender; // set receiver
-			$this->maildata['sender'] = $this->MainReceiver; // set sender
+			$this->maildata['sender'] = (isset($this->conf['email.']['overwritesender']) &&  t3lib_div::validEmail($this->conf['email.']['overwritesender']) ? $this->conf['email.']['overwritesender'] : $this->MainReceiver); // set sender email address (take from ts or from first receiver)
 			$this->maildata['subject'] = $this->subject_s; // set subject
 			$this->maildata['sendername'] = (isset($this->sendername) ? $this->sendername : $this->MainReceiver); // set sendername
 			$this->maildata['cc'] = ''; // no cc
@@ -181,11 +181,12 @@ class tx_powermail_submit extends tslib_pibase {
 		
 		// Configuration
 		$this->save_PID = $GLOBALS['TSFE']->id; // PID where to save: Take current page
-		if($this->conf['PID.']['dblog']) $this->save_PID = $this->conf['PID.']['dblog']; // PID where to save: Get it from TS if set
+		if (intval($this->conf['PID.']['dblog']) > 0) $this->save_PID = $this->conf['PID.']['dblog']; // PID where to save: Get it from TS if set
+		if (intval($this->pibase->cObj->data['pages']) > 0) $this->save_PID = $this->pibase->cObj->data['pages']; // PID where to save: Get it from plugin
 		
 		// DB entry for table Tabelle: tx_powermail_mails
-		$db_values = array (
-			'pid' => $this->save_PID, // PID
+		$this->db_values = array (
+			'pid' => intval($this->save_PID), // PID
 			'tstamp' => time(), // save current time
 			'crdate' => time(), // save current time
 			'formid' => ($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']),
@@ -199,7 +200,8 @@ class tx_powermail_submit extends tslib_pibase {
 			'Referer' => $_SERVER['HTTP_REFERER'],
 			'SP_TZ' => $_SERVER['SP_TZ']
 		);
-		if ($this->dbInsert) $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_powermail_mails',$db_values); // DB entry
+		if ($this->dbInsert) $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_powermail_mails',$this->db_values); // DB entry
+		$this->debug('db'); // Debug output
 	}
 	
 	
@@ -294,20 +296,26 @@ class tx_powermail_submit extends tslib_pibase {
 	
 	// Function debug() enables debug output
 	function debug($subpart) {
-		// If debug output for email
-		if ($this->conf['debug.']['output'] == 'all' || $this->conf['debug.']['output'] == 'email') { // only if debug output activated via constants
-			$debugarray = array (
-				'receiver' => $this->maildata['receiver'] ? $this->maildata['receiver'] : 'SYSTEM NOTE: No receiver email address',
-				'cc receiver' => $this->maildata['cc'] ? $this->maildata['cc'] : 'SYSTEM NOTE: No cc addresses',
-				'sender' => $this->maildata['sender'] ? $this->maildata['sender'] : 'SYSTEM NOTE: No sender email address',
-				'sendername' => $this->maildata['sendername'] ? $this->maildata['sendername'] : 'SYSTEM NOTE: No sender name',
-				'charset' => $GLOBALS['TSFE']->metaCharset ? $GLOBALS['TSFE']->metaCharset : 'SYSTEM NOTE: No charset set',
-				'attachment' => $this->sessiondata['FILE'] ? $this->sessiondata['FILE'] : 'SYSTEM NOTE: No attachments',
-				'subject' => $this->maildata['subject'] ? $this->maildata['subject'] : 'SYSTEM NOTE: No subject',
-				'mailcontent (html)' => ($this->conf['emailformat.'][$this->subpart] != 'plain' ? $this->mailcontent[$subpart] : 'SYSTEM NOTE: Disabled via typoscript'),
-				'mailcontent (plaintext)' => ($this->conf['emailformat.'][$this->subpart] != 'html' ? $this->div_functions->makePlain($this->mailcontent[$subpart]) : 'SYSTEM NOTE: Disabled via typoscript')
-			);
-			$this->div_functions->debug($debugarray, 'Email values ('.$subpart.')'); // Debug function (Array from Session)
+		if ($subpart != 'db') {
+			// If debug output for email
+			if ($this->conf['debug.']['output'] == 'all' || $this->conf['debug.']['output'] == 'email') { // only if debug output activated via constants
+				$debugarray = array (
+					'receiver' => $this->maildata['receiver'] ? $this->maildata['receiver'] : 'SYSTEM NOTE: No receiver email address',
+					'cc receiver' => $this->maildata['cc'] ? $this->maildata['cc'] : 'SYSTEM NOTE: No cc addresses',
+					'sender' => $this->maildata['sender'] ? $this->maildata['sender'] : 'SYSTEM NOTE: No sender email address',
+					'sendername' => $this->maildata['sendername'] ? $this->maildata['sendername'] : 'SYSTEM NOTE: No sender name',
+					'charset' => $GLOBALS['TSFE']->metaCharset ? $GLOBALS['TSFE']->metaCharset : 'SYSTEM NOTE: No charset set',
+					'attachment' => $this->sessiondata['FILE'] ? $this->sessiondata['FILE'] : 'SYSTEM NOTE: No attachments',
+					'subject' => $this->maildata['subject'] ? $this->maildata['subject'] : 'SYSTEM NOTE: No subject',
+					'mailcontent (html)' => ($this->conf['emailformat.'][$this->subpart] != 'plain' ? $this->mailcontent[$subpart] : 'SYSTEM NOTE: Disabled via typoscript'),
+					'mailcontent (plaintext)' => ($this->conf['emailformat.'][$this->subpart] != 'html' ? $this->div_functions->makePlain($this->mailcontent[$subpart]) : 'SYSTEM NOTE: Disabled via typoscript')
+				);
+				$this->div_functions->debug($debugarray, 'Email values ('.$subpart.')'); // Debug function (Array from Session)
+			}
+		} else {
+			if ($this->conf['debug.']['output'] == 'all' || $this->conf['debug.']['output'] == 'db') { // only if debug output activated via constants
+				$this->div_functions->debug($this->db_values, 'DB values'); // Debug function (Array from Session)
+			}
 		}
 	
 	}

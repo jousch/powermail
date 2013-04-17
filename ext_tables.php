@@ -13,6 +13,7 @@ if (TYPO3_MODE=="BE") {
 	include_once(t3lib_extMgm::extPath("powermail")."lib/class.user_powermail_tx_powermail_example.php");
 	include_once(t3lib_extMgm::extPath("powermail")."lib/class.user_powermail_tx_powermail_uid.php");
 }
+$TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi1']='layout,select_key,pages,recursive';
 
 t3lib_extMgm::addToInsertRecords('tx_powermail_fieldsets');
 
@@ -151,6 +152,18 @@ $tempColumns = Array (
 			"default" => 1,
 		)
 	),
+	"pages" => Array (		
+		"exclude" => 1,		
+		"label" => "LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.startingpoint",		
+		"config" => Array (
+			"type" => "group",
+			"internal_type" => "db",
+			"allowed" => "pages",
+			"size" => 1,	
+			"maxitems" => 1,
+			"show_thumbs" => 1,
+		)
+	),
 	"tx_powermail_multiple" => Array (		
 		"exclude" => 1,		
 		"label" => "LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.multiple",		
@@ -285,18 +298,9 @@ if($confArr['usePreview'] != 1) unset($tempColumns["tx_powermail_preview"]);
 
 t3lib_div::loadTCA("tt_content");
 t3lib_extMgm::addTCAcolumns("tt_content",$tempColumns,1);
-/*$TCA['tt_content']['types'][$_EXTKEY.'_pi1']['showitem'] = '
-	CType;;4;button;1-1-1, sys_language_uid;;;;2-2-2, l18n_parent, l18n_diffsource, hidden;;1, header;;3;;3-3-3,
-	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div1, tx_powermail_title;;;;2-2-2, tx_powermail_confirm;;;;3-3-3, tx_powermail_multiple,
-	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div2, tx_powermail_fieldsets;;;;4-4-4, tx_powermail_preview,
-	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div3, tx_powermail_sender, tx_powermail_subject_s,, tx_powermail_mailsender;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts],
-	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div4, tx_powermail_subject_r, tx_powermail_recipient, tx_powermail_users;;;;5-5-5,tx_powermail_recip_table, tx_powermail_recip_id, tx_powermail_query;;;;6-6-6,, tx_powermail_mailreceiver;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts],
-	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div5, tx_powermail_thanks;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], tx_powermail_redirect,
-	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div8
-';*/
 $TCA['tt_content']['types'][$_EXTKEY.'_pi1']['showitem'] = '
 	CType;;4;button;1-1-1, sys_language_uid;;;;2-2-2, l18n_parent, l18n_diffsource, header;;3;;3-3-3,
-	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div1, tx_powermail_title;;;;2-2-2, tx_powermail_confirm;;;;3-3-3, tx_powermail_multiple,
+	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div1, tx_powermail_title;;;;2-2-2, pages;;;;3-3-3, tx_powermail_confirm;;;;3-3-3, tx_powermail_multiple,
 	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div2, tx_powermail_fieldsets;;;;4-4-4, tx_powermail_preview,
 	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div3, tx_powermail_sender, tx_powermail_subject_s,, tx_powermail_mailsender;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts],
 	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div4, tx_powermail_subject_r, tx_powermail_recipient, tx_powermail_users;;;;5-5-5,tx_powermail_recip_table, tx_powermail_recip_id, tx_powermail_query;;;;6-6-6,, tx_powermail_mailreceiver;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts],

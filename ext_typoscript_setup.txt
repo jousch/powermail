@@ -18,6 +18,7 @@ plugin.tx_powermail_pi1 {
 	enable.unique = {$plugin.powermail.enable.unique}
 	email.noreply = {$plugin.powermail.email.noreply}
 	email.checkMX = {$plugin.powermail.email.checkMX}
+	email.overwritesender = {$plugin.powermail.email.overwritesender}
 	markerALL.hideLabel = {$plugin.powermail.markerALL.hideLabel}
 	markerALL.notIn = {$plugin.powermail.markerALL.notIn}
 	PID.dblog = {$plugin.powermail.PID.dblog}

@@ -6,7 +6,8 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="locallangmarker_confirmation_question">Are this values correct?</label>
+			<label index="powermailmarker_notitle">ERROR: No title to current field found in DB (%s)</label>
+			<label index="locallangmarker_confirmation_question">Are these values correct?</label>
 			<label index="locallangmarker_confirmation_back">Go back</label>
 			<label index="locallangmarker_confirmation_files">Attached file %s: </label>
 			<label index="locallangmarker_confirmation_submit">Send values now</label>
@@ -26,7 +27,7 @@
 			<label index="error_captcha_wrong">Captcha Code wrong</label>
 			<label index="error_backend_noip">IP logging disabled</label>
 			<label index="error_validemail">Email address is not valid</label>
-			<label index="error_nomx">Email address don't exist</label>
+			<label index="error_nomx">Email address doesn't exist</label>
 			<label index="error_unique_field">%s was already used</label>
 			<label index="error_unique_ip">IP address %s already made an entry</label>
 			<label index="error_expression_validation">Validation failed</label>
@@ -47,6 +48,7 @@
 			<label index="JSvalidation_label_validate_one_required">Please select one of the above options</label>
 		</languageKey>
 		<languageKey index="de" type="array">
+			<label index="powermailmarker_notitle">FEHLER: Kein Titel zu Feld (%s) in DB gefunden</label>
 			<label index="locallangmarker_confirmation_question">Sind diese Angaben korrekt?</label>
 			<label index="locallangmarker_confirmation_back">Zurück</label>
 			<label index="locallangmarker_confirmation_files">Angehängte Datei %s: </label>
@@ -88,7 +90,8 @@
 			<label index="JSvalidation_label_validate_one_required">Bitte füllen Sie min. 1 Feld aus</label>
 		</languageKey>
 		<languageKey index="en" type="array">
-			<label index="locallangmarker_confirmation_question">Are this values correct?</label>
+			<label index="powermailmarker_notitle">ERROR: No title to current field found in DB (%s)</label>
+			<label index="locallangmarker_confirmation_question">Are these values correct?</label>
 			<label index="locallangmarker_confirmation_back">Go back</label>
 			<label index="locallangmarker_confirmation_files">Attached file %s:</label>
 			<label index="locallangmarker_confirmation_submit">Send values now</label>
@@ -108,7 +111,7 @@
 			<label index="error_captcha_wrong">Captcha Code wrong</label>
 			<label index="error_backend_noip">IP logging disabled</label>
 			<label index="error_validemail">Email addres is not valid</label>
-			<label index="error_nomx">Email address don't exist</label>
+			<label index="error_nomx">Email address doesn't exist</label>
 			<label index="error_unique_field">%s was already used</label>
 			<label index="error_unique_ip">IP address %s already made an entry</label>
 			<label index="error_expression_validation">Validation failed</label>

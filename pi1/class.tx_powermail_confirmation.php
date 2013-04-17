@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007 Mischa Heiﬂmann, Alexander Kellner <typo3@heissmann.org, alexander.kellner@wunschtacho.de>
+*  (c) 2007 Alexander Kellner, Mischa Heiﬂmann <alexander.kellner@wunschtacho.de, typo3@heissmann.org>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is

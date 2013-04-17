@@ -121,7 +121,8 @@ class tx_powermail_markers extends tslib_pibase {
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery ( // GET title where fields.flexform LIKE <value index="vDEF">vorname</value>
 				'tx_powermail_fields.title',
 				'tx_powermail_fields LEFT JOIN tx_powermail_fieldsets ON (tx_powermail_fields.fieldset = tx_powermail_fieldsets.uid) LEFT JOIN tt_content ON (tt_content.uid = tx_powermail_fieldsets.tt_content)',
-				$where_clause = 'tt_content.uid = '.($this->pibase->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->pibase->cObj->data['uid']).' AND tx_powermail_fields.uid = '.$uid.' AND tx_powermail_fields.hidden = 0 AND tx_powermail_fields.deleted = 0'.tslib_cObj::enableFields('tt_content'),
+				//$where_clause = 'tt_content.uid = '.($this->pibase->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->pibase->cObj->data['uid']).' AND tx_powermail_fields.uid = '.$uid.' AND tx_powermail_fields.hidden = 0 AND tx_powermail_fields.deleted = 0'.tslib_cObj::enableFields('tt_content'),
+				$where_clause = 'tx_powermail_fields.uid = '.$uid.' AND tx_powermail_fields.hidden = 0 AND tx_powermail_fields.deleted = 0',
 				$groupBy = '',
 				$orderBy = '',
 				$limit = ''
@@ -129,7 +130,7 @@ class tx_powermail_markers extends tslib_pibase {
 			if ($res) $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 			
 			if(isset($row['title'])) return $row['title']; // if title was found return ist
-			else return 'POWERMAIL ERROR: No title to current field found in DB ('.$name.')'; // if no title was found return  
+			else return sprintf($this->pi_getLL('powermailmarker_notitle','ERROR: No title to current field found in DB (%s)'), $name); //  if no title was found return  
 		} else { // no uid55 so return $name
 			return $name;
 		}

@@ -69,6 +69,7 @@ if(t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.1.0') || 
 		"foreign_table" => "tt_content",
 		'foreign_table_where' => 'AND tt_content.pid=###CURRENT_PID### ',
 		"maxitems" => 1,
+		'itemsProcFunc' => 'user_powermail_tx_powermail_fieldsetchoose->main',
 	);
 	$TCA["tx_powermail_fieldsets"]["columns"]["tt_content"]['label'] = "LLL:EXT:powermail/locallang_db.xml:tx_powermail_fieldsets.tt_content";
 	$TCA["tx_powermail_fieldsets"]["columns"]["felder"]['config']['type'] = 'passthrough';
@@ -220,6 +221,7 @@ if(t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.1.0') || 
 		"type" => "select",
 		"foreign_table" => "tx_powermail_fieldsets",
 		"maxitems" => 1,
+		'itemsProcFunc' => 'user_powermail_tx_powermail_fieldsetchoose->main',
 	);
 	$TCA["tx_powermail_fields"]["columns"]["fieldset"]['label'] = "LLL:EXT:powermail/locallang_db.xml:tx_powermail_fields.fieldset";
 	$TCA["tx_powermail_fields"]["types"]["0"]['showitem'] = "title;;;;1-1-1,fieldset,formtype;;;;2-2-2,flexform;;;;3-3-3, fe_field;;;;4-4-4";

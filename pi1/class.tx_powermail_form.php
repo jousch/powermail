@@ -179,7 +179,6 @@ class tx_powermail_form extends tslib_pibase {
 	// Function tabindexArray() returns array with sorted numbers for tabindex
 	function tabindexArray() {
 		// config
-		$GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode
 		$array = array(); //init
 		
 		// Let's go

@@ -125,7 +125,7 @@ class tx_powermail_functions_div {
 	
 	// Function nl2br2() changes breakes to html breakes
 	function nl2br2($string) {
-		return str_replace('\r\n',"<br />",$string);
+		return str_replace(array('\r\n','\n','\r','\n\r',"\r\n","\n","\r","\n\r"),"<br />",$string);
 	}
 	
 	

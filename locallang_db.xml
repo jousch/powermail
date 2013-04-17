@@ -21,6 +21,7 @@
 			<label index="tx_powermail_forms.subject_s">Subject for sender's mail</label>
 			<label index="tx_powermail_forms.sender">Sender field</label>
 			<label index="tx_powermail_forms.confirm">Activate confirmation page</label>
+			<label index="tx_powermail_forms.startingpoint">Save mails in page</label>
 			<label index="tx_powermail_forms.multiple">Muliple steps</label>
 			<label index="tx_powermail_forms.multiple.I.0">Single step</label>
 			<label index="tx_powermail_forms.multiple.I.1">Muliple steps JS</label>
@@ -153,6 +154,7 @@
 			<label index="tx_powermail_forms.subject_s">Betreff für Absendermail</label>
 			<label index="tx_powermail_forms.sender">Absenderfeld</label>
 			<label index="tx_powermail_forms.confirm">Bestätigungsseite aktivieren</label>
+			<label index="tx_powermail_forms.startingpoint">Speicherort für Mails</label>
 			<label index="tx_powermail_forms.multiple">Mehrere Schritte</label>
 			<label index="tx_powermail_forms.multiple.I.0">Eine Seite</label>
 			<label index="tx_powermail_forms.multiple.I.1">Mehrere Schritte JS</label>
@@ -283,6 +285,7 @@
 			<label index="tx_powermail_forms.subject_s">Subject for sender's mail</label>
 			<label index="tx_powermail_forms.sender">Sender field</label>
 			<label index="tx_powermail_forms.confirm">Activate confirmation page</label>
+			<label index="tx_powermail_forms.startingpoint">Save mails in page</label>
 			<label index="tx_powermail_forms.multiple">Muliple steps</label>
 			<label index="tx_powermail_forms.multiple.I.0">Single step</label>
 			<label index="tx_powermail_forms.multiple.I.1">Muliple steps JS</label>
