@@ -3,6 +3,13 @@
 ###############################
 
 
+## Powermail version 1.5.x stable ##
+- Update on 21.10.2009 version 1.5.0
+Major Feature #5071: Charts to BE added
+Bugfix #4998: Countryselector Fallback to english
+
+
+
 ## Powermail version 1.4.x stable ##
 - Update on 08.10.2009 version 1.4.18
 Bugfix #4946: Additional settings in the default CSS
