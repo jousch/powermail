@@ -90,11 +90,14 @@
 			<label index="tx_powermail_forms.fieldtitle.reset">Reset button</label>
 			<label index="tx_powermail_forms.fieldtitle.datetime">Date and time field</label>
 			<label index="tx_powermail_forms.fieldtitle.date">Date field</label>
-			<label index="tx_powermail_forms.fieldtitle.time">Time field</label>
 			<label index="tx_powermail_forms.fieldtitle.button">Button</label>
 			<label index="tx_powermail_forms.fieldtitle.submitgraphic">Graphic as submit</label>
 			<label index="tx_powermail_forms.fieldtitle.countryselect">Country selection</label>
 			<label index="tx_powermail_forms.fieldtitle.captcha">Captcha request</label>
+			<label index="tx_powermail_forms.fieldtitle.typoscript">Add typoscript object</label>
+			<label index="tx_powermail_forms.fieldtitle.div1">Standard</label>
+			<label index="tx_powermail_forms.fieldtitle.div2">Extra</label>
+			<label index="tx_powermail_forms.fieldtitle.div3">Extensions</label>
 			<label index="tx_powermail_forms.mailsender">Email-Text for sender</label>
 			<label index="tx_powermail_forms.mailreceiver">Email-Text for receiver</label>
 			<label index="tx_powermail_forms.redirect">Auto-redirect after confirmation-page</label>
@@ -119,6 +122,7 @@
 			<label index="tx_powermail_forms.xml.preselect">Country shortage for preselect</label>
 			<label index="tx_powermail_forms.xml.within">Only show this countries</label>
 			<label index="tx_powermail_forms.xml.without">Show list without this countries</label>
+			<label index="tx_powermail_forms.xml.typoscript">Typoscript object</label>
 			<label index="tx_powermail_forms.xml.validate">Validate this field for</label>
 			<label index="tx_powermail_forms.xml.validate.1">email-address</label>
 			<label index="tx_powermail_forms.xml.validate.2">URL</label>
@@ -218,11 +222,14 @@
 			<label index="tx_powermail_forms.fieldtitle.reset">Zurücksetzen Button</label>
 			<label index="tx_powermail_forms.fieldtitle.datetime">Datum und Zeit Feld</label>
 			<label index="tx_powermail_forms.fieldtitle.date">Datum Feld</label>
-			<label index="tx_powermail_forms.fieldtitle.time">Zeit Feld</label>
 			<label index="tx_powermail_forms.fieldtitle.button">Button</label>
 			<label index="tx_powermail_forms.fieldtitle.submitgraphic">Grafik als Absendebutton</label>
 			<label index="tx_powermail_forms.fieldtitle.countryselect">Länderauswahl</label>
 			<label index="tx_powermail_forms.fieldtitle.captcha">Captcha Abfrage</label>
+			<label index="tx_powermail_forms.fieldtitle.typoscript">Typoscript Objekt einfügen</label>
+			<label index="tx_powermail_forms.fieldtitle.div1">Standard</label>
+			<label index="tx_powermail_forms.fieldtitle.div2">Extra</label>
+			<label index="tx_powermail_forms.fieldtitle.div3">Erweiterungen</label>
 			<label index="tx_powermail_forms.xml.name">Name für Templates</label>
 			<label index="tx_powermail_forms.xml.label">Beschreibung</label>
 			<label index="tx_powermail_forms.xml.size">Größe</label>
@@ -244,6 +251,7 @@
 			<label index="tx_powermail_forms.xml.preselect">Länderkürzel für Vorauswahl</label>
 			<label index="tx_powermail_forms.xml.within">Zeige nur diese Länder</label>
 			<label index="tx_powermail_forms.xml.without">Schließe diese Länder aus Liste aus</label>
+			<label index="tx_powermail_forms.xml.typoscript">Typoscript Objekt</label>
 			<label index="tx_powermail_forms.xml.validate">Dieses Feld überprüfen nach</label>
 			<label index="tx_powermail_forms.xml.validate.0">Keine Prüfung</label>
 			<label index="tx_powermail_forms.xml.validate.1">E-Mail-Adresse</label>
@@ -345,11 +353,14 @@
 			<label index="tx_powermail_forms.fieldtitle.reset">Reset button</label>
 			<label index="tx_powermail_forms.fieldtitle.datetime">Date and time field</label>
 			<label index="tx_powermail_forms.fieldtitle.date">Date field</label>
-			<label index="tx_powermail_forms.fieldtitle.time">Time field</label>
 			<label index="tx_powermail_forms.fieldtitle.button">Button</label>
 			<label index="tx_powermail_forms.fieldtitle.submitgraphic">Graphic as submit</label>
 			<label index="tx_powermail_forms.fieldtitle.countryselect">Country selection</label>
 			<label index="tx_powermail_forms.fieldtitle.captcha">Captcha request</label>
+			<label index="tx_powermail_forms.fieldtitle.typoscript">Add typoscript object</label>
+			<label index="tx_powermail_forms.fieldtitle.div1">Standard</label>
+			<label index="tx_powermail_forms.fieldtitle.div2">Extra</label>
+			<label index="tx_powermail_forms.fieldtitle.div3">Extensions</label>
 			<label index="tx_powermail_forms.mailsender">Email-Text for sender</label>
 			<label index="tx_powermail_forms.mailreceiver">Email-Text for receiver</label>
 			<label index="tx_powermail_forms.redirect">Auto-redirect after confirmation-page</label>
@@ -374,6 +385,7 @@
 			<label index="tx_powermail_forms.xml.preselect">Country shortage for preselect</label>
 			<label index="tx_powermail_forms.xml.within">Only show this countries</label>
 			<label index="tx_powermail_forms.xml.without">Show list without this countries</label>
+			<label index="tx_powermail_forms.xml.typoscript">Typoscript object</label>
 			<label index="tx_powermail_forms.xml.validate">Validate this field for</label>
 			<label index="tx_powermail_forms.xml.validate.1">email-address</label>
 			<label index="tx_powermail_forms.xml.validate.2">URL</label>
@@ -467,7 +479,6 @@
 			<label index="tx_powermail_forms.fieldtitle.reset">Bouton de réinitialisation</label>
 			<label index="tx_powermail_forms.fieldtitle.datetime">Champ heure et date</label>
 			<label index="tx_powermail_forms.fieldtitle.date">Champ la date</label>
-			<label index="tx_powermail_forms.fieldtitle.time">Champ heure</label>
 			<label index="tx_powermail_forms.fieldtitle.button">Bouton</label>
 			<label index="tx_powermail_forms.fieldtitle.submitgraphic">Bouton sous forme d'image</label>
 			<label index="tx_powermail_forms.fieldtitle.countryselect">Séléction de pays</label>
@@ -590,7 +601,6 @@
 			<label index="tx_powermail_forms.fieldtitle.reset">Reset knop</label>
 			<label index="tx_powermail_forms.fieldtitle.datetime">Datum en tijd veld</label>
 			<label index="tx_powermail_forms.fieldtitle.date">Datum veld</label>
-			<label index="tx_powermail_forms.fieldtitle.time">Tijd veld</label>
 			<label index="tx_powermail_forms.fieldtitle.button">Knop</label>
 			<label index="tx_powermail_forms.fieldtitle.submitgraphic">Plaatje als verzendknop</label>
 			<label index="tx_powermail_forms.fieldtitle.countryselect">Land selectie</label>

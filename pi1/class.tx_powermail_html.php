@@ -118,8 +118,18 @@ class tx_powermail_html extends tslib_pibase {
 				case 'countryselect':
 					$this->content = $this->html_countryselect(); // generate select fields with countries from static_info_tables
 				break;
-				default: // errormessage if undefined tag needed
-					$this->content = 'POWERMAIL: wrong input field required: <strong>'.$row['f_type'].'</strong> in tx_powermail_pi1_html (field uid '.$row['f_uid'].')<br />'; // errormessage
+				case 'typoscript':
+					$this->content = $this->html_typoscript(); // gets typoscript element and output the result of it
+				break;
+				default: // default settings
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FieldHook'][$this->type])) { // Adds hook for processing of extra fields
+						foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FieldHook'][$this->type] as $_classRef) {
+							$_procObj = &t3lib_div::getUserObj($_classRef);
+							$this->content = $_procObj->PM_FieldHook($this->xml, $this->title, $this->type, $this->uid, $this->markerArray, $this);
+						}
+					} else { // no hook so write errormessage
+						$this->content = 'POWERMAIL: wrong input field required: <strong>'.$this->type.'</strong> in tx_powermail_pi1_html (field uid '.$row['f_uid'].')<br />'; // errormessage
+					}
 				break;
 			}
 		} else { // no type selected
@@ -708,6 +718,36 @@ class tx_powermail_html extends tslib_pibase {
 		$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
 		return $content; // return HTML
 	}
+	
+	
+	/**
+	 * Function html_typoscript() returns result of a typoscript
+	 *
+	 * @return	[type]		...
+	 */
+	function html_typoscript() {
+		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'typoscriptobject') != '') { // only if object field was set
+			// config
+			$str = array(); $array = array(); // init
+			$tsarray = t3lib_div::trimExplode('.',$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'typoscriptobject'),1); // $tsarray[0] = lib // $tsarray[1] = object
+				
+			// let's go		
+			for ($i=0; $i<count($tsarray); $i++) { // One loop for every level in typoscript object array
+				$str[0] .= '[\''.str_replace(';','',$tsarray[$i]) . ($i==(count($tsarray)-1) ? '' : '.') . '\']'; // create php code for array like ['lib.']['object']
+				$str[1] .= '[\''.str_replace(';','',$tsarray[$i]).'.\']'; // create php code for array like ['lib.']['object.']
+			}
+			eval("\$array[0] = \$GLOBALS['TSFE']->tmpl->setup$str[0];"); // $newarray = $array['lib.']['object']
+			eval("\$array[1] = \$GLOBALS['TSFE']->tmpl->setup$str[1];"); // $newarray = $array['lib.']['object.']
+			
+			$content = $this->pibase->pibase->cObj->cObjGetSingle($array[0], $array[1]); // parse typoscript
+		}
+		if (!empty($content)) return $content;
+	}
+	
+	
+	
+	################################################################################################################
+	
 
 
 	// Function setGlobalMarkers() to fill global markers with values

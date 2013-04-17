@@ -55,7 +55,7 @@ class tx_powermail_submit extends tslib_pibase {
 		$this->confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]); // Get config from localconf.php
 		
 		// Configuration
-		$this->noReplyEmail = str_replace('###DOMAIN###',$_SERVER['SERVER_NAME'],$this->conf['email.']['noreply']); // no reply email address from TS setup
+		$this->noReplyEmail = str_replace('###DOMAIN###',str_replace('www.','',$_SERVER['SERVER_NAME']),$this->conf['email.']['noreply']); // no reply email address from TS setup
 		$this->sessiondata = $GLOBALS['TSFE']->fe_user->getKey('ses',$this->extKey.'_'.$this->pibase->cObj->data['uid']); // Get piVars from session
 		$this->sender = ($this->pibase->cObj->data['tx_powermail_sender'] && t3lib_div::validEmail($this->sessiondata[$this->pibase->cObj->data['tx_powermail_sender']]) ? $this->sessiondata[$this->pibase->cObj->data['tx_powermail_sender']] : $this->noReplyEmail); // email sender (if sender is selected and email exists)
 		$this->emailReceiver(); // Receiver mail
