@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007 Mischa Heiﬂmann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@wunschtacho.de>
+*  (c) 2007 Alexander Kellner, Mischa Heiﬂmann <alexander.kellner@einpraegsam.net, typo3.2008@heissmann.org>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -75,11 +75,21 @@ class tx_powermail_functions_div {
 		}
 	}
 	
+	
 	// Function changeValues() to change values after submit (timestring to date or something like that...)
 	function changeValues($piVars) {
 		// TODO Changing piVars via typoscript
 		return $piVars;
 	}
+	
+	
+	// Add debug view for any array
+	function debug($array, $msg = 'Debug output') {
+		echo '<b>'.$msg.':</b>'; // title output
+		t3lib_div::print_array($array); // debug output of sessiondata
+		echo '<hr /><br />'; // separator after debug output
+	}
+	
 	
 	// Function clearName() to disable not allowed letters (only A-Z and 0-9 allowed) (e.g. Perfect Extension -> perfectextension)
 	function clearName($string,$strtolower = 0,$cut = 0) {
@@ -89,6 +99,7 @@ class tx_powermail_functions_div {
 		
 		if(isset($string)) return $string;
 	}
+	
 	
 	// Function clearValue() to remove all " or ' from code
 	function clearValue($string,$htmlentities = 1,$strip_tags = 0) {
@@ -100,6 +111,7 @@ class tx_powermail_functions_div {
 		if(isset($string)) return $string;
 	}
 	
+	
 	// Function linker() generates link (email and url) from pure text string within an email or url ('test www.test.de test' => 'test <a href="http://www.test.de">www.test.de</a> test')
     function linker($link,$additinalParams = '') {
         $link = str_replace("http://www.","www.",$link);
@@ -110,10 +122,12 @@ class tx_powermail_functions_div {
         return $link;
     }
 	
+	
 	// Function nl2br2() changes breakes to html breakes
 	function nl2br2($string) {
 		return str_replace('\r\n',"<br />",$string);
 	}
+	
 	
 	// Function nl2br2() changes breakes to real breakes
 	function nl2nl2($string) {
@@ -195,6 +209,7 @@ class tx_powermail_functions_div {
 		$this->conf = $conf;
 		$this->pibase = $pibase;
 	}
+	
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/powermail/lib/class.tx_powermail_functions_div.php'])	{

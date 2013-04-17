@@ -130,12 +130,13 @@ class tx_powermail_submit extends tslib_pibase {
 			$this->maildata['receiver'] = $this->sender; // set receiver
 			$this->maildata['sender'] = $this->MainReceiver; // set sender
 			$this->maildata['subject'] = $this->subject_s; // set subject
-			$this->maildata['sendername'] = (isset($this->sendername)?$this->sendername:$this->MainReceiver); // set sendername
+			$this->maildata['sendername'] = (isset($this->sendername) ? $this->sendername : $this->MainReceiver); // set sendername
 			$this->maildata['cc'] = ''; // no cc
 		}
 		
-		// Last chance to manipulate the mail
-		$this->hook_submit_changeEmail();
+		
+		$this->hook_submit_changeEmail(); // Last chance to manipulate the mail via hook
+		$this->debug($this->subpart); // Debug output
 		
 		// start main mail function
 		$this->htmlMail = t3lib_div::makeInstance('t3lib_htmlmail'); // New object: TYPO3 mail class
@@ -278,6 +279,26 @@ class tx_powermail_submit extends tslib_pibase {
 		
 			}
 		}
+	}
+	
+	
+	// Function debug() enables debug output
+	function debug($subpart) {
+		// If debug output for email
+		if ($this->conf['debug.']['output'] == 'all' || $this->conf['debug.']['output'] == 'email') { // only if debug output activated via constants
+			$debugarray = array (
+				'receiver' => $this->maildata['receiver'], 
+				'cc receiver' => $this->maildata['cc'],
+				'sender' => $this->maildata['sender'], 
+				'sendername' => $this->maildata['sendername'],
+				'charset' => $GLOBALS['TSFE']->metaCharset,
+				'attachment' => $this->sessiondata['FILE'],
+				'subject' => $this->maildata['subject'],
+				'mailcontent' => $this->mailcontent[$this->subpart]
+			);
+			$this->div_functions->debug($debugarray, 'Email values ('.$subpart.')'); // Debug function (Array from Session)
+		}
+	
 	}
 	
 

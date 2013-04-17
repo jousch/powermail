@@ -44,6 +44,7 @@ plugin.tx_powermail_pi1 {
 	powermail.charset = {$plugin.powermail.powermail.charset}
 	barrier-free.tabindex = {$plugin.powermail.barrier-free.tabindex}
 	barrier-free.accesskey = {$plugin.powermail.barrier-free.accesskey}
+	debug.output = {$plugin.powermail.debug.output}
 	
 	
 	# adding (or changing) flexible locallang markers in any HTML template or RTE field (example)

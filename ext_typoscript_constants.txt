@@ -3,6 +3,7 @@
 ##
 
 plugin.powermail {
+
 	# cat=plugin.powermail_mainconfig/file/0010; type=file[html,htm,tmpl,txt]; label= Template File formwrap: HTML-template file for formwrap (see EXT:powermail/templates/tmpl_formwrap.html for an example)
 	template.formWrap = EXT:powermail/templates/tmpl_formwrap.html
 	
@@ -95,7 +96,7 @@ plugin.powermail {
 	upload.folder = uploads/tx_powermail/files/
 	
 	# cat=plugin.powermail_additionalconfig//0550; type=text; label= Allow files for upload: If you are using min. one upload field in frontend, you can set the allowed extension of this files (use small letters)
-	upload.file_extensions = jpg,jpeg,gif,png,tif,txt,doc,xls,sxw,html,swf
+	upload.file_extensions = jpg,jpeg,gif,png,tif,txt,doc,xls,sxw,html,swf,pdf
 	
 	# cat=plugin.powermail_additionalconfig//0600; type=int; label= Allow filesize for upload: If you are using min. one upload field in frontend, you can set the allowed filesize of the files (in kB)
 	upload.filesize = 1000
@@ -135,4 +136,8 @@ plugin.powermail {
 	
 	# cat=plugin.powermail_additionalconfig//1310; type=text; label= Adding accesskeys: You can add some accesskeys to the fields if you want (e.g. uid1(colon)f,uid3(colon)g or 1(colon)a,2(colon)b,3_1(colon)c)
 	barrier-free.accesskey = 
+	
+	# cat=plugin.powermail_additionalconfig//9999; type=options[,all,session,email]; label= Activate debug output: Possibility to print a debug output over the html. All displays session and email array, Session prints only session array, Email prints only email array (empty or all or session or email)
+	debug.output = 
+	
 }

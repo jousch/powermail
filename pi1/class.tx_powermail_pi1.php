@@ -69,6 +69,7 @@ class tx_powermail_pi1 extends tslib_pibase {
 		$this->sessions->setSession($this->piVars,0); // Set piVars to session (but don't overwrite old values)
 		$this->sessionfields = $this->sessions->getSession(0); // give me all piVars from session (without not needed values)
 		$this->sessionfields = $this->div->changeValues($this->sessionfields); // changing sessionvalues with typoscript // TODO
+		if ($this->conf['debug.']['output'] == 'all' || $this->conf['debug.']['output'] == 'session') $this->div->debug($this->sessionfields, 'Values from session'); // Debug function (Array from Session)
 		
 		// Start main choose
 		$this->hook_main_content_before(); // hook for content manipulation 1
