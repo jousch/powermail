@@ -33,18 +33,20 @@ class tx_powermail_markers extends tslib_pibase {
     var $locallangmarker_prefix = 'locallangmarker_'; // prefix for automatic locallangmarker
     
     // Function GetMarkerArray() to set global Markers for Emails and THX message
-    function GetMarkerArray() {
+    function GetMarkerArray($what = '') {
         
         // Configuration
+		$this->what = $what;
 		$this->geo = t3lib_div::makeInstance('tx_powermail_geoip'); // Instance with geo class
 		$this->geoArray = $this->geo->main($this->conf); // Get geoinfo array
-        $this->markerArray = array(); $this->markerArray['###POWERMAIL_ALL###'] = ''; // init
-        $this->sessiondata = $GLOBALS['TSFE']->fe_user->getKey('ses',$this->extKey.'_'.($this->pibase->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->pibase->cObj->data['uid'])); // Get piVars from session
+        $this->markerArray = array(); $this->markerArray['###POWERMAIL_ALL###'] = ''; $content_item = ''; // init
+        $this->sessiondata = $this->getSession($what);		
        	$this->div_functions = t3lib_div::makeInstance('tx_powermail_functions_div'); // New object: div functions
         $this->notInMarkerAll = t3lib_div::trimExplode(',',$this->conf['markerALL.']['notIn'],1); // choose which fields should not be listed in marker ###ALL### (ERROR is never allowed to be shown)
         $this->tmpl['all']['all'] = $this->pibase->pibase->cObj->getSubpart(tslib_cObj::fileResource($this->conf['template.']['all']),"###POWERMAIL_ALL###"); // Load HTML Template: ALL (works on subpart ###POWERMAIL_ALL###)
 		$this->tmpl['all']['item'] = $this->pibase->pibase->cObj->getSubpart($this->tmpl['all']['all'],"###ITEM###"); // Load HTML Template: ALL (works on subpart ###POWERMAIL_ALL###)
-		$content_item = ''; $markerArray = array();
+		$this->hook_markerArray(); // adds hook
+		 
 
 		if(isset($this->sessiondata) && is_array($this->sessiondata)) {
 			// normal markers
@@ -160,6 +162,57 @@ class tx_powermail_markers extends tslib_pibase {
         $string = $this->pi_getLL(strtolower($this->locallangmarker_prefix.$array[1]));
         if(isset($string)) return $string;
     }
+	
+	
+	// Function getSession() loads values from current session (with or without hidden fields)
+	function getSession($what) {
+		// $what could be: recipient_mail, sender_mail, thx, confirmation, mandatory
+		
+		// config
+		$allowhidden = t3lib_div::trimExplode(',', $this->conf['hiddenfields.']['show'], 1); // allow/disallow hidden fields
+		
+		// 1. get sessionarray
+		$sessionArray = $GLOBALS['TSFE']->fe_user->getKey('ses',$this->extKey.'_'.($this->pibase->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->pibase->cObj->data['uid'])); // Get piVars from session
+		
+		// 2. delete hiddenfield from session array if should
+		if (
+			($what == 'recipient_mail' && !$allowhidden[0]) || // if current action is recipient_mail and hiddenfields are not allowed for this
+			($what == 'sender_mail' && !$allowhidden[1]) || // if current action is sender_mail and hiddenfields are not allowed for this
+			($what == 'thx' && !$allowhidden[2]) || // if current action is thx and hiddenfields are not allowed for this
+			($what == 'confirmation' && !$allowhidden[3]) || // if current action is confirmation and hiddenfields are not allowed for this
+			($what == 'mandatory' && !$allowhidden[4]) // if current action is mandatory and hiddenfields are not allowed for this
+		) { 
+			// Give me all hidden field of current page
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
+				'uid',
+				'tx_powermail_fields',
+				$where_clause = 'pid = '.$GLOBALS['TSFE']->id.' AND (formtype = "hidden")'.tslib_cObj::enableFields('tx_powermail_fields'),
+				$groupBy = '',
+				$orderBy = '',
+				$limit = ''
+			);
+			if ($res) { // If there is a result
+				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every uploadfield 
+					if (!empty($sessionArray['uid'.$row['uid']])) { // if value exists in session to current hiddenfield
+						unset($sessionArray['uid'.$row['uid']]); // delete hiddenfield from session array
+					}
+				}
+			}
+		}
+			
+		if (!empty($sessionArray)) return $sessionArray;
+	}
+	
+
+	// Function hook_submit_changeEmail() to add a hook and change the email datas (changing subject, receiver, sender, sendername)
+	function hook_markerArray() {
+		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MarkerArrayHook'])) { // Adds hook for processing
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MarkerArrayHook'] as $_classRef) {
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$_procObj->PM_markerArrayHook($this->what, $this->geoArray, $this->markerArray, $this->sessiondata, $this->tmpl, $this); // Manipulate arrays and objects
+			}
+		}
+	}
 
 
     //function for initialisation.

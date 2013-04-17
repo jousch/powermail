@@ -250,6 +250,23 @@ class tx_powermail_functions_div {
 		
 		if (!empty($content)) return $content;
 	}
+	
+	
+	// Function subpartsExists() checks if every part of the array contains min one sign
+	function subpartsExists($array) {
+		if (count($array) > 0) { // if there are values
+			foreach ($array as $key => $value) { // one loop for every array part
+				if (!is_array($value)) { // first level
+					if (strlen($value) == 0) return false; // error
+				} else { // second level
+					foreach ($value as $key2 => $value2) { // one loop for every array part in second level
+						if (strlen($value2) == 0) return false; // error
+					}
+				}
+			}
+		}
+		return true; // ok
+	}
 
 
 	// Function for initialisation.
