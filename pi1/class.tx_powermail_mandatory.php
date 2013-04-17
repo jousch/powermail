@@ -268,18 +268,19 @@ class tx_powermail_mandatory extends tslib_pibase {
 					// sr_freecap
 					if (t3lib_extMgm::isLoaded('sr_freecap', 0) && $this->conf['captcha.']['use'] == 'sr_freecap') { // use sr_freecap if available
 						
-						require_once(t3lib_extMgm::extPath('sr_freecap').'pi2/class.tx_srfreecap_pi2.php');
+						require_once(t3lib_extMgm::extPath('sr_freecap') . 'pi2/class.tx_srfreecap_pi2.php');
 						$this->freeCap = t3lib_div::makeInstance('tx_srfreecap_pi2');
 						session_start(); // start session
 						
-						if ($this->sessionfields['uid'.$row['uid']] == '') { // if captcha value is empty
+						if ($this->sessionfields['uid' . $row['uid']] == '') { // if captcha value is empty
 							
 							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('error_captcha_empty'); // write error message to session
 						
 						} elseif (
-							($_SESSION['sr_freecap_word_hash'] != md5($this->sessionfields['uid'.$row['uid']])) && 
-							($_SESSION['sr_freecap_word_hash'] != md5($this->sessionfields['uid'.$row['uid']]."\n")) &&
-							(is_object($this->freeCap) && !$this->freeCap->checkWord($this->sessionfields['uid'.$row['uid']]))
+							($_SESSION['sr_freecap_word_hash'] != md5($this->sessionfields['uid' . $row['uid']])) && 
+							($_SESSION['sr_freecap_word_hash'] != md5($this->sessionfields['uid' . $row['uid']]."\n")) &&
+							($GLOBALS['TSFE']->fe_user->sesData['tx_sr_freecap']['sr_freecap_word_hash'] != md5($this->sessionfields['uid' . $row['uid']])) &&
+							(is_object($this->freeCap) && !$this->freeCap->checkWord($this->sessionfields['uid' . $row['uid']]))
 						) {
 							
 							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('error_captcha_wrong'); // write error message to session
@@ -368,8 +369,8 @@ class tx_powermail_mandatory extends tslib_pibase {
 	* In case the called user function throws an exception, this is treated as a failed 
 	* validation.
 	********************************************/	
-	function customValidation(){		
-	
+	function customValidation() {
+			
 		$configKey = 'customvalidation.';
 		if (isset($this->conf[$configKey]) && is_array($this->conf[$configKey])) { // Only if any validation is set per typoscript		
 			foreach ($this->conf[$configKey] as $key => $value) { // One loop for every validation

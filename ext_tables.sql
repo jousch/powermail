@@ -123,7 +123,6 @@ CREATE TABLE tt_content (
 	tx_powermail_recip_table text NOT NULL,
 	tx_powermail_recip_id text NOT NULL,
 	tx_powermail_recip_field text NOT NULL,
-	tx_powermail_query text NOT NULL,
 	tx_powermail_thanks text NOT NULL,
 	tx_powermail_mailsender text NOT NULL,
 	tx_powermail_mailreceiver text NOT NULL,

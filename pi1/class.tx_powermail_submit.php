@@ -274,9 +274,9 @@ class tx_powermail_submit extends tslib_pibase {
 		}
 		
 		// 3. Field receiver query
-		elseif ($this->cObj->data['tx_powermail_query']) { // If own select query is chosen
-			$query = $this->secQuery($this->cObj->data['tx_powermail_query']); // secure function of query
-			$query = $this->div->marker2value($query, $this->sessiondata); // make markers available in email query
+		elseif ($this->conf['email.']['recipient_mail.']['email_query.']) { // If own select query is chosen
+			$query = $this->secQuery($this->cObj->cObjGetSingle($this->conf['email.']['recipient_mail.']['email_query'], $this->conf['email.']['recipient_mail.']['email_query.'])); // secure function of query
+			$query = $this->div->marker2value($query, $this->sessiondata, 1); // make markers available in email query 
 			
 			$res = mysql_query($query); // mysql query
 			

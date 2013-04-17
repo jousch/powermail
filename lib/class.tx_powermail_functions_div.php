@@ -154,13 +154,21 @@ class tx_powermail_functions_div {
 	}
 	
 	
-	// Function marker2value() replaces ###UID3### with its value from session
-	function marker2value($string, $sessiondata) {
+	/**
+	 * Function marker2value() replaces ###UID3### with its value from session
+	 *
+	 * @param	string		$string: Any string
+	 * @param	array		$sessiondata: Values from session an an array
+	 * @param	boolean		$int: Should the string transformed to an integer (or an integer list)
+	 * @return	string		replaced string
+	 */
+	function marker2value($string, $sessiondata, $int = 0) {
 		$this->sessiondata = $sessiondata; // make session array available in other functions
+		$this->activateIntList = $int; // activate intList
 		
 		$string = preg_replace_callback ( // Automaticly replace ###UID55### with value from session to use markers in query strings
 			'#\#\#\#UID(.*)\#\#\##Uis', // regulare expression
-			array($this,'uidReplaceIt'), // open function
+			array($this, 'uidReplaceIt'), // open function
 			$string // current string
 		);
 	
@@ -179,14 +187,18 @@ class tx_powermail_functions_div {
 			if (isset($this->sessiondata['uid' . $uid[1]])) { // if there is a value in the session like uid32 = bla
 				if (!is_array($this->sessiondata['uid' . $uid[1]])) { // value is not an array
 					
-					return $this->sessiondata['uid' . $uid[1]]; // return bla (e.g.)
+					if (!$this->activateIntList) { // return without int transformation
+						return $this->sessiondata['uid' . $uid[1]]; // return bla (e.g.)
+					} else { // transform to intList
+						return $this->makeIntList($this->sessiondata['uid' . $uid[1]]); // return bla (e.g.)
+					}
 					
 				} else { // value is an array
 				
 					$return = ''; $i=0; // init counter
 					foreach ($this->sessiondata['uid' . $uid[1]] as $key => $value) { // one loop for every value
 						if ($value != '') {
-							$return .= ($return != '' ? ',' : '') . $value; // add a value (commaseparated)
+							$return .= ($return != '' ? ',' : '') . (!$this->activateIntList ? $value : $this->makeIntList($value)); // add a value (commaseparated)
 							$i++; // increase counter
 						}
 					}
@@ -197,9 +209,29 @@ class tx_powermail_functions_div {
 		} else { // if this is a field like ###UID55_1###
 			$tmp_uid = t3lib_div::trimExplode('_', $uid[1], 1); // spilt at _ to get 55 and 1
 			if ($this->sessiondata['uid' . $tmp_uid[0]][$tmp_uid[1]]) { // value is not an array
-				return $this->sessiondata['uid' . $tmp_uid[0]][$tmp_uid[1]]; // return bla (e.g.)
+				if (!$this->activateIntList) { // return without transformation
+					return $this->sessiondata['uid' . $tmp_uid[0]][$tmp_uid[1]]; // return bla (e.g.)
+				} else { // transform to intList
+					return $this->makeIntList($this->sessiondata['uid' . $tmp_uid[0]][$tmp_uid[1]]); // return bla (e.g.)
+				}
 			}
 		}
+	}
+	
+	
+	/**
+	 * Function makeIntList() to transfor string list to an integer list
+	 *
+	 * @param	string		$string: string like "1,2,3,4"
+	 * @return	string		it's integer values
+	 */
+	function makeIntList($string) {
+		$str_arr = explode(',', $string); // split on ,
+		for ($i=0; $i<count($str_arr); $i++) { // one loop for every part of the list
+			$str_arr[$i] = intval($str_arr[$i]); // transform to integer
+		}
+		$list = implode(',', $str_arr); // merge with , as glue
+		return $list;
 	}
 	
 	

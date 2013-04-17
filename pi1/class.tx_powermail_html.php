@@ -644,7 +644,19 @@ class tx_powermail_html extends tslib_pibase {
 				$JSCalendar->setConfigOption('daFormat', $this->conf['format.']['datetime']);
 				$JSCalendar->setDateFormat(true);
 				$JSCalendar->setInputField('uid' . $this->uid);
-				$this->markerArray['###FIELD###'] .= $JSCalendar->render($value, 'tx_powermail_pi1[uid' . $this->uid . ']');
+				$params = array(
+					'checkboxField' => array(
+						'name' => 'tx_powermail_pi1[uid' . $this->uid . ']'
+					),
+					'inputField' => array(
+						'name' => 'tx_powermail_pi1[uid' . $this->uid . ']',
+						'tabindex' => $this->turnedtabindex[$this->uid] + 1
+					)
+				);
+				if ($this->markerArray['###ACCESSKEY###'] != '') { // if there is a defined accesskey
+					$params['inputField']['accesskey'] = $this->accesskeyarray[$i][2]; // set accesskey for datefield
+				}
+				$this->markerArray['###FIELD###'] .= $JSCalendar->render($value, $params);
 	
 				// get initialisation code of the calendar
 				if (($jsCode = $JSCalendar->getMainJS()) != '') $GLOBALS['TSFE']->additionalHeaderData['powermail_date2cal'] = $jsCode;

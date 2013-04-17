@@ -4,6 +4,9 @@
 
 
 ## Powermail version 1.5.x stable ##
+- Update on 10.01.2010 version 1.5.2
+Security Update: Moving SQL selection field to typoscript - admins only
+
 - Update on 13.11.2009 version 1.5.1
 Bugfix #5265: Refill fields if user go back from confirmation page to form in other FE languages
 Bugfix #5076: Add CSS class does not affect Radiobuttons
