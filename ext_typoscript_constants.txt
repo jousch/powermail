@@ -43,14 +43,17 @@ plugin.powermail {
 	
 	
 	
+	# cat=plugin.powermail_additionalconfig//0380; type=boolean; label= HTML or Plain format: If you use this value, emails will be send in html format - disable for plain text (0 or 1)
+	enable.html = 1
+	
+	# cat=plugin.powermail_additionalconfig//0390; type=text; label= Onetime form: Checks if a field has already this entry (maybe email address), IP check is also possible if ip addresses will be logged) - (e.G. uid11,ip checks for unique IP and unique entry in field uid11)
+	enable.unique = 
+	
 	# cat=plugin.powermail_additionalconfig//0400; type=text; label= Standard sender address: This email address is important, if no sender field was chosen in the backend, so this email address will be used for the sender (###DOMAIN### will be replaced with current domain like test.com)
 	email.noreply = noreply@###DOMAIN###
 	
-	# cat=plugin.powermail_additionalconfig//0410; type=text; label= Check MX record of sender mail: This is a small test, if senders email address exists (MX record check of domain)
+	# cat=plugin.powermail_additionalconfig//0410; type=boolean; label= Check MX record of sender mail: This is a small test, if senders email address exists (MX record check of domain)
 	email.checkMX = 1
-	
-	# cat=plugin.powermail_additionalconfig//0415; type=text; label= Onetime form: Checks if a field has already this entry (maybe email address), IP check is also possible if ip addresses will be logged) - (e.G. uid11,ip checks for unique IP and unique entry in field uid11)
-	enable.unique = 
 	
 	# cat=plugin.powermail_additionalconfig//0420; type=boolean; label= Hide label if empty value: This option hides labels if its value is empty in marker ###POWERMAIL_ALL###
 	markerALL.hideLabel = 0
@@ -121,12 +124,15 @@ plugin.powermail {
 	# cat=plugin.powermail_additionalconfig//1000; type=boolean; label= Hiddenfields for checkboxes: (De)activate the hiddenfields for checkboxes. If only checkboxes are in use, there is a problem to enable a checkbox, submit, go back and deaktivate checkbox and submit again - the value ist still set. To fix this, you can use a JavaScript with hiddenfields (set by default).
 	field.checkboxJS = 1
 	
-	# cat=plugin.powermail_additionalconfig//1100; type=options[,utf8_encode,utf8_decode]; label= Charset for powermail: You can use the php functions utf8_encode or utf8_decode to change the whole powermail output
+	# cat=plugin.powermail_additionalconfig//1100; type=boolean; label= Use rteCSStext function: Text from rich text editor will be parsed automaticly for emails and thx message (every line gets an p tag, etc...). Disabling could be useful if you want to use only plaintext mails.
+	rte.parse = 1
+	
+	# cat=plugin.powermail_additionalconfig//1200; type=options[,utf8_encode,utf8_decode]; label= Charset for powermail: You can use the php functions utf8_encode or utf8_decode to change the whole powermail output
 	powermail.charset = 
 	
-	# cat=plugin.powermail_additionalconfig//1200; type=text; label= Manual sorting of tabindex: Powermail adds tabindex to the fields (automaticly via sorting). If you want to use another order, you can change the order with this settings (e.g. uid5,uid4,uid3_0,uid3_1 or 5,4,6,4_0,4_1,3)
+	# cat=plugin.powermail_additionalconfig//1300; type=text; label= Manual sorting of tabindex: Powermail adds tabindex to the fields (automaticly via sorting). If you want to use another order, you can change the order with this settings (e.g. uid5,uid4,uid3_0,uid3_1 or 5,4,6,4_0,4_1,3)
 	barrier-free.tabindex = 
 	
-	# cat=plugin.powermail_additionalconfig//1200; type=text; label= Adding accesskeys: You can add some accesskeys to the fields if you want (e.g. uid1(colon)f,uid3(colon)g or 1(colon)a,2(colon)b,3_1(colon)c)
+	# cat=plugin.powermail_additionalconfig//1310; type=text; label= Adding accesskeys: You can add some accesskeys to the fields if you want (e.g. uid1(colon)f,uid3(colon)g or 1(colon)a,2(colon)b,3_1(colon)c)
 	barrier-free.accesskey = 
 }

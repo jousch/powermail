@@ -162,8 +162,8 @@ class tx_powermail_submit extends tslib_pibase {
 		
 		$this->htmlMail->charset = $GLOBALS['TSFE']->metaCharset; // set current charset
 		$this->htmlMail->defaultCharset = $GLOBALS['TSFE']->metaCharset; // set current charset
-		$this->htmlMail->addPlain($this->mailcontent[$this->subpart]);
-		$this->htmlMail->setHTML($this->htmlMail->encodeMsg($this->mailcontent[$this->subpart]));
+		$this->htmlMail->addPlain($this->mailcontent[$this->subpart]); // add plaintext
+		if ($this->conf['enable.']['html'] == 1) $this->htmlMail->setHTML($this->htmlMail->encodeMsg($this->mailcontent[$this->subpart])); // html format if active via constants
 		if ($this->email_send) $this->htmlMail->send($this->maildata['receiver']);
 	}
 	

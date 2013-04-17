@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007 Mischa Heißmann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@einpraegsam.net>
+*  (c) 2008 Alexander Kellner, Mischa Heißmann <alexander.kellner@einpraegsam.net, typo3.2008@heissmann.org>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -34,67 +34,75 @@ class tx_powermail_db extends tslib_pibase {
 	
 	// Main Function for inserting datas to other tables
 	function main($conf, $sessiondata, $ok) {
-		if($ok) { // if it's allowed to save db values
+		if ($ok) { // if it's allowed to save db values
 			
 			// config
 			global $TSFE;
 			$this->cObj = $TSFE->cObj; // cObject
 			$this->conf = $conf;
 			$this->sessiondata = $sessiondata;
-			$db_allowed = ( $this->cObj->cObjGetSingle($this->conf['dbEntry.']['tt_address.']['enable'], $this->conf['dbEntry.']['tt_address.']['enable.']) != '' ? $this->cObj->cObjGetSingle($this->conf['dbEntry.']['tt_address.']['enable'], $this->conf['dbEntry.']['tt_address.']['enable.']) : $this->conf['dbEntry.']['tt_address'] );
 			$db_values = array(); // init dbArray
 			
 			// Let's go
 			if (isset($this->conf['dbEntry.']) && is_array($this->conf['dbEntry.'])) { // Only if any dbEntry is set per typoscript
 				foreach ($this->conf['dbEntry.'] as $key => $value) { // One loop for every table to insert
 					
-					// 1. Insert dynamic values to array
-					if (isset($this->conf['dbEntry.'][$key]) && is_array($this->conf['dbEntry.'][$key])) { // Only if its an array
-						foreach ($this->conf['dbEntry.'][$key] as $kk => $vv) { // One loop for every field to insert in current table
-							$vvv = str_replace(';',',',t3lib_div::trimExplode(',',$vv,1)); // if value should be saved in more fields
-							for ($i=0; $i<count($vvv); $i++) { // one loop for every field (if a value should be saved to more fields
-								if (strpos(strtolower($kk), "_") === false) { // if there is no underscore (uid34)
-									if ($this->sessiondata[strtolower($kk)] && $this->fieldExists($vvv[$i], str_replace('.','',$key))) { // If value exists and db field exists
-										$db_values[$vvv[$i]] = $this->sessiondata[strtolower($kk)]; // generate array for saving to db (if there is a value in the session AND table/field exist)
+					if ($this->cObj->cObjGetSingle($this->conf['dbEntry.'][$key]['_enable'], $this->conf['dbEntry.'][$key]['_enable.']) == 1) { // only if db entry is allowed for current table (dbEntry.tt_address._enable.value = 1)
+						
+						// 1. Array for first db entry
+						if (isset($this->conf['dbEntry.'][$key]) && is_array($this->conf['dbEntry.'][$key])) { // Only if its an array
+							
+							foreach ($this->conf['dbEntry.'][$key] as $kk => $vv) { // One loop for every field to insert in current table
+								if (substr($kk, 0, 1) != '_' && substr($kk, -1) != '.') { // if fieldname is not _enable or _mm and not with . at the end
+									
+									if ($this->fieldExists($kk, str_replace('.','',$key))) { // if db table and field exists
+										$db_values[$kk] = $this->cObj->cObjGetSingle($this->conf['dbEntry.'][$key][$kk], $this->conf['dbEntry.'][$key][$kk.'.']); // write current TS value to array
 									}
-								} else { // if there is an underscore (uid34_1) maybe for checkboxes
-									$keyparts = t3lib_div::trimExplode('_', strtolower($kk), 1); // array for 34 and 1
-									if ($this->sessiondata[$keyparts[0]][$keyparts[1]] && $this->fieldExists($vvv[$i], str_replace('.','',$key))) { // If value exists and db field exists
-										$db_values[$vvv[$i]] = $this->sessiondata[$keyparts[0]][$keyparts[1]]; // generate array for saving to db (if there is a value in the session AND table/field exist)
+									
+								}
+							}
+							
+						}
+					
+						// 2. DB insert
+						if ($this->dbInsert && count($db_values) > 0) { // if its allowed and db array is not empty
+							
+							// 2.1 Main db insert for main table
+							$GLOBALS['TYPO3_DB']->exec_INSERTquery(str_replace('.','',$key), $db_values); // DB entry for every table
+							$uid[$key] = mysql_insert_id(); // Get uid of current db entry
+							
+							
+							// 2.1 db entry for mm tables if set
+							if (count($this->conf['dbEntry.'][$key]['_mm.'] > 0)) { // if mm entry enabled
+								foreach ($this->conf['dbEntry.'][$key]['_mm.'] as $kkk => $vvv) { // One loop for every mm db insert
+									if (substr($kkk, -1) == '.') { // We want the array
+										if (
+											$this->fieldExists('uid_local', $this->cObj->cObjGetSingle($this->conf['dbEntry.'][$key]['_mm.'][$kkk]['1'], $this->conf['dbEntry.'][$key]['_mm.'][$kkk]['1.']))
+											&&
+											$this->fieldExists('uid', $this->cObj->cObjGetSingle($this->conf['dbEntry.'][$key]['_mm.'][$kkk]['2'], $this->conf['dbEntry.'][$key]['_mm.'][$kkk]['2.']))
+											&&
+											is_numeric($this->cObj->cObjGetSingle($this->conf['dbEntry.'][$key]['_mm.'][$kkk]['3'], $this->conf['dbEntry.'][$key]['_mm.'][$kkk]['3.']))
+										) { // 1. is db table && 2. is db table && 3. is a number
+											$db_values_mm = array (
+												'uid_local' => $uid[$key],
+												'uid_foreign' => $this->cObj->cObjGetSingle($this->conf['dbEntry.'][$key]['_mm.'][$kkk]['3'], $this->conf['dbEntry.'][$key]['_mm.'][$kkk]['3.'])
+											);
+											if ($this->dbInsert && count($db_values_mm) > 0) $GLOBALS['TYPO3_DB']->exec_INSERTquery($this->cObj->cObjGetSingle($this->conf['dbEntry.'][$key]['_mm.'][$kkk]['1'], $this->conf['dbEntry.'][$key]['_mm.'][$kkk]['1.']), $db_values_mm); // DB entry for every table
+										}
 									}
 								}
 							}
 						}
-					}
-					
-					
-					// 2. Insert static values to same array
-					if (isset($this->conf['dbEntryDefault.'][$key]) && is_array($this->conf['dbEntryDefault.'][$key])) { // Only if any dbEntryDefault is set per typoscript
-						foreach ($this->conf['dbEntryDefault.'][$key] as $sk => $sv) { // One loop for every field to insert in current table
-							if( $this->fieldExists($sk, str_replace('.','',$key)) ) { // If database table exists
-								
-								if ($sv == '[pid]') $db_values[$sk] = $GLOBALS['TSFE']->id; // add current pid
-								elseif ($sv == '[tstamp]') $db_values[$sk] = time(); // add current timestamp
-								else $db_values[$sk] = ( $this->cObj->cObjGetSingle($this->conf['dbEntryDefault.'][$key][$sk], $this->conf['dbEntryDefault.'][$key][$sk.'.']) ? $this->cObj->cObjGetSingle($this->conf['dbEntryDefault.'][$key][$sk], $this->conf['dbEntryDefault.'][$key][$sk.'.']) : $this->conf['dbEntryDefault.'][$key][$sk] ); // add static value from ts
-								
-							}
-						}
-					}
-					
-					// 3. DB insert
-					if ($this->dbInsert && $db_allowed != '0' && isset($db_values) && is_array($db_values)) { // if its allowed and db array is not empty
-						$GLOBALS['TYPO3_DB']->exec_INSERTquery(str_replace('.','',$key), $db_values); // DB entry for every table
-					}
-					
+						
+							
+					}		
 				}
 			}
-				
-			
 		}
 	}
 	
 	
-	// Function fieldExists() checks if a table and field exist
+	// Function fieldExists() checks if a table and field exist in mysql db
 	function fieldExists($field = '', $table = '') {
 		if (!empty($field) && !empty($table) && strpos($field, ".") === false) {
 			$row1 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc( mysql_query('SHOW TABLES LIKE "'.$table.'"') ); // check if table exist

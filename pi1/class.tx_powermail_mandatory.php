@@ -222,7 +222,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 			if($this->sessionfields[$this->pibase->cObj->data['tx_powermail_sender']]) { // if there is content in the email sender field
 				if(!t3lib_div::validEmail($this->sessionfields[$this->pibase->cObj->data['tx_powermail_sender']])) { // Value is not an email address
 					$this->sessionfields['ERROR'][str_replace('uid','',$this->pibase->cObj->data['tx_powermail_sender'])][] = $this->pi_getLL('error_validemail'); // write error message to session
-				} else { // Syntax of email address is correct - check for MX Record
+				} else { // Syntax of email address is correct - check for MX Record (if activated via constants)
 					if( !$this->div_functions->checkMX( $this->sessionfields[$this->pibase->cObj->data['tx_powermail_sender']] ) && $this->conf['email.']['checkMX'] ) $this->sessionfields['ERROR'][str_replace('uid','',$this->pibase->cObj->data['tx_powermail_sender'])][] = $this->pi_getLL('error_nomx'); // write error message to session
 				}
 			}

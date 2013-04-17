@@ -627,7 +627,7 @@ class tx_powermail_html extends tslib_pibase {
 			
 			// Give me all needed fields from static_info_tables
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
-				'cn_iso_2,cn_short_local,cn_short_'.$uselang.' cn_short,uid',
+				'uid,cn_iso_2,cn_short_local,cn_short_'.$uselang.' cn_short,uid',
 				'static_countries',
 				$where_clause = '1=1'.$whereadd,
 				$groupBy = '',
@@ -640,7 +640,7 @@ class tx_powermail_html extends tslib_pibase {
 					
 					// Fill markers
 					$markerArray['###VALUE###'] = $this->dontAllow($row['cn_iso_2']);
-					$markerArray['###LONGVALUE###'] = $this->dontAllow($row['cn_short']);
+					$markerArray['###LONGVALUE###'] = ($row['cn_short'] ? $this->dontAllow($row['cn_short']) : 'empty field cn_short_'.$uselang.' (uid '.$row['uid'].')' );
 					
 					// Preselection
 					if ($row['uid'] == $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'preselect') && $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'preselect') > 0) $markerArray['###SELECTED###'] = ' selected="selected"'; // preselect one country

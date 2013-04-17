@@ -30,12 +30,50 @@
  * @subpackage	tx_powermail
  */
  
-require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_removexss.php'); // file for removexss function class
+//require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_removexss.php'); // file for removexss function class
 
 
 class tx_powermail_functions_div {
 
 	var $extKey = 'powermail';
+	
+	// Function sec() is a security function against all bad guys :) 
+	function sec($array) {
+		if(isset($array) && is_array($array)) { // if array
+			//$this->removeXSS = t3lib_div::makeInstance('tx_powermail_removexss'); // New object: removeXSS function
+			//t3lib_div::addSlashesOnArray($array); // addslashes for every piVar (He'l"lo => He\'l\"lo)
+			
+			foreach ($array as $key => $value) { // one loop for every key in first level
+				
+				if(!is_numeric(str_replace('UID','',$key)) && !is_array($value)) { // all others piVars than UID34
+					$array[$key] = intval(trim($value)); // the value should be integer
+				}
+					
+				if(!is_array($value)) {	// if value is not an array
+				
+					$array[$key] = strip_tags(trim($value)); // strip_tags removes html and php code
+					$array[$key] = addslashes($array[$key]); // use addslashes
+					//$array[$key] = $this->removeXSS->RemoveXSS($array[$key]); // use remove XSS for piVars
+					
+				} else { // value is still an array (second level)
+					
+					if(!is_array($key2)) {	// if value is not an array
+						foreach ($value as $key2 => $value2) { // one loop for every key in second level
+						
+							$array[$key][$key2] = strip_tags(trim($value2)); // strip_tags removes html and php code
+							$array[$key][$key2] = addslashes($array[$key][$key2]); // use addslashes
+							//$array[$key][$key2] = $this->removeXSS->RemoveXSS($array[$key][$key2]); // use remove XSS for piVars
+							
+						}
+					} else unset($array[$key][$key2]); // if array with 3 or more dimensions - delete this value
+					
+				}
+			}
+			
+			return $array;
+			
+		}
+	}
 	
 	// Function clearName() to disable not allowed letters (only A-Z and 0-9 allowed) (e.g. Perfect Extension -> perfectextension)
 	function clearName($string,$strtolower = 0,$cut = 0) {
@@ -74,44 +112,6 @@ class tx_powermail_functions_div {
 	// Function nl2br2() changes breakes to real breakes
 	function nl2nl2($string) {
 		return str_replace('\r\n',"\r\n",$string);
-	}
-	
-	// Function sec() is a security function against all bad guys :) 
-	function sec($array) {
-		if(isset($array) && is_array($array)) { // if array
-			$this->removeXSS = t3lib_div::makeInstance('tx_powermail_removexss'); // New object: removeXSS function
-			//t3lib_div::addSlashesOnArray($array); // addslashes for every piVar (He'l"lo => He\'l\"lo)
-			
-			foreach ($array as $key => $value) { // one loop for every key in first level
-				
-				if(!is_numeric(str_replace('UID','',$key)) && !is_array($value)) { // all others piVars than UID34
-					$array[$key] = intval(trim($value)); // the value should be integer
-				}
-					
-				if(!is_array($value)) {	// if value is not an array
-				
-					$array[$key] = strip_tags(trim($value)); // strip_tags removes html and php code
-					$array[$key] = addslashes($array[$key]); // use addslashes
-					$array[$key] = $this->removeXSS->RemoveXSS($array[$key]); // use remove XSS for piVars
-					
-				} else { // value is still an array (second level)
-					
-					if(!is_array($key2)) {	// if value is not an array
-						foreach ($value as $key2 => $value2) { // one loop for every key in second level
-						
-							$array[$key][$key2] = strip_tags(trim($value2)); // strip_tags removes html and php code
-							$array[$key][$key2] = addslashes($array[$key][$key2]); // use addslashes
-							$array[$key][$key2] = $this->removeXSS->RemoveXSS($array[$key][$key2]); // use remove XSS for piVars
-							
-						}
-					} else unset($array[$key][$key2]); // if array with 3 or more dimensions - delete this value
-					
-				}
-			}
-			
-			return $array;
-			
-		}
 	}
 	
 	
@@ -162,10 +162,15 @@ class tx_powermail_functions_div {
 	
 	// Function checkMX() checks if a domain exists
 	function checkMX($email,$record = 'MX') {
-		list($user,$domain) = split('@',$email); // split email in user and domain
+		if (function_exists('checkdnsrr')) { // if function checkdnsrr() exist (not available on windows systems)
+			list($user,$domain) = split('@',$email); // split email in user and domain
+			
+			if (checkdnsrr($domain,$record) == 1) return TRUE; // return true if mx record exist
+			else return FALSE; // return false if not
 		
-		if (checkdnsrr($domain,$record) == 1) return TRUE; // return true if mx record exist
-		else return FALSE; // return false if not
+		} else {
+			return TRUE; // function checkdnsrr() don't exist, so always return TRUE
+		}
 	}
 	
 	
