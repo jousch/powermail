@@ -1,9 +1,9 @@
 
 
-plugin.tx_powermail_pi1.CSS_editor = Plugin: "tx_powermail_pi1"
-plugin.tx_powermail_pi1.CSS_editor.selector = .tx-powermail-pi1
-plugin.tx_powermail_pi1.CSS_editor.exampleWrap = <HR><strong>Plugin: "tx_powermail_pi1"</strong><HR><div class="tx-powermail-pi1"> | </div>
-plugin.tx_powermail_pi1.CSS_editor.ch {
+plugin.tx_powermailfrontend_pi1.CSS_editor = Plugin: "tx_powermailfrontend_pi1"
+plugin.tx_powermailfrontend_pi1.CSS_editor.selector = .tx-powermailfrontend-pi1
+plugin.tx_powermailfrontend_pi1.CSS_editor.exampleWrap = <HR><strong>Plugin: "tx_powermailfrontend_pi1"</strong><HR><div class="tx-powermailfrontend-pi1"> | </div>
+plugin.tx_powermailfrontend_pi1.CSS_editor.ch {
 	P = Text
 	P.selector = P
 	P.attribs = BODYTEXT
