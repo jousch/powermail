@@ -33,8 +33,9 @@
 class user_powermail_tx_powermail_forms_preview {
 	function main(&$params,&$pObj)	{
 
-		$rootfolder = substr($_SERVER['SCRIPT_NAME'], 0 , strpos($_SERVER['SCRIPT_NAME'],'/typo3'));
-		$http_host = 'http://'.$GLOBALS['_SERVER']['HTTP_HOST'].$rootfolder.'/index.php?id='.$params['row']['pid'].'&no_cache=1';
+		//$rootfolder = substr($_SERVER['SCRIPT_NAME'], 0 , strpos($_SERVER['SCRIPT_NAME'],'/typo3'));
+		//$http_host = 'http://'.$GLOBALS['_SERVER']['HTTP_HOST'].$rootfolder.'/index.php?id='.$params['row']['pid'].'&no_cache=1';
+		$http_host = t3lib_div::getIndpEnv('TYPO3_SITE_URL').'index.php?id='.$params['row']['pid'].'&no_cache=1';
 		return '<iframe src="'.$http_host.'" style="width:600px;height:350px;border:1px solid black;background-color: white; margin: 10px 20px 10px 0px;" name="powermail_preview"></iframe>';
 	
 	}

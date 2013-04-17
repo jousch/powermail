@@ -3,7 +3,7 @@
 /***************************************************************
  * Extension Manager/Repository config file for ext "powermail".
  *
- * Auto generated 17-04-2013 11:34
+ * Auto generated 17-04-2013 11:35
  *
  * Manual updates:
  * Only the data in the array - everything else is removed by next
@@ -12,10 +12,10 @@
 
 $EM_CONF[$_EXTKEY] = array (
 	'title' => 'powermail',
-	'description' => 'Powerful and easy mailform extension with many features like database storing (Excel and CSV export in own backend modul), different HTML templates for sender and receiver and for all different fields, morestep forms, works with date2cal and static_info_tables and many more...',
+	'description' => 'Powerful and easy mailform extension with many features like database storing (Excel and CSV export), different HTML templates, javascript validation, morestep forms, works with date2cal and static_info_tables and many more...',
 	'category' => 'plugin',
 	'shy' => 0,
-	'version' => '0.5.3',
+	'version' => '0.5.4',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
@@ -27,8 +27,8 @@ $EM_CONF[$_EXTKEY] = array (
 	'modify_tables' => 'tt_content',
 	'clearcacheonload' => 0,
 	'lockType' => '',
-	'author' => 'Mischa Heissmann, Alexander Kellner',
-	'author_email' => 'typo3.2008@heissmann.org, alexander.kellner@einpraegsam.net',
+	'author' => 'Alexander Kellner, Mischa Heissmann',
+	'author_email' => 'alexander.kellner@einpraegsam.net, typo3.2008@heissmann.org',
 	'author_company' => '',
 	'CGLcompliance' => NULL,
 	'CGLcompliance_note' => NULL,

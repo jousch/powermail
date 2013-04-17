@@ -200,7 +200,7 @@ class tx_powermail_html extends tslib_pibase {
 				$markerArray['###LABEL_NAME###'] = $this->div_functions->clearName($optionlines[$i]); // add labelname
 				$markerArray['###ID###'] = 'id="'.$this->div_functions->clearName($optionlines[$i]).'" '; // add labelname
 				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow($optionlines[$i]).'" '; // add labelname
-				$markerArray['###CLASS###'] = 'class="required powermail_'.$this->formtitle.' powermail_'.$this->type.'powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
+				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.'powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
 				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
 				
 				// ###CHECKED###

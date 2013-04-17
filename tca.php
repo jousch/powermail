@@ -49,7 +49,7 @@ $TCA["tx_powermail_fieldsets"] = array (
 );
 
 // Make powermail available in older TYPO3 version (fieldsets)
-if($GLOBALS['TYPO_VERSION'] < '4.0' || $confArr['useIRRE'] == 0) {
+if(t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.1.0') || $confArr['useIRRE'] == 0) { // if current version older than 4.1 or IRRE deaktivated in ext manager
 	$TCA["tx_powermail_fieldsets"]["columns"]["tt_content"]['config'] = array (
 		"type" => "select",
 		"foreign_table" => "tt_content",
@@ -60,7 +60,6 @@ if($GLOBALS['TYPO_VERSION'] < '4.0' || $confArr['useIRRE'] == 0) {
 	$TCA["tx_powermail_fieldsets"]["columns"]["felder"]['config']['type'] = 'passthrough';
 	$TCA["tx_powermail_fieldsets"]["types"]["0"]['showitem'] = "form, title;;;;2-2-2, tt_content, felder";
 }
-
 
 
 $TCA["tx_powermail_fields"] = array (
@@ -183,7 +182,7 @@ if(!t3lib_extMgm::isLoaded('date2cal',0)) {
 }
 
 // Make powermail available in older TYPO3 version (fields)
-if($GLOBALS['TYPO_VERSION'] < '4.0' || $confArr['useIRRE'] == 0) {
+if(t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.1.0') || $confArr['useIRRE'] == 0) { // if current version older than 4.1 or IRRE deaktivated in ext manager
 	$TCA["tx_powermail_fields"]["columns"]["fieldset"]['config'] = array (
 		"type" => "select",
 		"foreign_table" => "tx_powermail_fieldsets",
@@ -192,7 +191,6 @@ if($GLOBALS['TYPO_VERSION'] < '4.0' || $confArr['useIRRE'] == 0) {
 	$TCA["tx_powermail_fields"]["columns"]["fieldset"]['label'] = "LLL:EXT:powermail/locallang_db.xml:tx_powermail_fields.fieldset";
 	$TCA["tx_powermail_fields"]["types"]["0"]['showitem'] = "title;;;;1-1-1,fieldset,formtype;;;;2-2-2,flexform;;;;3-3-3, fe_field;;;;4-4-4";
 }
-
 
 
 
