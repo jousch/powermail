@@ -220,7 +220,7 @@ page.includeJS.file31313 = EXT:powermail/js/mandatoryjs/src/effects.js
 page.includeJS.file31314 = EXT:powermail/js/mandatoryjs/fabtabulous.js
 
 page.headerData.31310 = COA
-page.headerData.31310.wrap = <script src="|" type="text/javascript" />
+page.headerData.31310.wrap = <script src="|" type="text/javascript"></script>
 page.headerData.31310 {
 	10 = TEXT
 	10.data = getIndpEnv:TYPO3_SITE_URL
