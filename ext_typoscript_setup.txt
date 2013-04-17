@@ -21,4 +21,6 @@ plugin.tx_powermail_pi1 {
 	js.init = {$plugin.powermail.js.init}
 	js.onchange = {$plugin.powermail.js.onchange}
 	label.allowTags = {$plugin.powermail.label.allowTags}
+	mandatory.symbol = {$plugin.powermail.mandatory.symbol}
+	mandatory.wrap = {$plugin.powermail.mandatory.wrap}
 }

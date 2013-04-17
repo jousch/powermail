@@ -1,5 +1,6 @@
 <?php
-if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
+if (!defined ('TYPO3_MODE')) die ('Access denied.');
+$confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['powermail']); // Get backandconfig
 
 $TCA["tx_powermail_fieldsets"] = array (
 	"ctrl" => $TCA["tx_powermail_fieldsets"]["ctrl"],
@@ -51,6 +52,19 @@ $TCA["tx_powermail_fieldsets"] = array (
 		"1" => array("showitem" => "")
 	)
 );
+
+// Make powermail available in older TYPO3 version (fieldsets)
+if($GLOBALS['TYPO_VERSION'] < '4.0' || $confArr['useIRRE'] == 0) {
+	$TCA["tx_powermail_fieldsets"]["columns"]["tt_content"]['config'] = array (
+		"type" => "select",
+		"foreign_table" => "tt_content",
+		'foreign_table_where' => 'AND tt_content.pid=###CURRENT_PID### ',
+		"maxitems" => 1,
+	);
+	$TCA["tx_powermail_fieldsets"]["columns"]["tt_content"]['label'] = "LLL:EXT:powermail/locallang_db.xml:tx_powermail_fieldsets.tt_content";
+	$TCA["tx_powermail_fieldsets"]["columns"]["felder"]['config']['type'] = 'passthrough';
+	$TCA["tx_powermail_fieldsets"]["types"]["0"]['showitem'] = "form, title;;;;2-2-2, tt_content, felder";
+}
 
 
 
@@ -158,6 +172,17 @@ $TCA["tx_powermail_fields"] = array (
 		"1" => array("showitem" => ""),
 	)
 );
+
+// Make powermail available in older TYPO3 version (fields)
+if($GLOBALS['TYPO_VERSION'] < '4.0' || $confArr['useIRRE'] == 0) {
+	$TCA["tx_powermail_fields"]["columns"]["fieldset"]['config'] = array (
+		"type" => "select",
+		"foreign_table" => "tx_powermail_fieldsets",
+		"maxitems" => 1,
+	);
+	$TCA["tx_powermail_fields"]["columns"]["fieldset"]['label'] = "LLL:EXT:powermail/locallang_db.xml:tx_powermail_fields.fieldset";
+	$TCA["tx_powermail_fields"]["types"]["0"]['showitem'] = "title;;;;1-1-1,fieldset,formtype;;;;2-2-2,flexform;;;;3-3-3, fe_field;;;;4-4-4";
+}
 
 $TCA["tx_powermail_mails"] = array (
 	"ctrl" => $TCA["tx_powermail_mails"]["ctrl"],

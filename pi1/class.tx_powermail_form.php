@@ -37,6 +37,11 @@ class tx_powermail_form extends tslib_pibase {
 
 	// Function main chooses what to show
 	function main($content, $conf) {
+		// config
+		if(!$GLOBALS['TSFE']->tmpl->setup['config.']['baseURL']) $this->baseurl = 'http://'.$_SERVER['HTTP_HOST'].'/'; // if no baseurl take http_host
+		else $this->baseurl = $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL']; // set baseurl
+		
+		// what to show
 		if ($this->pibase->cObj->data['tx_powermail_multiple'] == 2) { // If multiple (PHP) active (load tmpl_multiple.html)
 			
 			// Set limit
@@ -152,8 +157,8 @@ class tx_powermail_form extends tslib_pibase {
 		} elseif ($add < 0) { // Backward link
 		
 			if($this->multiple['currentpage'] > 1) { // If current fieldset is not the first
-				$link = $this->pibase->cObj->typolink('x',array('parameter'=>$GLOBALS['TSFE']->id,'returnLast'=>'url', 'additionalParams'=>'&tx_powermail_pi1[multiple]='.($this->multiple['currentpage'] + $add).'&tx_powermail_pi1[mailID]='.$this->pibase->cObj->data['uid'],'useCacheHash' => 1)); // Create target url
-				$content = '<input type="button" value="'.$this->pi_getLL('multiple_back').'" onclick="location=\''.$link.'\'" class="tx_powermail_pi1_submitmultiple_forward" />';
+				$link = $this->baseurl.$this->pibase->cObj->typolink('x',array('parameter'=>$GLOBALS['TSFE']->id,'returnLast'=>'url', 'additionalParams'=>'&tx_powermail_pi1[multiple]='.($this->multiple['currentpage'] + $add).'&tx_powermail_pi1[mailID]='.$this->pibase->cObj->data['uid'],'useCacheHash' => 1)); // Create target url
+				$content = '<input type="button" value="'.$this->pi_getLL('multiple_back').'" onclick="location=\''.$link.'\'" class="tx_powermail_pi1_submitmultiple_back" />';
 			}
 			else $content = ''; // clear it if it's not needed
 		

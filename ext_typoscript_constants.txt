@@ -24,7 +24,7 @@ plugin.powermail {
 	# cat=plugin.powermail/file/070; type=file[html,htm,tmpl,txt]; label= Template File multiple: HTML-template file for multiple pages (see EXT:powermail/templates/tmpl_multiple.html for an example)
 	template.multiple = EXT:powermail/templates/tmpl_multiple.html
 	
-	# cat=plugin.powermail/file/080; type=file[html,htm,tmpl,txt]; label= Template File multiple: HTML-template file for mandatory page (if any mandatory field was not filled) (see EXT:powermail/templates/tmpl_mandatory.html for an example)
+	# cat=plugin.powermail/file/080; type=file[html,htm,tmpl,txt]; label= Template File mandatory: HTML-template file for mandatory page (if any mandatory field was not filled) (see EXT:powermail/templates/tmpl_mandatory.html for an example)
 	template.mandatory = EXT:powermail/templates/tmpl_mandatory.html
 
 	# cat=plugin.powermail/enable/100; type=boolean; label= Email to receiver active: You can disable emails to receiver (maybe if you want only to store the values to db)
@@ -65,4 +65,10 @@ plugin.powermail {
 	
 	# cat=plugin.powermail//380; type=text; label= Allowed tags in labels: Allow some tags for label fields
 	label.allowTags = <p><br><b><strong><a>
+	
+	# cat=plugin.powermail//390; type=text; label= Add symbol for mandatory fields: If any field is a mandatory field, add this at the end of the label
+	mandatory.symbol = *
+	
+	# cat=plugin.powermail//400; type=wrap; label= Wrap mandatory symbol: You can wrap the mandatory symbol with any html code
+	mandatory.wrap = <span class="powermail_mandatory">|</span>
 }

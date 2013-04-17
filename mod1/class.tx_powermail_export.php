@@ -50,7 +50,7 @@ class tx_powermail_export {
 							}
 						}
 						$table .= '<td>'.$row['formid'].'</td>';
-						$table .= '<td>'.$row['content'].'</td>';
+						$table .= '<td>'.trim(str_replace(array('<br>','<br />'),'',$row['content'])).'</td>';
 						$table .= '<td>'.$row['UserAgent'].'</td>';
 						$table .= '<td>'.$row['Referer'].'</td>';
 						$table .= '<td>'.$row['SP_TZ'].'</td>';

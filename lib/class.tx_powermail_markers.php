@@ -37,7 +37,7 @@ class tx_powermail_markers extends tslib_pibase {
         // Configuration
         $this->markerArray = array(); $this->markerArray['###POWERMAIL_ALL###'] = ''; // init
         $this->sessiondata = $GLOBALS['TSFE']->fe_user->getKey('ses',$this->extKey.'_'.$this->pibase->pibase->cObj->data['uid']); // Get piVars from session
-        $this->div_functions = t3lib_div::makeInstance('tx_powermail_functions_div'); // New object: div functions
+       	$this->div_functions = t3lib_div::makeInstance('tx_powermail_functions_div'); // New object: div functions
         $this->tmpl['all'] = $this->pibase->pibase->cObj->getSubpart(tslib_cObj::fileResource($this->conf['template.']['all']),"###POWERMAIL_ALL###"); // Load HTML Template: ALL (works on subpart ###POWERMAIL_ALL###)
         $this->notInMarkerAll = t3lib_div::trimExplode(',',$this->conf['markerALL.']['notIn'],1); // choose which fields should not be listed in marker ###ALL###
         
@@ -95,7 +95,11 @@ class tx_powermail_markers extends tslib_pibase {
     function GetLabelfromBackend($name,$value) {
 		if(strpos($name,'uid') !== FALSE) { // $name like uid55
 			$uid = str_replace('uid','',$name);
+
+			// additional where clause for tt_content table
 			$where_clause = 'c.deleted=0 AND c.t3ver_state!=1 AND c.hidden=0 AND (c.starttime<='.time().') AND (c.endtime=0 OR c.endtime>'.time().') AND (c.fe_group="" OR c.fe_group IS NULL OR c.fe_group="0" OR (c.fe_group LIKE "%,0,%" OR c.fe_group LIKE "0,%" OR c.fe_group LIKE "%,0" OR c.fe_group="0") OR (c.fe_group LIKE "%,-1,%" OR c.fe_group LIKE "-1,%" OR c.fe_group LIKE "%,-1" OR c.fe_group="-1"))'; // enable fields for tt_content
+			if($GLOBALS['TYPO_VERSION'] < '4.0') $where_clause = 'c.deleted=0 AND c.hidden=0 AND (c.starttime<='.time().') AND (c.endtime=0 OR c.endtime>'.time().') AND (c.fe_group="" OR c.fe_group IS NULL OR c.fe_group="0" OR (c.fe_group LIKE "%,0,%" OR c.fe_group LIKE "0,%" OR c.fe_group LIKE "%,0" OR c.fe_group="0") OR (c.fe_group LIKE "%,-1,%" OR c.fe_group LIKE "-1,%" OR c.fe_group LIKE "%,-1" OR c.fe_group="-1"))'; // enable fields for tt_content
+
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery ( // GET title where fields.flexform LIKE <value index="vDEF">vorname</value>
 				'f.title',
 				'tx_powermail_fields f LEFT JOIN tx_powermail_fieldsets fs ON (f.fieldset = fs.uid) LEFT JOIN tt_content c ON (c.uid = fs.tt_content)',
