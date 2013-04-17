@@ -30,7 +30,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 	var $pi_checkCHash = true;
     var $scriptRelPath = 'pi1/class.tx_powermail_mandatory.php';    // Path to pi1 to get locallang.xml from pi1 folder
 
-	function main($conf,$sessionfields){
+	function main($conf,$sessionfields) {
 		$this->conf = $conf;
 		$this->sessionfields = $sessionfields;
 		$this->pi_setPiVarDefaults();
@@ -53,8 +53,10 @@ class tx_powermail_mandatory extends tslib_pibase {
 		$this->markerArray['###POWERMAIL_NAME###'] = $this->pibase->cObj->data['tx_powermail_title'].'_mandatory'; // Fill Marker with formname
 		$this->markerArray['###POWERMAIL_METHOD###'] = $this->conf['form.']['method']; // Form method
 		
-		// Captcha Check
-		$this->captchaCheck();
+		// Different check functions
+		$this->captchaCheck(); // Captcha Check
+		$this->emailCheck(); // Email Check
+		$this->regulareExpressions(); // Regulare Expression Check
 		
 		// Give me all fields of current content uid
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
@@ -101,6 +103,59 @@ class tx_powermail_mandatory extends tslib_pibase {
 		if($this->error == 1) { // if there is an error
 			$this->clearErrorsInSession();
 			return $this->content; // return HTML
+		}
+	}
+	
+	
+	// Functions regulareExpressions() checks values
+	function regulareExpressions() {
+		// Config - set regulare expressions for autocheck
+		$autoarray = array (
+			'email' => "^[_a-z0-9]+(\.[_a-z0-9-]+)*@([a-z0-9-]+\.)+([a-z0-9]{2,4})$^",
+			'url' => "^(http://)?([a-z0-9-]+\.)+([a-z0-9-]{2,3})$^",
+			'numbers' => "/[0-9]+$/",
+			'phone' => "/[0-9\/+-]+$/",
+			'alphanum' => "/[a-zA-Z0-9]/"
+		);
+		
+		// Let's go and check
+		if (isset($this->conf['validate.']) && is_array($this->conf['validate.'])) { // Only if any validation is set per typoscript
+			foreach ($this->conf['validate.'] as $key => $value) { // One loop for every validation
+				// autocheck
+				if ($this->conf['validate.'][$key]['auto']) { // If autocheck of current value is active
+					if (isset($autoarray[$this->conf['validate.'][$key]['auto']])) { // if regulare expression in $autoarray
+						if ($this->sessionfields[str_replace('.','',$key)]) { // if there is a value in the field, which to check
+							
+							// Check
+							if (!preg_match($autoarray[$this->conf['validate.'][$key]['auto']], $this->sessionfields[str_replace('.','',$key)])) { // If check failed
+								$this->sessionfields['ERROR'][str_replace('.','',$key)][] = ($this->conf['validate.'][$key]['errormsg']?$this->conf['validate.'][$key]['errormsg']:$this->pi_getLL('error_expression_validation')); // write errormessage
+							}
+							
+						}
+					}
+				} elseif ($this->conf['validate.'][$key]['expression']) { // regulare expression
+					if ($this->sessionfields[str_replace('.','',$key)]) { // if there is a value in the field, which to check
+						
+						// Check
+						if (!preg_match($this->conf['validate.'][$key]['expression'], $this->sessionfields[str_replace('.','',$key)])) { // If check failed
+							$this->sessionfields['ERROR'][str_replace('.','',$key)][] = ($this->conf['validate.'][$key]['errormsg']?$this->conf['validate.'][$key]['errormsg']:$this->pi_getLL('error_expression_validation')); // write errormessage
+						}
+						
+					}
+				}
+			}
+		}
+	}
+	
+	
+	// Function emailCheck() checks if sender email address is a real email address, if not write error to session
+	function emailCheck() {
+		if($this->pibase->cObj->data['tx_powermail_sender']) { // If email address from sender is set in backend
+			if($this->sessionfields[$this->pibase->cObj->data['tx_powermail_sender']]) { // if there is content in the email sender field
+				if(!t3lib_div::validEmail($this->sessionfields[$this->pibase->cObj->data['tx_powermail_sender']])) { // Value is not an email address
+					$this->sessionfields['ERROR'][str_replace('uid','',$this->pibase->cObj->data['tx_powermail_sender'])][] = $this->pi_getLL('error_validemail'); // write error message to session
+				}
+			}
 		}
 	}
 	

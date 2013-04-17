@@ -24,6 +24,8 @@
 			<label index="error_captcha_empty">Captcha Code empty</label>
 			<label index="error_captcha_wrong">Captcha Code wrong</label>
 			<label index="error_backend_noip">IP logging disabled</label>
+			<label index="error_validemail">Email addres is not valid</label>
+			<label index="error_expression_validation">Validation failed</label>
 			<label index="multiple_forward">Next step</label>
 			<label index="multiple_back">Previous step</label>
 			<label index="pagebrowser_inner"> of </label>
@@ -59,6 +61,8 @@
 			<label index="error_captcha_empty">Sie haben vergessen einen Code einzutragen</label>
 			<label index="error_captcha_wrong">Der eingetragene Code war leider falsch</label>
 			<label index="error_backend_noip">IP Speicherung deaktiviert</label>
+			<label index="error_validemail">Die eingegebenen E-Mail Adresse enthält Fehler</label>
+			<label index="error_expression_validation">Check fehlgeschlagen</label>
 			<label index="multiple_forward">Nächster Schritt</label>
 			<label index="multiple_back">Vorheriger Schritt</label>
 			<label index="pagebrowser_inner"> von </label>
@@ -94,6 +98,8 @@
 			<label index="error_captcha_empty">Captcha Code empty</label>
 			<label index="error_captcha_wrong">Captcha Code wrong</label>
 			<label index="error_backend_noip">IP logging disabled</label>
+			<label index="error_validemail">Email addres is not valid</label>
+			<label index="error_expression_validation">Validation failed</label>
 			<label index="multiple_forward">Next step</label>
 			<label index="multiple_back">Previous step</label>
 			<label index="pagebrowser_inner"> of </label>
@@ -129,6 +135,7 @@
 			<label index="error_captcha_empty">Le code de vérification n'a pas été saisi</label>
 			<label index="error_captcha_wrong">Le code de vérification est erroné</label>
 			<label index="error_backend_noip">Journalisation des adresses IP désactivée</label>
+			<label index="error_validemail">Cette adresse email n'est pas valable</label>
 			<label index="multiple_forward">Etape suivante</label>
 			<label index="multiple_back">Etape précédente</label>
 			<label index="pagebrowser_inner">de</label>
@@ -163,6 +170,7 @@
 			<label index="error_check_recipient">Email adres van de ontvanger</label>
 			<label index="error_captcha_empty">Captcha Code leeg</label>
 			<label index="error_captcha_wrong">Captcha Code verkeerd</label>
+			<label index="error_validemail">Dit is geen correct email adres:</label>
 			<label index="multiple_forward">Volgende stap</label>
 			<label index="multiple_back">Vorige stap</label>
 			<label index="pagebrowser_inner"> van </label>

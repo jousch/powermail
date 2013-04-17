@@ -42,15 +42,15 @@ class tx_powermail_export {
 						$table .= '<td>'.$row['sender'].'</td>';
 						$table .= '<td>'.$row['senderIP'].'</td>';
 						$table .= '<td>'.$row['recipient'].'</td>';
-						$table .= '<td>'.$this->decode($row['subject_r']).'</td>';
+						$table .= '<td>'.$row['subject_r'].'</td>';
 						$values = t3lib_div::xml2array($row['piVars'],'pivars'); // xml2array
 						if(isset($values) && is_array($values)) {
 							foreach ($values as $key => $value) { // one loop for every piVar
-								if(!is_array($value)) $table .= '<td>'.$this->decode($value).'</td>';
+								if(!is_array($value)) $table .= '<td>'.$value.'</td>';
 							}
 						}
 						$table .= '<td>'.$row['formid'].'</td>';
-						$table .= '<td>'.$this->decode(trim(strip_tags($row['content'],'<a><b>'))).'</td>';
+						$table .= '<td>'.$row['content'].'</td>';
 						$table .= '<td>'.$row['UserAgent'].'</td>';
 						$table .= '<td>'.$row['Referer'].'</td>';
 						$table .= '<td>'.$row['SP_TZ'].'</td>';
@@ -70,14 +70,14 @@ class tx_powermail_export {
 						$table .= '"'.$row['sender'].'"'.$this->seperator;
 						$table .= '"'.$row['senderIP'].'"'.$this->seperator;
 						$table .= '"'.$row['recipient'].'"'.$this->seperator;
-						$table .= '"'.$this->decode($row['subject_r']).'"'.$this->seperator;
+						$table .= '"'.$row['subject_r'].'"'.$this->seperator;
 						if(isset($values) && is_array($values)) {
 							foreach ($values as $key => $value) { // one loop for every piVar
-								if(!is_array($value)) $table .= '"'.str_replace('"',"'",str_replace(array("\n\r","\r\n","\n","\r"),'',$this->decode($value))).'"'.$this->seperator;
+								if(!is_array($value)) $table .= '"'.str_replace('"',"'",str_replace(array("\n\r","\r\n","\n","\r"),'',$value)).'"'.$this->seperator;
 							}
 						}
 						$table .= '"'.$row['formid'].'"'.$this->seperator;
-						$table .= '"'.str_replace(array("\n\r","\r\n","\n","\r"),'',$this->decode(strip_tags($row['content'],'<a><b>'))).'"'.$this->seperator;
+						$table .= '"'.str_replace(array("\n\r","\r\n","\n","\r"),'',$row['content']).'"'.$this->seperator;
 						$table .= '"'.$row['UserAgent'].'"'.$this->seperator;
 						$table .= '"'.$row['Referer'].'"'.$this->seperator;
 						$table .= '"'.$row['SP_TZ'].'"'.$this->seperator;
@@ -103,7 +103,7 @@ class tx_powermail_export {
 				$content .= '<a href="http://'.$_SERVER['HTTP_HOST'].'/typo3temp/'.$this->csvfilename.'" target="_blank"><u>'.$this->LANG->getLL('export_download_download').'</u></a><br />'; // link to xx.csv.gz
 				$content .= '<a href="http://'.$_SERVER['HTTP_HOST'].'/typo3temp/'.$this->csvfilename.'.gz" target="_blank"><u>'.$this->LANG->getLL('export_download_downloadZIP').'</u></a><br />'; // link to xx.csv
 			} else {
-				$content .= t3lib_div::writeFileToTypo3tempDir(PATH_site.'typo3temp/'.$this->csvfilename,$table); // Error message
+				$content .= t3lib_div::writeFileToTypo3tempDir(PATH_site.'typo3temp/'.$this->csvfilename,$table);
 			}
 		
 		} elseif($export == 'table') {
@@ -115,13 +115,6 @@ class tx_powermail_export {
 		}
 		
 		return $content;
-	}
-	
-	// Function decode() decodes string if utf-8 is in use
-	function decode($string) {
-		if($this->LANG->charSet == 'utf-8') $string = utf8_decode($string);
-		
-		return $string;
 	}
 
 	// Compress a file

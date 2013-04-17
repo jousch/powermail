@@ -24,7 +24,7 @@ class tx_powermail_bedetails {
 			$values = t3lib_div::xml2array($row['piVars'],'pivars'); // xml2array
 			if(isset($values) && is_array($values)) {
 				foreach ($values as $key => $value) { // one loop for every piVar
-					if(!is_array($value)) $this->content .= '<tr>'.'<td><strong>'.$this->GetLabelfromBackend($key,$value).':</strong></td>'.'<td>'.$value.'</td></tr>';
+					if(!is_array($value)) $this->content .= '<tr>'.'<td><strong>'.$this->GetLabelfromBackend($key,$value).':</strong></td>'.'<td>'.stripslashes($value).'</td></tr>';
 				}
 			}
 		}

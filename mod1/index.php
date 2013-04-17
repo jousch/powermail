@@ -145,8 +145,7 @@ class  tx_powermail_module1 extends t3lib_SCbase {
 						$this->content .= $this->belist->main($this->id, $BACK_PATH); // Show list
 					} else {
 						$this->export = t3lib_div::makeInstance('tx_powermail_export');
-						if($_GET['export'] != 'csv') $this->content = $this->export->main($_GET['export'], $this->id, $LANG); // Show export functions
-						else $this->content .= $this->export->main($_GET['export'], $this->id, $LANG); // Show export functions
+						$this->content .= $this->export->main($_GET['export'], $this->id, $LANG); // Show export functions
 					}
 				} else { // show only one with details
 					$this->belist = t3lib_div::makeInstance('tx_powermail_belist');

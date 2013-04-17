@@ -75,7 +75,7 @@ class tx_powermail_functions_div {
 	// Function sec() is a security function against all bad guys :) 
 	function sec($array) {
 		if(isset($array) && is_array($array)) { // if array
-			t3lib_div::addSlashesOnArray($array); // addslashes for every piVar (He'l"lo => He\'l\"lo)
+			//t3lib_div::addSlashesOnArray($array); // addslashes for every piVar (He'l"lo => He\'l\"lo)
 			
 			foreach ($array as $key => $value) { // one loop for every key in first level
 				
@@ -87,6 +87,7 @@ class tx_powermail_functions_div {
 				
 					$array[$key] = strip_tags(trim($value)); // strip_tags removes html and php code
 					if(function_exists('mysql_real_escape_string')) $array[$key] = mysql_real_escape_string($value); // check against sql injection
+					else $array[$key] = addslashes($value); // use addslashes if escape_string is not available
 					
 				} else { // value is still an array (second level)
 					
@@ -95,6 +96,7 @@ class tx_powermail_functions_div {
 						
 							$array[$key][$key2] = strip_tags(trim($value2)); // strip_tags removes html and php code
 							if(function_exists('mysql_real_escape_string')) $array[$key][$key2] = mysql_real_escape_string($value2); // check against sql injection
+							else $array[$key] = addslashes($value); // use addslashes if escape_string is not available
 							
 						}
 					} else unset($array[$key][$key2]); // if array with 3 or more dimensions - delete this value
