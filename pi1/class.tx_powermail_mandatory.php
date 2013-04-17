@@ -44,6 +44,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 		$this->dynamicMarkers = t3lib_div::makeInstance('tx_powermail_dynamicmarkers'); // New object: TYPO3 dynamicmarker function
 		$this->markers = t3lib_div::makeInstance('tx_powermail_markers'); // New object: TYPO3 mail functions
 		$this->markers->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions
+		unset($this->sessionfields['ERROR']); // don't start with errors, because here we have to check for errors
 		
 		// Template
 		$this->tmpl = array();
@@ -62,40 +63,12 @@ class tx_powermail_mandatory extends tslib_pibase {
 		$this->captchaCheck(); // Captcha Check
 		$this->emailCheck(); // Email Check
 		$this->regulareExpressions(); // Regulare Expression Check
-		
-		// Give me all fields of current content uid
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
-			'tx_powermail_fields.uid, tx_powermail_fields.title, tx_powermail_fields.flexform',
-			'tx_powermail_fields LEFT JOIN tx_powermail_fieldsets ON (tx_powermail_fields.fieldset = tx_powermail_fieldsets.uid) LEFT JOIN tt_content ON (tx_powermail_fieldsets.tt_content = tt_content.uid)',
-			$where_clause = 'tx_powermail_fieldsets.tt_content = '.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']).tslib_cObj::enableFields('tt_content').tslib_cObj::enableFields('tx_powermail_fieldsets').tslib_cObj::enableFields('tx_powermail_fields'),
-			$groupBy = '',
-			$orderBy = 'tx_powermail_fieldsets.sorting ASC, tx_powermail_fields.sorting ASC',
-			$limit
-		);
-		if ($res) { // If there is a result
-			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every field
-				if ($this->pi_getFFvalue(t3lib_div::xml2array($row['flexform']),'mandatory') == 1 || $this->conf['validate.']['uid'.$row['uid'].'.'][required] == 1) { // if in current xml mandatory == 1 OR mandatory was set via TS for current field
-					if (!is_array($this->sessionfields['uid'.$row['uid']])) { // first level
-						if (!trim($this->sessionfields['uid'.$row['uid']]) || !isset($this->sessionfields['uid'.$row['uid']])) { // only if current value is not set in session (piVars)
-							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_mandatory_emptyfield').' <b>'.$row['title'].'</b>'; // set current error to sessionlist
-						}
-					} else { // second level (maybe for checkboxes
-						if (isset($this->sessionfields['uid'.$row['uid']])) {
-							$error=1; // errors on start (by default)
-							foreach ($this->sessionfields['uid'.$row['uid']] as $key => $value) { // one loop for every field
-								if ($this->sessionfields['uid'.$row['uid']][$key] != '') $error = 0; // set error
-							}
-							if ($error) $this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_mandatory_emptyfield').' <b>'.$row['title'].'</b>'; // set current error to sessionlist
-						}
-					}
-				}
-			}
-		}
+		$this->mandatoryCheck(); // Mandatory check
 		
 		// Check for errors
 		if(isset($this->sessionfields['ERROR']) && is_array($this->sessionfields['ERROR'])) {
 			foreach($this->sessionfields['ERROR'] as $key1 => $value1) { // one loop for every field with an error
-				if(isset($this->sessionfields['ERROR'][$key1])) {
+				if(isset($this->sessionfields['ERROR'][$key1])) { // if error was set
 					foreach($this->sessionfields['ERROR'][$key1] as $key2 => $value2) { // one loop for every error on current field
 						$this->error = 1; // mark as error
 						$this->innerMarkerArray['###POWERMAIL_MANDATORY_LABEL###'] = $value2; // current field title (label)
@@ -111,10 +84,47 @@ class tx_powermail_mandatory extends tslib_pibase {
 		$this->content = $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['mandatory']['all'],$this->markerArray,$subpartArray); // substitute Marker in Template
 		$this->content = $this->dynamicMarkers->main($this->conf, $this->pibase->cObj, $this->content); // Fill dynamic locallang or typoscript markers
 		$this->content = preg_replace("|###.*?###|i","",$this->content); // Finally clear not filled markers
-		if($this->error == 1) { // if there is an error
+		$this->overwriteSession(); // write $this->sessionfields to session if there is an ok for an error
+        
+        if($this->error == 1) { // if there is an error
 			$this->clearErrorsInSession();
 			return $this->content; // return HTML
 		}
+	}
+	
+	
+	// Function mandatoryCheck() checks if a field has to contain anything
+	function mandatoryCheck() {
+		
+        // Give me all fields of current content uid
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
+			'tx_powermail_fields.uid, tx_powermail_fields.title, tx_powermail_fields.flexform',
+			'tx_powermail_fields LEFT JOIN tx_powermail_fieldsets ON (tx_powermail_fields.fieldset = tx_powermail_fieldsets.uid) LEFT JOIN tt_content ON (tx_powermail_fieldsets.tt_content = tt_content.uid)',
+			$where_clause = 'tx_powermail_fieldsets.tt_content = '.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']).tslib_cObj::enableFields('tt_content').tslib_cObj::enableFields('tx_powermail_fieldsets').tslib_cObj::enableFields('tx_powermail_fields'),
+			$groupBy = '',
+			$orderBy = 'tx_powermail_fieldsets.sorting ASC, tx_powermail_fields.sorting ASC',
+			$limit
+		);
+		if ($res) { // If there is a result
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every field
+				if ($this->pi_getFFvalue(t3lib_div::xml2array($row['flexform']),'mandatory') == 1 || $this->conf['validate.']['uid'.$row['uid'].'.'][required] == 1) { // if in current xml mandatory == 1 OR mandatory was set via TS for current field
+					if (!is_array($this->sessionfields['uid'.$row['uid']])) { // first level
+						if (!trim($this->sessionfields['uid'.$row['uid']]) || !isset($this->sessionfields['uid'.$row['uid']])) { // only if current value is not set in session (piVars)
+							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_mandatory_emptyfield').' <b>'.$row['title'].'</b>'; // set current error to sessionlist
+						}
+					} else { // second level (maybe for checkboxes)
+						if (isset($this->sessionfields['uid'.$row['uid']])) {
+							$error = 1; // errors on start (by default)
+							foreach ($this->sessionfields['uid'.$row['uid']] as $key => $value) { // one loop for every field
+								if ($this->sessionfields['uid'.$row['uid']][$key] != '') $error = 0; // set error
+							}
+							if ($error) $this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_mandatory_emptyfield').' <b>'.$row['title'].'</b>'; // set current error
+						}
+					}
+				}
+			}
+		}
+	
 	}
 	
 	
@@ -228,7 +238,9 @@ class tx_powermail_mandatory extends tslib_pibase {
 				if(!t3lib_div::validEmail($this->sessionfields[$this->pibase->cObj->data['tx_powermail_sender']])) { // Value is not an email address
 					$this->sessionfields['ERROR'][str_replace('uid','',$this->pibase->cObj->data['tx_powermail_sender'])][] = $this->pi_getLL('error_validemail'); // write error message to session
 				} else { // Syntax of email address is correct - check for MX Record (if activated via constants)
-					if( !$this->div_functions->checkMX( $this->sessionfields[$this->pibase->cObj->data['tx_powermail_sender']] ) && $this->conf['email.']['checkMX'] ) $this->sessionfields['ERROR'][str_replace('uid','',$this->pibase->cObj->data['tx_powermail_sender'])][] = $this->pi_getLL('error_nomx'); // write error message to session
+					if( !$this->div_functions->checkMX( $this->sessionfields[$this->pibase->cObj->data['tx_powermail_sender']] ) && $this->conf['email.']['checkMX'] ) {
+                        $this->sessionfields['ERROR'][str_replace('uid','',$this->pibase->cObj->data['tx_powermail_sender'])][] = $this->pi_getLL('error_nomx'); // write error message to session
+                    }
 				}
 			}
 		}
@@ -237,7 +249,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 	
 	// Function captchaCheck check if captcha fields are within current content and set errof if value is wrong
 	function captchaCheck() {
-		if(t3lib_extMgm::isLoaded('captcha',0) || t3lib_extMgm::isLoaded('sr_freecap',0)) { // only if a captcha extension is loaded
+		if(t3lib_extMgm::isLoaded('captcha',0) || t3lib_extMgm::isLoaded('sr_freecap',0) || t3lib_extMgm::isLoaded('jm_recaptcha',0)) { // only if a captcha extension is loaded
 		
 			// Give me all captcha fields of current tt_content
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
@@ -251,6 +263,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 			if ($res) { // If there is a result
 				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every captcha field
 					
+					// sr_freecap
 					if (t3lib_extMgm::isLoaded('sr_freecap',0) && $this->conf['captcha.']['use'] == 'sr_freecap') { // use sr_freecap if available
 						
 						session_start(); // start session
@@ -267,6 +280,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 						}
 					}
 					
+					// captcha
 					elseif (t3lib_extMgm::isLoaded('captcha',0) && $this->conf['captcha.']['use'] == 'captcha') { // use captcha if available
 					
 						session_start(); // start session
@@ -281,11 +295,37 @@ class tx_powermail_mandatory extends tslib_pibase {
 						}
 						
 					}
+					
+					// jm_recaptcha
+					elseif (t3lib_extMgm::isLoaded('jm_recaptcha',0) && $this->conf['captcha.']['use'] == 'recaptcha') { // use recaptcha if available
+						
+                        if (!$this->sessionfields['OK'][$row['uid']]) { // do this check only if recaptcha gave not ok before // if ok, you don't have to check again if captcha is right
+    						require_once(t3lib_extMgm::extPath('jm_recaptcha')."class.tx_jmrecaptcha.php"); // include recaptcha class
+    						$recaptcha = t3lib_div::makeInstance('tx_jmrecaptcha'); // new object
+    						
+    						$status = $recaptcha->validateReCaptcha(); // get status
+    						if (!$status['verified']) { // if code is ok
+    							 $this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('error_captcha_wrong'); // error message
+    						} else { // code ok
+    							$this->sessionfields['OK'][$row['uid']] = 'recaptcha'; // recaptcha code is ok - set an ok to the session for further checks
+    						}
+    					}
+						
+					}
 				}
 			}
 			
 		}
 	}
+	
+	
+	// Function overwriteSession() saves $this->sessionfields to session to overwrite errors (recaptcha can set an OK for errors in future) 
+	function overwriteSession() {
+        if (count($this->sessionfields['OK']) > 0) { // only if min 1 OK value
+            $GLOBALS['TSFE']->fe_user->setKey("ses", $this->extKey.'_'.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']), $this->sessionfields); // Generate Session without ERRORS
+    		$GLOBALS['TSFE']->storeSessionData(); // Save session
+    	}
+    }
 	
 	
 	// Function clearErrorsInSession() removes all global errors, which are marked as an error in the session

@@ -152,8 +152,9 @@ Fieldwrap for radiobuttons like <input type="radio" />
 Fieldwrap for captcha request
 
 	Special markers:
-	###POWERMAIL_CAPTCHA_PICTURE###				Captcha picture
-	###POWERMAIL_CAPTCHA_PICTURERELOAD###		Link to reload captcha (sr_freecap only)
+	###POWERMAIL_CAPTCHA_PICTURE###            Captcha picture
+	###POWERMAIL_CAPTCHA_PICTURERELOAD###      Link to reload captcha (sr_freecap only)
+	###POWERMAIL_CAPTCHA_ACCESSIBLE###         Link for audio (sr_freecap only)
 
 <!-- ###POWERMAIL_FIELDWRAP_HTML_CAPTCHA### begin -->
 	<div id="powermaildiv_uid###POWERMAIL_FIELD_UID###" class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_captcha tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###"###DIVJS###>
@@ -164,6 +165,13 @@ Fieldwrap for captcha request
 		###POWERMAIL_CAPTCHA_ACCESSIBLE###
 	</div>
 <!-- ###POWERMAIL_FIELDWRAP_HTML_CAPTCHA### end -->
+
+<!-- ###POWERMAIL_FIELDWRAP_HTML_RECAPTCHA### begin -->
+	<div id="powermaildiv_uid###POWERMAIL_FIELD_UID###" class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_captcha tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###"###DIVJS###>
+		<label for="###LABEL_NAME###">###LABEL######MANDATORY_SYMBOL###</label>
+        ###POWERMAIL_CAPTCHA_PICTURE###
+    </div>
+<!-- ###POWERMAIL_FIELDWRAP_HTML_RECAPTCHA### end -->
 
 
 
@@ -326,11 +334,24 @@ Fieldwrap for dropdown with countries <select>
 	<div id="powermaildiv_uid###POWERMAIL_FIELD_UID###" class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_select tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###"###DIVJS###>
 		<label for="###LABEL_NAME###">###LABEL######MANDATORY_SYMBOL###</label>
 		<select ###NAME######ID######CLASS######ONCHANGE######ONFOCUS######TABINDEX######ACCESSKEY######JS###>
+		<option value=""></option>
 		 <!-- ###CONTENT### -->
 		 	<!-- ###ITEM### -->
 		 		<option value="###VALUE###"###SELECTED######JS_INNER###>###LONGVALUE###</option>
 		 	<!-- ###ITEM### -->
 		 <!-- ###CONTENT### -->
 		 </select>
+         <div id="powermail_countryzoneselect###POWERMAIL_FIELD_UID###" class="countryzone"></div>
 	</div>
 <!-- ###POWERMAIL_FIELDWRAP_HTML_COUNTRYSELECT### end -->
+
+<!-- ###POWERMAIL_FIELDWRAP_HTML_COUNTRYZONESELECT### begin -->
+	<select ###NAME######ID######CLASS######ONCHANGE######ONFOCUS######TABINDEX######ACCESSKEY######JS###>
+	<option value=""></option>
+	<!-- ###CONTENT### -->
+		<!-- ###ITEM### -->
+			<option value="###VALUE###"###SELECTED######JS_INNER###>###LONGVALUE###</option>
+		<!-- ###ITEM### -->
+	<!-- ###CONTENT### -->
+	</select>
+<!-- ###POWERMAIL_FIELDWRAP_HTML_COUNTRYZONESELECT### end -->

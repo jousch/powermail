@@ -27,11 +27,16 @@ require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_function
 require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_sessions.php'); // load session class
 require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_dynamicmarkers.php'); // file for dynamicmarker functions
 require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_removexss.php'); // file for removexss function class
+require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_countryzones.php'); // file for countryzones function class
+// extern resources
+	// date2cal
 if(t3lib_extMgm::isLoaded('date2cal',0)) { // if date2cal is loaded
 	if(file_exists(t3lib_extMgm::siteRelPath('date2cal').'src/class.jscalendar.php')) { // if file exists (date2cal 7.0.0 or newer)
 		include_once(t3lib_extMgm::siteRelPath('date2cal').'src/class.jscalendar.php'); // include calendar class
 	}
 }
+
+
 
 class tx_powermail_html extends tslib_pibase {
 	var $prefixId      = 'tx_powermail_pi1';		// Same as class name
@@ -42,14 +47,14 @@ class tx_powermail_html extends tslib_pibase {
 
 	function main($conf, $row, $tabindex) {
 		// Config
-		$this->pibase->pi_initPIflexForm();
-		$this->xml = $row['f_field'];
-		$this->title = $row['f_title'];
-		$this->type = $row['f_type'];
-		$this->formtitle = $row['c_title'];
-		$this->uid = $row['f_uid'];
-		$this->fe_field = $row['f_fefield'];
-		$this->tabindex = $tabindex;
+		$this->pibase->pi_initPIflexForm(); // allow flexform
+		$this->xml = $row['f_field']; // get xml from flexform to current field
+		$this->title = $row['f_title']; // get label to current field
+		$this->type = $row['f_type']; // get type of current field
+		$this->formtitle = $row['c_title']; // get title of powermail
+		$this->uid = $row['f_uid']; // get uid of current field
+		$this->fe_field = $row['f_fefield']; // Get frontend user field if related to
+		$this->tabindex = $tabindex; // get current tabindex
 		$this->tmpl = array('all' => tslib_cObj::fileResource($this->conf['template.']['fieldWrap'])); // Load HTML Template
 		$this->dynamicMarkers = t3lib_div::makeInstance('tx_powermail_dynamicmarkers'); // New object: TYPO3 marker function
 		$this->removeXSS = t3lib_div::makeInstance('tx_powermail_removexss'); // New object: removeXSS function
@@ -702,11 +707,19 @@ class tx_powermail_html extends tslib_pibase {
 			}
 			
 			$subpartArray['###CONTENT###'] = $content_item; // subpart 3
-	
+			
+			
+			$this->countryzones = t3lib_div::makeInstance('tx_powermail_countryzones');
+			$this->countryzones->preflight($this->uid, $this->xml, $this->markerArray, $this->tmpl, $this->formtitle, $this->conf, $this->piVarsFromSession, $this->pibase->pibase->cObj);
+			
+			
 			$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 			$content = $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['html_countryselect']['all'],$this->markerArray,$subpartArray); // substitute Marker in Template
 			$content = $this->dynamicMarkers->main($this->conf, $this->pibase->pibase->cObj, $content); // Fill dynamic locallang or typoscript markers
 			$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+			
+			
+			
 		
 		} else { // Extension static_info_tables is missing
 			$content = 'Please install extension <strong>static_info_tables</strong> to use countryselect feature';
@@ -723,7 +736,7 @@ class tx_powermail_html extends tslib_pibase {
 	 */
 	function html_captcha() {
 		if(t3lib_extMgm::isLoaded('captcha',0) || t3lib_extMgm::isLoaded('sr_freecap',0)) { // only if a captcha extension is loaded
-			$this->tmpl['html_captcha'] = tslib_cObj::getSubpart($this->tmpl['all'],'###POWERMAIL_FIELDWRAP_HTML_CAPTCHA###'); // work on subpart
+			$this->tmpl['html_captcha'] = tslib_cObj::getSubpart($this->tmpl['all'], '###POWERMAIL_FIELDWRAP_HTML_CAPTCHA###'); // work on subpart
 			
 			if (t3lib_extMgm::isLoaded('sr_freecap',0) && $this->conf['captcha.']['use'] == 'sr_freecap') { // use sr_freecap if available
 				
@@ -741,10 +754,20 @@ class tx_powermail_html extends tslib_pibase {
 				$this->markerArray['###POWERMAIL_CAPTCHA_PICTURE###'] = '<img src="'.t3lib_extMgm::siteRelPath('captcha').'captcha/captcha.php" alt="" class="powermail_captcha powermail_captcha_captcha" />'; // captcha image
 				$this->markerArray['###LABEL###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'label'); // captcha label
 			
+			} elseif (t3lib_extMgm::isLoaded('jm_recaptcha',0) && $this->conf['captcha.']['use'] == 'recaptcha') { // use recaptcha if available
+				
+				$this->tmpl['html_captcha'] = tslib_cObj::getSubpart($this->tmpl['all'], '###POWERMAIL_FIELDWRAP_HTML_RECAPTCHA###'); // work on subpart
+				
+				require_once(t3lib_extMgm::extPath('jm_recaptcha')."class.tx_jmrecaptcha.php"); // include recaptcha class
+				$recaptcha = t3lib_div::makeInstance('tx_jmrecaptcha'); // new object
+				
+				$this->markerArray['###POWERMAIL_CAPTCHA_PICTURE###'] = $recaptcha->getReCaptcha(); // get captcha
+				$this->markerArray['###LABEL###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'label'); // captcha label
+				
 			} else return 'Powermail ERROR: Please check if you have chosen the right captcha extension in the powermail constants!';
 			
 			$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
-			$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_captcha'],$this->markerArray); // substitute Marker in Template
+			$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_captcha'], $this->markerArray); // substitute Marker in Template
 			$content = $this->dynamicMarkers->main($this->conf, $this->pibase->pibase->cObj, $content); // Fill dynamic locallang or typoscript markers
 			$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
 			return $content; // return HTML
@@ -795,6 +818,12 @@ class tx_powermail_html extends tslib_pibase {
 			eval("\$array[0] = \$GLOBALS['TSFE']->tmpl->setup$str[0];"); // $newarray = $array['lib.']['object']
 			eval("\$array[1] = \$GLOBALS['TSFE']->tmpl->setup$str[1];"); // $newarray = $array['lib.']['object.']
 			
+			$row = array ( // $row for using .field in typoscript
+				'uid' => $this->uid, // make current field uid available
+				'label' => $this->dontAllow($this->title), // make current label available
+				'ttcontent_uid' => $this->pibase->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->pibase->cObj->data['uid'] // make current tt_content uid available
+			);
+			$this->pibase->pibase->cObj->start($row, 'tx_powermail_fields'); // enable .field to use uid and label in typoscript
 			$content = $this->pibase->pibase->cObj->cObjGetSingle($array[0], $array[1]); // parse typoscript
 		}
 		if (!empty($content)) return $content;
