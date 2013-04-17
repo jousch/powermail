@@ -96,6 +96,7 @@ class tx_powermail_form extends tslib_pibase {
 		// Configuration
 		$div_functions = t3lib_div::makeInstance('tx_powermail_functions_div'); // New object: div functions
 		$html_input_field = t3lib_div::makeInstance('tx_powermail_html'); // New object: html generation of input fields
+		$i=1; // counter for automatic tabindex
 
 		$this->tmpl['all'] = tslib_cObj::fileResource($this->conf['template.']['formWrap']); // Load HTML Template
 		$this->tmpl['formwrap']['all'] = $this->pibase->cObj->getSubpart($this->tmpl['all'],'###POWERMAIL_FORMWRAP###'); // work on subpart 1
@@ -128,7 +129,6 @@ class tx_powermail_form extends tslib_pibase {
 		// Give me all needed fieldsets
 		$res1 = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 			'uid,title',
-
 			'tx_powermail_fieldsets',
 			$where_clause = 'tt_content = '.$this->pibase->cObj->data['uid'].tslib_cObj::enableFields('tx_powermail_fieldsets'),
 			$groupBy = '',
@@ -151,7 +151,8 @@ class tx_powermail_form extends tslib_pibase {
 				if ($res2) { // If there is a result
 					$html_input_field->init($this->conf,$this);
 					while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2)) { // One loop for every field
-						$this->InnerMarkerArray['###POWERMAIL_FIELDS###'] .= $html_input_field->main($conf,$row); // Get HTML code for each field
+						$this->InnerMarkerArray['###POWERMAIL_FIELDS###'] .= $html_input_field->main($conf, $row, $this->tabindexArray()); // Get HTML code for each field
+						$i++; // increase counter
 					}
 				}
 				
@@ -168,7 +169,41 @@ class tx_powermail_form extends tslib_pibase {
 		$this->contentForm = $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['formwrap']['all'],$this->OuterMarkerArray,$this->subpartArray); // substitute Marker in Template
 		$this->contentForm = $this->dynamicMarkers->main($this->conf, $this->pibase->cObj, $this->contentForm); // Fill dynamic locallang or typoscript markers
 		$this->contentForm = preg_replace("|###.*?###|i","",$this->contentForm); // Finally clear not filled markers
+		
 		return $this->contentForm; // return HTML
+	}
+	
+	
+	// Function tabindexArray() returns array with sorted numbers for tabindex
+	function tabindexArray() {
+		// config
+		$GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode
+		$array = array(); //init
+		
+		// Let's go
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
+			'tx_powermail_fields.uid, tx_powermail_fields.formtype, tx_powermail_fields.flexform',
+			'tx_powermail_fields LEFT JOIN tx_powermail_fieldsets ON (tx_powermail_fields.fieldset = tx_powermail_fieldsets.uid) LEFT JOIN tt_content ON (tx_powermail_fieldsets.tt_content = tt_content.uid)',
+			$where_clause = 'tx_powermail_fieldsets.tt_content = '.$this->pibase->cObj->data['uid'].tslib_cObj::enableFields('tx_powermail_fieldsets').tslib_cObj::enableFields('tx_powermail_fields'),
+			$groupBy = '',
+			$orderBy = 'tx_powermail_fieldsets.sorting, tx_powermail_fields.sorting',
+			$limit = ''
+		);
+		if ($res) { // If there is a result
+			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every field
+				if ($row['formtype'] != 'check' && $row['formtype'] != 'radio') { // if not checkbox or radiobuttons
+					$array[] = $row['uid']; // increase array with this uid
+				} else { // if checkbox or radiobuttons
+					$options = t3lib_div::trimExplode("\n", $this->pi_getFFvalue(t3lib_div::xml2array($row['flexform']), 'options'), 1); // all options in an array
+					
+					for ($i=0; $i<count($options); $i++) { // one loop for every option
+						$array[] = $row['uid'].'_'.$i; // increase array with this uid
+					}
+				}
+			}
+		}
+		
+		return $array;
 	}
 	
 	

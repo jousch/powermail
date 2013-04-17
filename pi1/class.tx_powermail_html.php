@@ -40,7 +40,7 @@ class tx_powermail_html extends tslib_pibase {
 	var $pi_checkCHash = true;
 
 
-	function main($conf, $row) {
+	function main($conf, $row, $tabindex) {
 		// Config
 		$this->pibase->pi_initPIflexForm();
 		$this->xml = $row['f_field'];
@@ -49,6 +49,7 @@ class tx_powermail_html extends tslib_pibase {
 		$this->formtitle = $row['c_title'];
 		$this->uid = $row['f_uid'];
 		$this->fe_field = $row['f_fefield'];
+		$this->tabindex = $tabindex;
 		$this->tmpl = array('all' => tslib_cObj::fileResource($this->conf['template.']['fieldWrap'])); // Load HTML Template
 		$this->dynamicMarkers = t3lib_div::makeInstance('tx_powermail_dynamicmarkers'); // New object: TYPO3 marker function
 		$this->removeXSS = t3lib_div::makeInstance('tx_powermail_removexss'); // New object: removeXSS function
@@ -250,6 +251,8 @@ class tx_powermail_html extends tslib_pibase {
 				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
 				$markerArray['###HIDDENVALUE###'] = 'value="'.$this->piVarsFromSession['uid'.$this->uid][$i].'"'; // add value for hidden field to markerArray
 				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
+				$this->turnedtabindex[$this->uid.'_'.$i] !== '' ? $markerArray['###TABINDEX###'] = 'tabindex="'.($this->turnedtabindex[$this->uid.'_'.$i] + 1).'" ' : $markerArray['###TABINDEX###'] = ''; // tabindex for every checkbox
+				isset($this->newaccesskey[$this->uid][$i]) ? $markerArray['###ACCESSKEY###'] = 'accesskey="'.$this->newaccesskey[$this->uid][$i].'" ' : $markerArray['###ACCESSKEY###'] = ''; // accesskey for every checkbox
 				
 				// ###CHECKED###
 				if ($options[$i][2] == '*')  {
@@ -307,6 +310,8 @@ class tx_powermail_html extends tslib_pibase {
 				$markerArray['###ID###'] = 'id="uid'.$this->uid.'_'.$i.'" '; // add labelname
 				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow(isset($options[$i][1])?$options[$i][1]:$options[$i][0]).'" '; // add labelname
 				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
+				$this->turnedtabindex[$this->uid.'_'.$i] !== '' ? $markerArray['###TABINDEX###'] = 'tabindex="'.($this->turnedtabindex[$this->uid.'_'.$i] + 1).'" ' : $markerArray['###TABINDEX###'] = ''; // tabindex for every radiobutton
+				isset($this->newaccesskey[$this->uid][$i]) ? $markerArray['###ACCESSKEY###'] = 'accesskey="'.$this->newaccesskey[$this->uid][$i].'" ' : $markerArray['###ACCESSKEY###'] = ''; // accesskey for every radiobutton
 				
 				// ###CHECKED###
 				if($options[$i][2] == '*') { // Preselection from backend
@@ -333,6 +338,7 @@ class tx_powermail_html extends tslib_pibase {
 		$content = $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['html_radio']['all'], $this->markerArray, $subpartArray); // substitute Marker in Template
 		$content = $this->dynamicMarkers->main($this->conf, $this->pibase->pibase->cObj, $content); // Fill dynamic locallang or typoscript markers
 		$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+		
 		return $content; // return HTML
 	}
 
@@ -780,7 +786,7 @@ class tx_powermail_html extends tslib_pibase {
 		
 		// ###MULTIPLE###
 		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'multiple')) {
-			$this->markerArray['###MULTIPLE###'] = 'multiple="multiple" '; // add multiple to markerArray
+			$this->markerArray['###MULTIPLE###'] = 'multiple="multiple"'; // add multiple to markerArray
 		}
 		
 		// ###MAXLENGTH###
@@ -823,6 +829,38 @@ class tx_powermail_html extends tslib_pibase {
 		// ###ROWS###
 		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'rows')) {
 			$this->markerArray['###ROWS###'] = 'rows="'.intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'rows')).'" '; // add number of rows to markerArray
+		}
+		
+		// ###TABINDEX###
+		// 1. add tabindex automaticly
+		if (in_array($this->uid, $this->tabindex)) { // if current uid within tabindex array
+			$this->turnedtabindex = array_flip($this->tabindex); // array flipped (values and keys)
+			$this->markerArray['###TABINDEX###'] = 'tabindex="'.($this->turnedtabindex[$this->uid] + 1).'" '; // add tabindex automaticly
+		}
+		// 2. set tabindex from ts
+		if (!empty($this->conf['barrier-free.']['tabindex'])) { // If manually set tabindex in ts
+			$this->tabindex = t3lib_div::trimExplode(',', str_replace('uid', '', $this->conf['barrier-free.']['tabindex']), 1); // Array with uids
+			$this->turnedtabindex = array_flip($this->tabindex); // array flipped (values and keys)
+			if (in_array($this->uid, $this->tabindex)) { // If current uid exists in tabindex settings from ts
+				$this->markerArray['###TABINDEX###'] = 'tabindex="'.($this->turnedtabindex[$this->uid] + 1).'" '; // add tabindex automaticly
+			}
+		}
+		
+		// ###ACCESSKEY###
+		if (!empty($this->conf['barrier-free.']['accesskey'])) { // If manually set accesskey in ts
+			$array = t3lib_div::trimExplode(',', $this->conf['barrier-free.']['accesskey'], 1); // Array with uids and subuids
+			
+			for ($i=0; $i<count($array); $i++) { // one loop for every uid/accesskey part
+				$temparray[$i] = t3lib_div::trimExplode(':', $array[$i], 1); // Split on :
+				$this->accesskeyarray[$i] = t3lib_div::trimExplode('_', str_replace('uid', '', $temparray[$i][0]), 1); // split on _
+				$this->accesskeyarray[$i][2] = $temparray[$i][1]; // [2] = accesskey value
+				unset($temparray); // delete array
+				if ($this->accesskeyarray[$i][1] != '') $this->newaccesskey[$this->accesskeyarray[$i][0]][$this->accesskeyarray[$i][1]] = $this->accesskeyarray[$i][2]; // array for radiobuttons and checkboxes
+				
+				if ($this->uid == intval(str_replace('uid', '', $this->accesskeyarray[$i][0])) && !isset($this->accesskeyarray[$i][1])) { // accesskey to this uid found
+					$this->markerArray['###ACCESSKEY###'] = 'accesskey="'.$this->accesskeyarray[$i][2].'" '; // add accesskey to normal fields (first level)
+				}
+			}
 		}
 		
 		// ###ONCHANGE###

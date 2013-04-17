@@ -123,4 +123,10 @@ plugin.powermail {
 	
 	# cat=plugin.powermail_additionalconfig//1100; type=options[,utf8_encode,utf8_decode]; label= Charset for powermail: You can use the php functions utf8_encode or utf8_decode to change the whole powermail output
 	powermail.charset = 
+	
+	# cat=plugin.powermail_additionalconfig//1200; type=text; label= Manual sorting of tabindex: Powermail adds tabindex to the fields (automaticly via sorting). If you want to use another order, you can change the order with this settings (e.g. uid5,uid4,uid3_0,uid3_1 or 5,4,6,4_0,4_1,3)
+	barrier-free.tabindex = 
+	
+	# cat=plugin.powermail_additionalconfig//1200; type=text; label= Adding accesskeys: You can add some accesskeys to the fields if you want (e.g. uid1(colon)f,uid3(colon)g or 1(colon)a,2(colon)b,3_1(colon)c)
+	barrier-free.accesskey = 
 }

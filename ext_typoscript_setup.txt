@@ -40,6 +40,8 @@ plugin.tx_powermail_pi1 {
 	js.HTMLentities = {$plugin.powermail.js.HTMLentities}
 	field.checkboxJS = {$plugin.powermail.field.checkboxJS}
 	powermail.charset = {$plugin.powermail.powermail.charset}
+	barrier-free.tabindex = {$plugin.powermail.barrier-free.tabindex}
+	barrier-free.accesskey = {$plugin.powermail.barrier-free.accesskey}
 	
 	
 	# adding (or changing) flexible locallang markers in any HTML template or RTE field (example)
