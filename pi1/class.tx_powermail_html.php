@@ -120,7 +120,7 @@ class tx_powermail_html extends tslib_pibase {
 			$this->content = 'POWERMAIL: <strong>no field type</strong> in backend selected (field uid '.$row['f_uid'].')<br />'; // errormessage
 		}
 		
-		$this->html_hook(); // adds hook
+		$this->html_hook($this->content); // adds hook
 		
 		if(isset($this->content)) return $this->content;
 	}
