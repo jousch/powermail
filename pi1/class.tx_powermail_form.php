@@ -161,6 +161,7 @@ class tx_powermail_form extends tslib_pibase {
 				$this->InnerMarkerArray['###POWERMAIL_FIELDSETNAME###'] = $row_fs['title']; // Name of fieldset
 				$this->InnerMarkerArray['###POWERMAIL_FIELDSETNAME_small###'] = $div_functions->clearName($row_fs['title'],1,32); // Fieldsetname clear (strtolower = 1 / cut after 32 letters)
 				$this->InnerMarkerArray['###POWERMAIL_FIELDSET_UID###'] = $row_fs['uid']; // uid of fieldset
+				$this->hookInner(); // adds hookInner
 				$this->content_item .= $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['formwrap']['item'],$this->InnerMarkerArray);
 			}
 		}
@@ -291,15 +292,27 @@ class tx_powermail_form extends tslib_pibase {
 	}
 	
 	
+	// Function hookInner() to enable manipulation datas with another extension(s) within loop
+	function hookInner() {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FormWrapMarkerHookInner'])) { // Adds hook for processing of extra global markers
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FormWrapMarkerHookInner'] as $_classRef) {
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$_procObj->PM_FormWrapMarkerHookInner($this->InnerMarkerArray, $this->conf, $this); // Open function to manipulate datas
+			}
+		}
+	}
+	
+	
 	// Function hook() to enable manipulation datas with another extension(s)
 	function hook() {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FormWrapMarkerHook'])) { // Adds hook for processing of extra global markers
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FormWrapMarkerHook'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				$_procObj->PM_FormWrapMarkerHook($this->OuterMarkerArray,$this->subpartArray,$this->conf,$this); // Open function to manipulate datas
+				$_procObj->PM_FormWrapMarkerHook($this->OuterMarkerArray, $this->subpartArray, $this->conf, $this); // Open function to manipulate datas
 			}
 		}
 	}
+	
 	
 	// Generates JavaScript HTML output
 	function includeJavaScript($path,$file) {
@@ -308,6 +321,7 @@ class tx_powermail_form extends tslib_pibase {
 			return $js;
 		}
 	}
+	
 	
 	// Add Javascript after form output for mandatory check
 	function AddMandatoryJS() {
