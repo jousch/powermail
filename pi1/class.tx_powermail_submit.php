@@ -91,7 +91,7 @@ class tx_powermail_submit extends tslib_pibase {
 			array($this->markers,'DynamicLocalLangMarker'), // open function
 			$this->content // current content
 		);
-		$this->content = preg_replace("|###.*###|i","",$this->content); // Finally clear not filled markers
+		$this->content = preg_replace("|###.*?###|i","",$this->content); // Finally clear not filled markers
 		
 		// 4. Additional db storing if wanted
 		$this->dbImport->main($this->conf, $this->sessiondata, $this->ok);
@@ -121,7 +121,7 @@ class tx_powermail_submit extends tslib_pibase {
 			array($this->markers,'DynamicLocalLangMarker'), // open function
 			$this->mailcontent[$this->subpart] // current content
 		);
-		$this->mailcontent[$this->subpart] = preg_replace("|###.*###|i","",$this->mailcontent[$this->subpart]); // Finally clear not filled markers
+		$this->mailcontent[$this->subpart] = preg_replace("|###.*?###|i","",$this->mailcontent[$this->subpart]); // Finally clear not filled markers
 		$this->maildata = array();
 		
 		// Set emails and names

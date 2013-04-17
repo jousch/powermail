@@ -162,7 +162,7 @@ class tx_powermail_form extends tslib_pibase {
 		
 		$this->hook(); // adds hook
 		$this->contentForm = $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['formwrap']['all'],$this->OuterMarkerArray,$this->subpartArray); // substitute Marker in Template
-		$this->contentForm = preg_replace("|###.*###|i","",$this->contentForm); // Finally clear not filled markers
+		$this->contentForm = preg_replace("|###.*?###|i","",$this->contentForm); // Finally clear not filled markers
 		return $this->contentForm; // return HTML
 	}
 	
@@ -236,7 +236,7 @@ class tx_powermail_form extends tslib_pibase {
 				}
 				$subpartArray['###POWERMAIL_CONTENT###'] = $content_item; 
 				$content = $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['multiplejs']['all'], array(), $subpartArray);
-				$content = preg_replace("|###.*###|i","",$content); // Finally clear not filled markers
+				$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
 			}
 		
 		} else { // Error

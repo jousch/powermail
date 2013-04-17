@@ -59,7 +59,7 @@ class tx_powermail_confirmation extends tslib_pibase {
 			array($this->markers,'DynamicLocalLangMarker'), // open function
 			$this->content // current content
 		);
-		$this->content = preg_replace("|###.*###|i","",$this->content); // Finally clear not filled markers
+		$this->content = preg_replace("|###.*?###|i","",$this->content); // Finally clear not filled markers
 		return $this->content; // return HTML
 	}
 	

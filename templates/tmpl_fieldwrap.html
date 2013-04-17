@@ -1,17 +1,27 @@
 Powermail HTML Template for fieldwraps
 
 Global markers are:
-###LABEL###				Field label
-###MANDATORY_SYMBOL###	Symbol if mandatory field
-###NAME###				Field name
-###VALUE###				Standard-value
-###CLASS###				Field's class
-###ID###				Field's id
-###SIZE###				Field's size
-###ONFOCUS###			includes eventhandlers like onFocus and onBlur
-###ONCHANGE###			includes eventhandlers for changing fields like select
-###MAXLENGTH###			Field's maximum length
-###READONLY###			Is this field readonly?
+###LABEL###					Field label
+###LABEL_NAME###			"uid" + uid
+###MANDATORY_SYMBOL###		Symbol if mandatory field
+###NAME###					Field name
+###VALUE###					Standard-value
+###CLASS###					Field's class
+###ID###					Field's id
+###SIZE###					Field's size
+###MULTIPLE###				If multiple is allowed in select
+###MAXLENGTH###				Field's maximum length
+###READONLY###				Is this field readonly?
+###POWERMAIL_FIELD_UID###	UID of current field
+###COLS###					Rows for textarea
+###ROWS###					Cols for textarea
+###ONFOCUS###				includes eventhandlers like onFocus and onBlur
+###ONCHANGE###				includes eventhandlers for changing fields like select
+
+
+
+
+
 
 Fieldwrap for Text fields like <input type="text" />
 
@@ -24,12 +34,12 @@ Fieldwrap for Text fields like <input type="text" />
 
 
 
+
+
 Fieldwrap for Textareas like <textarea>
 
-Special markers:
-###ROWS###			Rows for textarea
-###COLS###			Cols for textarea
-###WRAP###			Textwrapping for textarea
+	Special markers:
+	###WRAP###			Textwrapping for textarea
 
 <!-- ###POWERMAIL_FIELDWRAP_HTML_TEXTAREA### begin -->
 	<div class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_textarea tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###">
@@ -40,7 +50,13 @@ Special markers:
 
 
 
-Fieldwrap for dropdown like <select>
+
+
+Fieldwrap for select fields (dropdown) like <select>
+
+	Special markers:
+	###SELECTED###		Preselection
+
 <!-- ###POWERMAIL_FIELDWRAP_HTML_SELECT### begin -->
 	<div class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_select tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###">
 		<label for="###LABEL_NAME###">###LABEL######MANDATORY_SYMBOL###</label>
@@ -56,7 +72,13 @@ Fieldwrap for dropdown like <select>
 
 
 
+
+
 Fieldwrap for checkboxen like <input type="checkbox" />
+
+	Special markers:
+	###CHECKED###		Preselection
+
 <!-- ###POWERMAIL_FIELDWRAP_HTML_CHECK### begin -->
 	<div class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_check tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###">
 		 <p class="tx_powermail_pi1_fieldwrap_html_checkbox_title">###LABEL_MAIN######MANDATORY_SYMBOL###</p>
@@ -71,7 +93,13 @@ Fieldwrap for checkboxen like <input type="checkbox" />
 
 
 
+
+
 Fieldwrap for radiobuttons like <input type="radio" />
+
+	Special markers:
+	###CHECKED###		Preselection
+
 <!-- ###POWERMAIL_FIELDWRAP_HTML_RADIO### begin -->
 	<div class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_radio tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###">
 		<p class="tx_powermail_pi1_fieldwrap_html_radio_title">###LABEL_MAIN######MANDATORY_SYMBOL###</p>
@@ -86,7 +114,14 @@ Fieldwrap for radiobuttons like <input type="radio" />
 
 
 
+
+
 Fieldwrap for captcha request
+
+	Special markers:
+	###POWERMAIL_CAPTCHA_PICTURE###				Captcha picture
+	###POWERMAIL_CAPTCHA_PICTURERELOAD###		Link to reload captcha (sr_freecap only)
+
 <!-- ###POWERMAIL_FIELDWRAP_HTML_CAPTCHA### begin -->
 	<div class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_captcha tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###">
 		<label for="###LABEL_NAME###">###LABEL######MANDATORY_SYMBOL###</label>
@@ -95,6 +130,8 @@ Fieldwrap for captcha request
 		###POWERMAIL_CAPTCHA_PICTURERELOAD###
 	</div>
 <!-- ###POWERMAIL_FIELDWRAP_HTML_CAPTCHA### end -->
+
+
 
 
 
@@ -107,12 +144,16 @@ Fieldwrap for submit buttons like <input type="submit" />
 
 
 
+
+
 Fieldwrap for reset buttons like <input type="reset" />
 <!-- ###POWERMAIL_FIELDWRAP_HTML_RESET### begin -->
 	<div class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_reset tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###">
 		<input type="reset" ###VALUE######CLASS###/>
 	</div>
 <!-- ###POWERMAIL_FIELDWRAP_HTML_RESET### end -->
+
+
 
 
 
@@ -126,6 +167,8 @@ Fieldwrap for labels like "blabla"
 
 
 
+
+
 Fieldwrap for pure html
 <!-- ###POWERMAIL_FIELDWRAP_HTML_HTML### begin -->
 	<div class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_html tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###">
@@ -133,6 +176,8 @@ Fieldwrap for pure html
 		###HIDDEN###
 	</div>
 <!-- ###POWERMAIL_FIELDWRAP_HTML_HTML### end -->
+
+
 
 
 
@@ -146,6 +191,8 @@ Fieldwrap for page-contents
 
 
 
+
+
 Fieldwrap for password fields like <input type="password" />
 <!-- ###POWERMAIL_FIELDWRAP_HTML_PASSWORD### begin -->
 	<div class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_password tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###">
@@ -153,6 +200,8 @@ Fieldwrap for password fields like <input type="password" />
 		<input type="password" ###NAME######CLASS######ID######SIZE######ONFOCUS######MAXLENGTH######READONLY###/>
 	</div>
 <!-- ###POWERMAIL_FIELDWRAP_HTML_PASSWORD### end -->
+
+
 
 
 
@@ -166,10 +215,14 @@ Fieldwrap for file fields like <input type="file" />
 
 
 
+
+
 Fieldwrap for hidden fields like <input type="hidden" />
 <!-- ###POWERMAIL_FIELDWRAP_HTML_HIDDEN### begin -->
 	<input type="hidden" ###NAME######VALUE###/>
 <!-- ###POWERMAIL_FIELDWRAP_HTML_HIDDEN### end -->
+
+
 
 
 
@@ -183,6 +236,8 @@ Fieldwrap for text fields with datetime help
 
 
 
+
+
 Fieldwrap for text fields with date help
 <!-- ###POWERMAIL_FIELDWRAP_HTML_DATE### begin -->
 	<div class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_date tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###">
@@ -192,13 +247,6 @@ Fieldwrap for text fields with date help
 <!-- ###POWERMAIL_FIELDWRAP_HTML_DATE### end -->
 
 
-
-Fieldwrap for text fields (time)
-<!-- ###POWERMAIL_FIELDWRAP_HTML_TIME### begin -->
-	<div class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_time tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###">
-		<label for="###LABEL_NAME###">###LABEL######MANDATORY_SYMBOL###</label>###FIELD###
-	</div>
-<!-- ###POWERMAIL_FIELDWRAP_HTML_TIME### end -->
 
 
 
@@ -211,7 +259,13 @@ Fieldwrap for button fields like <input type="button" />
 
 
 
+
+
 Fieldwrap for submitgraphic buttons like <input type="image" />
+
+	Special markers:
+	###SRC###		imagesource
+
 <!-- ###POWERMAIL_FIELDWRAP_HTML_SUBMITGRAPHIC### begin -->
 	<div class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_submitgraphic tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###">
 		<input type="image" ###SRC######ALT###/>
@@ -220,7 +274,13 @@ Fieldwrap for submitgraphic buttons like <input type="image" />
 
 
 
+
+
 Fieldwrap for dropdown with countries <select>
+
+	Special markers:
+	###SELECTED###		Preselection
+
 <!-- ###POWERMAIL_FIELDWRAP_HTML_COUNTRYSELECT### begin -->
 	<div class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_select tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###">
 		<label for="###LABEL_NAME###">###LABEL######MANDATORY_SYMBOL###</label>

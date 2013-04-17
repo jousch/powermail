@@ -38,7 +38,7 @@ class tx_powermail_db extends tslib_pibase {
 			// config
 			$this->conf = $conf;
 			$this->sessiondata = $sessiondata;
-			$GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode
+			//$GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode
 			
 			// Let's go and insert
 			if (isset($this->conf['dbEntry.']) && is_array($this->conf['dbEntry.'])) { // Only if any dbEntry is set per typoscript
