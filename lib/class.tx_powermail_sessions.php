@@ -40,11 +40,6 @@ class tx_powermail_sessions extends tslib_pibase {
 	// Function setSession() to save all piVars to a session
 	function setSession($piVars,$overwrite = 1) {
 		if(isset($piVars)) { // Only if piVars are existing
-			// Security Options
-			//$piVars = array_map(array($this->div_functions, 'validateValue'), $piVars); // disable forbidden values (He'l_lo y$<>ou => Hel_lo you)
-			//$piVars = array_map('strip_tags', $piVars); // Removes HTML and PHP code - TODO Funktioniert nur in erster Dimension
-			t3lib_div::addSlashesOnArray($piVars); // addslashes for every piVar (He'l"lo => He\'l\"lo)
-			
 			// get old values before overwriting
 			if($overwrite == 0) { // get old values so, it can be set again
 				$oldPiVars = $this->getSession(0); // Get Old piVars from Session (without not allowed piVars)
@@ -83,18 +78,18 @@ class tx_powermail_sessions extends tslib_pibase {
 		$this->allowedFileExtensions = t3lib_div::trimExplode(',',$this->conf['upload.']['file_extensions'],1); // get all allowed fileextensions
 		
 		// check for upload fields
-		$uids = '';
+		$this->uids = '';
 		if(is_array($piVars)) {
 			foreach ($piVars as $key => $value) { // one loop for every piVar
-				if(is_numeric(str_replace('uid','',$key))) $uids .= str_replace('uid','',$key).','; // generate uid list like 5,6,77,23,
+				if(is_numeric(str_replace('uid','',$key))) $this->uids .= str_replace('uid','',$key).','; // generate uid list like 5,6,77,23,
 			}
-			if(strlen($uids) > 0) $uids = substr($uids,0,-1); // delete last ,
+			if(strlen($this->uids) > 0) $this->uids = substr($this->uids,0,-1); // delete last ,
 		}
-		if(trim($uids)) {
+		if(trim($this->uids)) {
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery ( // search for all uploads fields within piVars
 				'uid',
 				'tx_powermail_fields',
-				$where_clause = 'uid IN ('.$uids.') AND formtype = "file"'.tslib_cObj::enableFields('tx_powermail_fields'),
+				$where_clause = 'uid IN ('.$this->uids.') AND formtype = "file"'.tslib_cObj::enableFields('tx_powermail_fields'),
 				$groupBy = '',
 				$orderBy = '',
 				$limit =''

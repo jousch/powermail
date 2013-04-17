@@ -39,40 +39,40 @@ plugin.powermail {
 	# cat=plugin.powermail//200; type=text; label= PID where to save logfiles: Enter a Page ID where the form values should be saved to the db (empty: same PID as form PID)
 	PID.dblog = 
 	
-	# cat=plugin.powermail//300; type=text; label= Exclude fields from marker ALL: Exclude some fields from marker ###ALL### (default: mailID,sendNow,basket)
+	# cat=plugin.powermail//400; type=text; label= Exclude fields from marker ALL: Exclude some fields from marker ###ALL### (default: mailID,sendNow,basket)
 	markerALL.notIn = mailID,sendNow,basket,multiple
 	
-	# cat=plugin.powermail//310; type=text; label= Form method: use post or get as post format (details see on selfhtml.org)
+	# cat=plugin.powermail//410; type=text; label= Form method: use post or get as post format (details see on selfhtml.org)
 	form.method = post
 	
-	# cat=plugin.powermail//320; type=text; label= Datetime format: Frontend datetime format if datetime field is in use (see http://php.net/manual/function.strftime.php for strftime details)
+	# cat=plugin.powermail//420; type=text; label= Datetime format: Frontend datetime format if datetime field is in use (see http://php.net/manual/function.strftime.php for strftime details)
 	format.datetime = %H:%M %d-%m-%Y
 	
-	# cat=plugin.powermail//330; type=text; label= Date format: Frontend date format if date field is in use (see http://php.net/manual/function.strftime.php for strftime details)
+	# cat=plugin.powermail//430; type=text; label= Date format: Frontend date format if date field is in use (see http://php.net/manual/function.strftime.php for strftime details)
 	format.date = %d-%m-%Y
 	
-	# cat=plugin.powermail//340; type=text; label= Date format: Frontend time format if time field is in use (see http://php.net/manual/function.strftime.php for strftime details)
+	# cat=plugin.powermail//440; type=text; label= Date format: Frontend time format if time field is in use (see http://php.net/manual/function.strftime.php for strftime details)
 	format.time = %H:%M
 	
-	# cat=plugin.powermail//350; type=text; label= Allowed tags in labels: Allow some tags for label fields
+	# cat=plugin.powermail//450; type=text; label= Allowed tags in labels: Allow some tags for label fields
 	label.allowTags = <p><br><b><strong><a>
 	
-	# cat=plugin.powermail//360; type=text; label= Add symbol for mandatory fields: If any field is a mandatory field, add this at the end of the label
+	# cat=plugin.powermail//460; type=text; label= Add symbol for mandatory fields: If any field is a mandatory field, add this at the end of the label
 	mandatory.symbol = *
 	
-	# cat=plugin.powermail//370; type=wrap; label= Wrap mandatory symbol: You can wrap the mandatory symbol with any html code
+	# cat=plugin.powermail//470; type=wrap; label= Wrap mandatory symbol: You can wrap the mandatory symbol with any html code
 	mandatory.wrap = <span class="powermail_mandatory">|</span>
 	
-	# cat=plugin.powermail//360; type=text; label= Folder for uploaded files: If you are using min. one upload field in frontend, you can change the folder where the uploaded file is safed
+	# cat=plugin.powermail//480; type=text; label= Folder for uploaded files: If you are using min. one upload field in frontend, you can change the folder where the uploaded file is safed
 	upload.folder = uploads/tx_powermail/files/
 	
-	# cat=plugin.powermail//360; type=text; label= Allow files for upload: If you are using min. one upload field in frontend, you can set the allowed extension of this files
+	# cat=plugin.powermail//490; type=text; label= Allow files for upload: If you are using min. one upload field in frontend, you can set the allowed extension of this files
 	upload.file_extensions = jpg,gif,png,tif,txt,doc,xls,sxw,html,swf
 	
-	# cat=plugin.powermail//360; type=int; label= Allow filesize for upload: If you are using min. one upload field in frontend, you can set the allowed filesize of the files (in kB)
+	# cat=plugin.powermail//500; type=int; label= Allow filesize for upload: If you are using min. one upload field in frontend, you can set the allowed filesize of the files (in kB)
 	upload.filesize = 1000
 
-	# cat=plugin.powermail//370; type=boolean; label= Clear Session: Check if session should be cleared after submit (emails sent)
+	# cat=plugin.powermail//510; type=boolean; label= Clear Session: Check if session should be cleared after submit (emails sent)
 	clear.session = 0
 	
 	# cat=plugin.powermail//900; type=boolean; label= Check for mandatory fields: (De)activate JavaScript check for mandatory fields (and other fields like email, url, etc..).

@@ -15,6 +15,16 @@
 					</config>
 				</TCEforms>
 			</value>
+			<example>
+				<TCEforms>
+					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.example</label>
+					<config>
+						<type>user</type>
+						<userFunc>tx_powermail_tx_powermail_example->main</userFunc>
+						<field>reset</field>
+					</config>
+				</TCEforms>
+			</example>
 		</el>
 	</ROOT>
 </T3DataStructure>

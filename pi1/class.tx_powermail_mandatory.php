@@ -53,6 +53,9 @@ class tx_powermail_mandatory extends tslib_pibase {
 		$this->markerArray['###POWERMAIL_NAME###'] = $this->pibase->cObj->data['tx_powermail_title'].'_mandatory'; // Fill Marker with formname
 		$this->markerArray['###POWERMAIL_METHOD###'] = $this->conf['form.']['method']; // Form method
 		
+		// Captcha Check
+		$this->captchaCheck();
+		
 		// Give me all fields of current content uid
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 			'f.uid,f.title,f.flexform',
@@ -72,7 +75,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 			}
 		}
 		
-		// check for errors
+		// Check for errors
 		if(isset($this->sessionfields['ERROR'])) {
 			foreach($this->sessionfields['ERROR'] as $key1 => $value1) { // one loop for every field with an error
 				if(isset($this->sessionfields['ERROR'][$key1])) {
@@ -98,6 +101,62 @@ class tx_powermail_mandatory extends tslib_pibase {
 		if($this->error == 1) { // if there is an error
 			$this->clearErrorsInSession();
 			return $this->content; // return HTML
+		}
+	}
+	
+	
+	// Function captchaCheck check if captcha fields are within current content and set errof if value is wrong
+	function captchaCheck() {
+		if(t3lib_extMgm::isLoaded('captcha',0) || t3lib_extMgm::isLoaded('sr_freecap',0)) { // only if a captcha extension is loaded
+		
+			// Give me all captcha fields of current tt_content
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
+				'f.uid',
+				'tx_powermail_fields f LEFT JOIN tx_powermail_fieldsets fs ON (f.fieldset = fs.uid) LEFT JOIN tt_content c ON (fs.tt_content = c.uid)',
+				$where_clause = 'f.formtype = "captcha" AND fs.tt_content = '.$this->pibase->cObj->data['uid'].' AND fs.hidden = 0 AND fs.deleted = 0 AND f.hidden = 0 AND f.deleted = 0 AND c.hidden = 0 AND c.deleted = 0',
+				$groupBy = '',
+				$orderBy = 'fs.sorting ASC, f.sorting ASC',
+				$limit = 1
+			);
+			if ($res) { // If there is a result
+				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every captcha field
+					
+					if(t3lib_extMgm::isLoaded('sr_freecap',0)) { // use sr_freecap if available
+					
+						session_start(); // start session
+						if($this->sessionfields['uid'.$row['uid']] == '') { // if captcha value is empty
+							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('error_captcha_empty'); // write error message to session
+						}
+						
+						elseif (
+							($_SESSION['sr_freecap_word_hash'] != md5($this->sessionfields['uid'.$row['uid']])) && 
+							($_SESSION['sr_freecap_word_hash'] != md5($this->sessionfields['uid'.$row['uid']]."\n"))) {
+							
+							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('error_captcha_wrong'); // write error message to session
+							
+						}
+						$_SESSION['sr_freecap_attempts'] = 0; // clear values
+						$_SESSION['sr_freecap_word_hash'] = false; // clear values
+					}
+					
+					elseif (t3lib_extMgm::isLoaded('captcha',0)) { // use captcha if available
+					
+						session_start(); // start session
+						$captchaStr = $_SESSION['tx_captcha_string']; // get captcha value from session
+						$_SESSION['tx_captcha_string'] = ''; // clear value in session
+						
+						if ($this->sessionfields['uid'.$row['uid']] == '') { // if captcha value is empty
+							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('error_captcha_empty'); // write error message to session
+						}
+						
+						elseif ($this->sessionfields['uid'.$row['uid']] != $captchaStr) { // if captcha value is wrong
+							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('error_captcha_wrong'); // write error message to session
+						}
+						
+					}
+				}
+			}
+			
 		}
 	}
 	

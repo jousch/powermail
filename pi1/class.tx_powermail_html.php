@@ -94,8 +94,8 @@ class tx_powermail_html extends tslib_pibase {
 		$this->setGlobalMarkers(); // set global markers
 
 		// selection
-		if($row['f_type']) { // If type exists
-			switch($row['f_type']) {
+		if($this->type) { // If type exists
+			switch($this->type) {
 				case 'text':
 					$content = $this->html_text(); // generate text field <input type="text"...
 				break;
@@ -107,6 +107,9 @@ class tx_powermail_html extends tslib_pibase {
 				break;
 				case 'select':
 					$content = $this->html_select(); // generate selectorbox <select><option>...
+				break;
+				case 'captcha':
+					$content = $this->html_captcha(); // generate captcha request
 				break;
 				case 'radio':
 					$content = $this->html_radio(); // generate radio buttons <input type="radio"...
@@ -671,6 +674,43 @@ class tx_powermail_html extends tslib_pibase {
 	
 
 	/**
+	 * Function html_captcha() returns captcha request
+	 *
+	 * @return	[type]		...
+	 */
+	function html_captcha() {
+		if(t3lib_extMgm::isLoaded('captcha',0) || t3lib_extMgm::isLoaded('sr_freecap',0)) { // only if a captcha extension is loaded
+			$this->tmpl['html_captcha'] = tslib_cObj::getSubpart($this->tmpl['all'],'###POWERMAIL_FIELDWRAP_HTML_CAPTCHA###'); // work on subpart
+			
+			if (t3lib_extMgm::isLoaded('sr_freecap',0)) { // use sr_freecap if available
+				require_once(t3lib_extMgm::extPath('sr_freecap').'pi2/class.tx_srfreecap_pi2.php'); // include freecap class
+				$this->freeCap = t3lib_div::makeInstance('tx_srfreecap_pi2'); // new object
+				$freecaparray = $this->freeCap->makeCaptcha(); // array with freecap marker
+				
+				$this->markerArray['###POWERMAIL_CAPTCHA_PICTURE###'] = $freecaparray['###SR_FREECAP_IMAGE###'];
+				$this->markerArray['###POWERMAIL_CAPTCHA_PICTURERELOAD###'] = $freecaparray['###SR_FREECAP_CANT_READ###'];
+				$this->markerArray['###LABEL###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'label');
+			
+			} elseif (t3lib_extMgm::isLoaded('captcha',0)) { // use captcha if available
+			
+				$this->markerArray['###POWERMAIL_CAPTCHA_PICTURE###'] = '<img src="'.t3lib_extMgm::siteRelPath('captcha').'captcha/captcha.php" alt="" class="powermail_captcha powermail_captcha_captcha" />';
+				$this->markerArray['###LABEL###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'label');
+			
+			}
+			
+			$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_captcha'],$this->markerArray); // substitute Marker in Template
+			$content = preg_replace("|###.*###|i","",$content); // Finally clear not filled markers
+			return $content; // return HTML
+		
+		} else { // Extension static_info_tables is missing
+			$content = 'Please install extension <strong>captcha</strong> or <strong>sr_freecap</strong> for using captcha';
+		}
+		
+		return $content;
+	}
+	
+
+	/**
 	 * Function html_graphicsubmit() returns graphic as submitbutton
 	 *
 	 * @return	[type]		...
@@ -709,7 +749,7 @@ class tx_powermail_html extends tslib_pibase {
 			// ###CLASS###
 			$this->required = '';
 			if($this->conf['js.']['mandatorycheck'] == 1) { // only if javascript mandatory is activated in constants
-				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $this->required = 'required '; // add class="required" if javascript mandatory should be activated
+				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1 || $this->type == 'captcha') $this->required = 'required '; // add class="required" if javascript mandatory should be activated and in captcha fields
 				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'validate') != '') $this->required .= $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'validate').' '; // add another key in class if javascript mandatory should be activated
 			}  
 			$this->markerArray['###CLASS###'] = 'class="'.$this->required.'powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').'" '; // add class name to markerArray
@@ -739,7 +779,7 @@ class tx_powermail_html extends tslib_pibase {
 		$this->markerArray['###LABEL###'] = $this->title; // add label to markerArray
 		
 		// ###MANDATORY_SYMBOL###
-		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $this->markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|');
+		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1 || $this->type == 'captcha') $this->markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|');
 		
 		// ###POWERMAIL_FIELD_UID###
 		$this->markerArray['###POWERMAIL_FIELD_UID###'] = $this->uid; // add uid to markerArray

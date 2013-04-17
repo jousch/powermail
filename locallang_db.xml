@@ -81,7 +81,9 @@
 			<label index="tx_powermail_forms.fieldtitle.button">Button</label>
 			<label index="tx_powermail_forms.fieldtitle.submitgraphic">Graphic as submit</label>
 			<label index="tx_powermail_forms.fieldtitle.countryselect">Country selection</label>
+			<label index="tx_powermail_forms.fieldtitle.captcha">Captcha request</label>
 			<label index="tx_powermail_forms.xml.name">Name</label>
+			<label index="tx_powermail_forms.xml.label">Description</label>
 			<label index="tx_powermail_forms.xml.size">Size</label>
 			<label index="tx_powermail_forms.xml.maxlength">Max. Length</label>
 			<label index="tx_powermail_forms.xml.readonly">Read only</label>
@@ -108,6 +110,7 @@
 			<label index="tx_powermail_forms.xml.validate.4">digits only (without comma or point)</label>
 			<label index="tx_powermail_forms.xml.validate.5">letters only</label>
 			<label index="tx_powermail_forms.xml.validate.6">letters and digits only</label>
+			<label index="tx_powermail_forms.xml.example">Field example</label>
 			<label index="tx_powermail_forms.xml.error">Please select a fieldtype to continue.</label>
 
 		</languageKey>
@@ -187,7 +190,9 @@
 			<label index="tx_powermail_forms.fieldtitle.button">Button</label>
 			<label index="tx_powermail_forms.fieldtitle.submitgraphic">Grafik als Absendebutton</label>
 			<label index="tx_powermail_forms.fieldtitle.countryselect">Länderauswahl</label>
+			<label index="tx_powermail_forms.fieldtitle.captcha">Captcha Abfrage</label>
 			<label index="tx_powermail_forms.xml.name">Name</label>
+			<label index="tx_powermail_forms.xml.label">Beschreibung</label>
 			<label index="tx_powermail_forms.xml.size">Größe</label>
 			<label index="tx_powermail_forms.xml.maxlength">Max. Länge</label>
 			<label index="tx_powermail_forms.xml.readonly">Nur Lesen</label>
@@ -215,6 +220,7 @@
 			<label index="tx_powermail_forms.xml.validate.4">nur Zahlen (ohne Komma oder Punkt)</label>
 			<label index="tx_powermail_forms.xml.validate.5">nur Buchstaben</label>
 			<label index="tx_powermail_forms.xml.validate.6">nur Buchstaben und Zahlen</label>
+			<label index="tx_powermail_forms.xml.example">Beispiel</label>
 			<label index="tx_powermail_forms.xml.error">Bitte wählen Sie einen Feldtypen um fortzufahren.</label>
 
 		</languageKey>

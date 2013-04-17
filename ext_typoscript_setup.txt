@@ -31,6 +31,7 @@ plugin.tx_powermail_pi1 {
 	js.onchange = {$plugin.powermail.js.onchange}
 }
 
+# TypeNum 3131 offers a dynamic javascript for powermail which allows to validate different fields
 powermailJS = PAGE
 powermailJS {
 	typeNum = 3131

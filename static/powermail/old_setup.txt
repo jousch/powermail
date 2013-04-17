@@ -1,0 +1,4 @@
+page.includeJS {
+	file1 = EXT:powermail/lib/basket.js
+	file1.type = application/x-javascript
+}

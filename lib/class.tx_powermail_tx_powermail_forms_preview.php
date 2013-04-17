@@ -32,15 +32,10 @@
  */
 class tx_powermail_tx_powermail_forms_preview {
 	function main(&$params,&$pObj)	{
-/*								
-	debug('Hello World!',1);
-	debug('$params:',1);
-	debug($params);
-	debug('$pObj:',1);
-	debug($pObj);
-*/
+
 		$http_host = 'http://'.$GLOBALS['_SERVER']['HTTP_HOST'].'/index.php?id='.$params['row']['pid'].'&no_cache=1';
 		return '<iframe src="'.$http_host.'" style="width:600px;height:350px;border:1px solid black;background-color: white; margin: 10px 20px 10px 0px;" name="powermail_preview"></iframe>';
+	
 	}
 }
 

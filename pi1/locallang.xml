@@ -21,6 +21,8 @@
 			<label index="error_check_prefix">PowerMail error!! Please fill in this backend fields: </label>
 			<label index="error_check_subject_r">Email receiver subject</label>
 			<label index="error_check_recipient">Email address of receiver</label>
+			<label index="error_captcha_empty">Captcha Code empty</label>
+			<label index="error_captcha_wrong">Captcha Code wrong</label>
 			<label index="multiple_forward">Next step</label>
 			<label index="multiple_back">Previous step</label>
 			<label index="JSvalidation_label_required">This is a required field</label>
@@ -52,6 +54,8 @@
 			<label index="error_check_prefix">PowerMail Fehler!! Bitte füllen Sie folgende Felder im Backend aus: </label>
 			<label index="error_check_subject_r">Betreff für Empfängermail</label>
 			<label index="error_check_recipient">Empfänger</label>
+			<label index="error_captcha_empty">Sie haben vergessen einen Code einzutragen</label>
+			<label index="error_captcha_wrong">Der eingetragene Code war leider falsch</label>
 			<label index="multiple_forward">Nächster Schritt</label>
 			<label index="multiple_back">Vorheriger Schritt</label>
 			<label index="JSvalidation_label_required">Das ist ein Pflichtfeld</label>

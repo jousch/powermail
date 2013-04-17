@@ -96,6 +96,7 @@ $TCA["tx_powermail_fields"] = array (
 					array('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.fieldtitle.select', 'select'),
 					array('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.fieldtitle.check', 'check'),
 					array('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.fieldtitle.radio', 'radio'),
+					array('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.fieldtitle.captcha', 'captcha'),
 					array('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.fieldtitle.submit', 'submit'),
 					array('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.fieldtitle.reset', 'reset'),
 					array('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.fieldtitle.label', 'label'),
@@ -125,6 +126,7 @@ $TCA["tx_powermail_fields"] = array (
 				'ds' => array(
 					"default" => 'FILE:EXT:powermail/lib/def/def_field_error.xml',
 					"button" => 'FILE:EXT:powermail/lib/def/def_field_button.xml',
+					"captcha" => 'FILE:EXT:powermail/lib/def/def_field_captcha.xml',
 					"check" => 'FILE:EXT:powermail/lib/def/def_field_check.xml',
 					"content" => 'FILE:EXT:powermail/lib/def/def_field_content.xml',
 					"countryselect" => 'FILE:EXT:powermail/lib/def/def_field_countryselect.xml',

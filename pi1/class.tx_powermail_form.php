@@ -100,14 +100,19 @@ class tx_powermail_form extends tslib_pibase {
 				$this->OuterMarkerArray['###POWERMAIL_TARGET###'] = $this->pibase->cObj->typolink('x',array("returnLast"=>"url","parameter"=>$GLOBALS['TSFE']->id,"additionalParams"=>'&tx_powermail_pi1[mailID]='.$this->pibase->cObj->data['uid'].'&tx_powermail_pi1[multiple]='.($this->multiple['currentpage'] + 1),"useCacheHash"=>1)); // Overwrite Target
 			}
 		}
-
+		
+		// UID of the last fieldset to current tt_content
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid','tx_powermail_fieldsets','tt_content = '.$this->pibase->cObj->data['uid'].tslib_cObj::enableFields('tx_powermail_fieldsets'),'','sorting DESC','1');
+		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		$this->lastfieldset = $row['uid']; // uid of last fieldset to current tt_content (needed to show only on the last fieldset the captcha code)
+		
 		// Give me all needed fieldsets
 		$res1 = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 			'uid,title',
 			'tx_powermail_fieldsets',
 			$where_clause = 'tt_content = '.$this->pibase->cObj->data['uid'].tslib_cObj::enableFields('tx_powermail_fieldsets'),
 			$groupBy = '',
-			$orderBy = 'sorting',
+			$orderBy = 'sorting ASC',
 			$limit
 		);
 		if ($res1) { // If there is a result
@@ -129,7 +134,7 @@ class tx_powermail_form extends tslib_pibase {
 						$this->InnerMarkerArray['###POWERMAIL_FIELDS###'] .= $html_input_field->main($conf,$row); // Get HTML code for each field
 					}
 				}
-
+				
 				$this->InnerMarkerArray['###POWERMAIL_FIELDSETNAME###'] = $row_fs['title']; // Name of fieldset
 				$this->InnerMarkerArray['###POWERMAIL_FIELDSETNAME_small###'] = $div_functions->clearName($row_fs['title'],1,32); // Fieldsetname clear (strtolower = 1 / cut after 32 letters)
 				$this->InnerMarkerArray['###POWERMAIL_FIELDSET_UID###'] = $row_fs['uid']; // uid of fieldset

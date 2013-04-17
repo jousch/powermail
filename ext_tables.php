@@ -1,16 +1,18 @@
 <?php
-if (!defined ('TYPO3_MODE'))     die ('Access denied.');
+if (!defined ('TYPO3_MODE')) die ('Access denied.');
 
 $GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode 
 
 t3lib_extMgm::allowTableOnStandardPages('tx_powermail_fieldsets');
 
-if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_forms_recip_table.php");
-if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_forms_recip_id.php");
-if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_forms_preview.php");
-if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_forms_sender_field.php");
-if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_fields_fe_field.php");
-//if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_xml_fieldreturn.php");
+if (TYPO3_MODE=="BE") {
+	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_forms_recip_table.php");
+	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_forms_recip_id.php");
+	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_forms_preview.php");
+	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_forms_sender_field.php");
+	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_fields_fe_field.php");
+	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_example.php");
+}
 
 t3lib_extMgm::addToInsertRecords('tx_powermail_fieldsets');
 

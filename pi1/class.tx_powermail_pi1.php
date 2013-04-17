@@ -28,6 +28,7 @@ require_once('class.tx_powermail_submit.php');
 require_once('class.tx_powermail_confirmation.php');
 require_once('class.tx_powermail_mandatory.php');
 require_once(str_replace('../','',t3lib_extMgm::extRelPath('powermail')).'lib/class.tx_powermail_sessions.php'); // load session class
+require_once(str_replace('../','',t3lib_extMgm::extRelPath('powermail')).'lib/class.tx_powermail_functions_div.php'); // load functions class
 
 
 class tx_powermail_pi1 extends tslib_pibase {
@@ -48,15 +49,19 @@ class tx_powermail_pi1 extends tslib_pibase {
 		$this->content = $content;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
-		//$GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode
+		$GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode
 		
 		// Instances
+		$this->div = t3lib_div::makeInstance('tx_powermail_functions_div'); // Create new instance for submit class
 		$this->sessions = t3lib_div::makeInstance('tx_powermail_sessions'); // New object: session functions
 		$this->form = t3lib_div::makeInstance('tx_powermail_form'); // Initialise the new instance to make cObj availabla in all other functions.
 		$this->submit = t3lib_div::makeInstance('tx_powermail_submit'); // Create new instance for submit class
 		$this->confirmation = t3lib_div::makeInstance('tx_powermail_confirmation'); // Create new instance for submit class
 		$this->mandatory = t3lib_div::makeInstance('tx_powermail_mandatory'); // Create new instance for submit class
 		$this->mandatory->init($this->conf,$this); // mandatory init
+		
+		// Security for piVars
+		$this->piVars = $this->div->sec($this->piVars); // first of all clean piVars
 		
 		// Sessionwork
 		$this->sessions->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions.
@@ -65,7 +70,7 @@ class tx_powermail_pi1 extends tslib_pibase {
 		$this->sessionfields = $this->sessions->getSession(0); // give me all piVars from session (without not needed values)
 		
 		// Start main choose
-		if($_GET['type'] != 3131) {
+		if(t3lib_div::GPvar('type') != 3131) { // typenum is not 3131
 			if(isset($this->piVars['multiple']) || isset($this->piVars['mailID']) || isset($this->piVars['sendNow'])) {
 				// What kind of function should be showed in frontend
 				if(!$this->piVars['multiple']) { // if multiple is not set
