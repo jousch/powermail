@@ -44,7 +44,7 @@ class tx_powermail_sessions extends tslib_pibase {
 			// get old values before overwriting
 			if($overwrite == 0) { // get old values so, it can be set again
 				$oldPiVars = $this->getSession(0); // Get Old piVars from Session (without not allowed piVars)
-				if(isset($oldPiVars)) $piVars = array_merge($oldPiVars, $piVars); // Add old piVars to new piVars
+				if(isset($oldPiVars) && is_array($oldPiVars)) $piVars = array_merge($oldPiVars, $piVars); // Add old piVars to new piVars
 			}
 			
 			// Set Session (overwrite all values)
@@ -60,7 +60,7 @@ class tx_powermail_sessions extends tslib_pibase {
 		//$piVars = array_map('html_entity_decode',$piVars);
 		
 		if($all == 0) { // delete not allowed values from piVars
-			if(isset($piVars)) {
+			if(isset($piVars) && is_array($piVars)) {
 				foreach($piVars as $key => $value) { // one loop for every piVar
 					if(!is_numeric(str_replace('uid','',$key)) && $key != 'FILE') {
 						unset($piVars[$key]); // delete current value (like mailID or sendnow)

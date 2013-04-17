@@ -43,7 +43,7 @@ class tx_powermail_markers extends tslib_pibase {
 		$this->tmpl['all']['item'] = $this->pibase->pibase->cObj->getSubpart($this->tmpl['all']['all'],"###ITEM###"); // Load HTML Template: ALL (works on subpart ###POWERMAIL_ALL###)
 		$content_item = ''; $markerArray = array();
         
-        if(isset($this->sessiondata)) {
+        if(isset($this->sessiondata) && is_array($this->sessiondata)) {
             foreach($this->sessiondata as $k => $v) { // One loop for every piVar
                 if(is_numeric(str_replace('uid','',$k))) { // use only piVars like UID555
 					if(!is_array($v)) { // standard: value is not an array

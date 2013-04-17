@@ -80,7 +80,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 		}
 		
 		// Check for errors
-		if(isset($this->sessionfields['ERROR'])) {
+		if(isset($this->sessionfields['ERROR']) && is_array($this->sessionfields['ERROR'])) {
 			foreach($this->sessionfields['ERROR'] as $key1 => $value1) { // one loop for every field with an error
 				if(isset($this->sessionfields['ERROR'][$key1])) {
 					foreach($this->sessionfields['ERROR'][$key1] as $key2 => $value2) { // one loop for every error on current field
@@ -152,7 +152,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 	
 	// Function emailCheck() checks if sender email address is a real email address, if not write error to session
 	function emailCheck() {
-		if($this->pibase->cObj->data['tx_powermail_sender']) { // If email address from sender is set in backend
+		if($this->pibase->cObj->data['tx_powermail_sender'] && is_array($this->sessionfields)) { // If email address from sender is set in backend
 			if($this->sessionfields[$this->pibase->cObj->data['tx_powermail_sender']]) { // if there is content in the email sender field
 				if(!t3lib_div::validEmail($this->sessionfields[$this->pibase->cObj->data['tx_powermail_sender']])) { // Value is not an email address
 					$this->sessionfields['ERROR'][str_replace('uid','',$this->pibase->cObj->data['tx_powermail_sender'])][] = $this->pi_getLL('error_validemail'); // write error message to session
