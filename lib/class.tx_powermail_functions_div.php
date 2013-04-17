@@ -39,25 +39,26 @@ class tx_powermail_functions_div {
 	
 	// Function sec() is a security function against all bad guys :) 
 	function sec($array) {
-		if(isset($array) && is_array($array)) { // if array
+		
+		if (isset($array) && is_array($array)) { // if array
 			//$this->removeXSS = t3lib_div::makeInstance('tx_powermail_removexss'); // New object: removeXSS function
 			//t3lib_div::addSlashesOnArray($array); // addslashes for every piVar (He'l"lo => He\'l\"lo)
 			
 			foreach ($array as $key => $value) { // one loop for every key in first level
 				
-				if(!is_numeric(str_replace('UID','',$key)) && !is_array($value)) { // all others piVars than UID34
+				if (!is_numeric(str_replace('UID', '', $key)) && !is_array($value)) { // all others piVars than UID34
 					$array[$key] = intval(trim($value)); // the value should be integer
 				}
 					
-				if(!is_array($value)) {	// if value is not an array
-				
-					$array[$key] = strip_tags(trim($value)); // strip_tags removes html and php code
+				if (!is_array($value)) { // if value is not an array
+					
+					$array[$key] = strip_tags($value); // strip_tags removes html and php code
 					$array[$key] = addslashes($array[$key]); // use addslashes
 					//$array[$key] = $this->removeXSS->RemoveXSS($array[$key]); // use remove XSS for piVars
 					
 				} else { // value is still an array (second level)
 					
-					if(!is_array($key2)) {	// if value is not an array
+					if (!is_array($key2)) {	// if value is not an array
 						foreach ($value as $key2 => $value2) { // one loop for every key in second level
 						
 							$array[$key][$key2] = strip_tags(trim($value2)); // strip_tags removes html and php code

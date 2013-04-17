@@ -322,7 +322,8 @@ class tx_powermail_submit extends tslib_pibase {
 				$link = $this->cObj->typolink('x', $typolink_conf); // Create target url
 				
 				if (intval($this->cObj->data['tx_powermail_redirect']) > 0 || strpos($this->cObj->data['tx_powermail_redirect'], 'fileadmin/') !== false) { // PID (intern link) OR file
-					if ($GLOBALS['TSFE']->tmpl->setup['config.']['absRefPrefix'] == '') { // only if absRefPrefix is not in use
+					//if ($GLOBALS['TSFE']->tmpl->setup['config.']['absRefPrefix'] == '') { // only if absRefPrefix is not in use
+					if ($GLOBALS['TSFE']->tmpl->setup['config.']['absRefPrefix'] == '' && strpos('://', $link) !== false ) { // only if absRefPrefix is not in use AND if the link didn't already have a HTTP-Host
 						$link = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')) . $link; // Add baseurl to link
 					} 
 				} 

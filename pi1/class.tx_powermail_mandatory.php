@@ -64,12 +64,13 @@ class tx_powermail_mandatory extends tslib_pibase {
 		$this->emailCheck(); // Email Check
 		$this->regulareExpressions(); // Regulare Expression Check
 		$this->mandatoryCheck(); // Mandatory check
+		$this->hookBefore(); // adds hook
 		
 		// Check for errors
-		if(isset($this->sessionfields['ERROR']) && is_array($this->sessionfields['ERROR'])) {
-			foreach($this->sessionfields['ERROR'] as $key1 => $value1) { // one loop for every field with an error
-				if(isset($this->sessionfields['ERROR'][$key1])) { // if error was set
-					foreach($this->sessionfields['ERROR'][$key1] as $key2 => $value2) { // one loop for every error on current field
+		if (isset($this->sessionfields['ERROR']) && is_array($this->sessionfields['ERROR'])) {
+			foreach ($this->sessionfields['ERROR'] as $key1 => $value1) { // one loop for every field with an error
+				if (isset($this->sessionfields['ERROR'][$key1])) { // if error was set
+					foreach ($this->sessionfields['ERROR'][$key1] as $key2 => $value2) { // one loop for every error on current field
 						$this->error = 1; // mark as error
 						$this->innerMarkerArray['###POWERMAIL_MANDATORY_LABEL###'] = $value2; // current field title (label)
 						$content_item .= $this->cObj->substituteMarkerArrayCached($this->tmpl['mandatory']['item'], $this->innerMarkerArray); // add to content_item
@@ -359,7 +360,18 @@ class tx_powermail_mandatory extends tslib_pibase {
 	}
 	
 	
-	// Function hook() to enable manipulation datas with another extension(s)
+	// Function hookBefore() to enable manipulation datas with another extension(s) before mandatory message creation
+	function hookBefore() {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MandatoryHookBefore'])) { // Adds hook for processing of extra global markers
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MandatoryHookBefore'] as $_classRef) {
+				$_procObj = &t3lib_div::getUserObj($_classRef);
+				$_procObj->PM_MandatoryHookBefore($this->error, $this->markerArray, $this->sessionfields, $this); // Open function to manipulate data
+			}
+		}
+	}
+	
+	
+	// Function hook() to enable manipulation datas with another extension(s) after mandatory message creation
 	function hook() {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MandatoryHook'])) { // Adds hook for processing of extra global markers
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MandatoryHook'] as $_classRef) {
