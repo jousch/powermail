@@ -125,6 +125,7 @@ class tx_powermail_form extends tslib_pibase {
 		// Give me all needed fieldsets
 		$res1 = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 			'uid,title',
+
 			'tx_powermail_fieldsets',
 			$where_clause = 'tt_content = '.$this->pibase->cObj->data['uid'].tslib_cObj::enableFields('tx_powermail_fieldsets'),
 			$groupBy = '',

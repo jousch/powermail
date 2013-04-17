@@ -21,7 +21,10 @@ class tx_powermail_bedetails {
 		);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 		if(isset($row)) {
-			$values = t3lib_div::xml2array($row['piVars'],'pivars'); // xml2array
+			$values = t3lib_div::xml2array($row['piVars'] ,'pivars'); // xml2array
+			if (!is_array($values)) $values = t3lib_div::xml2array(utf8_encode($row['piVars']) ,'pivars'); // xml2array
+			else if ($this->LANG->charSet != 'utf-8') $values = t3lib_div::xml2array(utf8_decode($row['piVars']) ,'pivars'); // xml2array
+			
 			if(isset($values) && is_array($values)) {
 				foreach ($values as $key => $value) { // one loop for every piVar
 					if(!is_array($value)) $this->content .= '<tr>'.'<td><strong>'.$this->GetLabelfromBackend($key,$value).':</strong></td>'.'<td style="padding-left: 10px;">'.$value.'</td><td style="padding-left: 10px; color: #888;">('.$key.')</td></tr>';

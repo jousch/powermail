@@ -40,7 +40,10 @@ class tx_powermail_export {
 				$table .= $this->setTitle($export,$row); // Title
 				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // one loop for every db entry
 					if($row['piVars']) {
-						$values = t3lib_div::xml2array($row['piVars'],'pivars'); // xml2array
+						$values = t3lib_div::xml2array($row['piVars'], 'piVars'); // xml2array
+						if (!is_array($values)) $values = t3lib_div::xml2array(utf8_encode($row['piVars']), 'piVars'); // xml2array
+						else $values = t3lib_div::xml2array(utf8_decode($row['piVars']), 'piVars'); // xml2array
+						
 						$i++; // increase counter
 						$table .= '<tr>';
 						foreach ($this->rowconfig as $key => $value) { // every row from config
@@ -73,7 +76,10 @@ class tx_powermail_export {
 				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // one loop for every db entry
 					if($row['piVars']) {
 						$i++; // increase counter
-						$values = t3lib_div::xml2array($row['piVars'],'pivars'); // xml2array
+						$values = t3lib_div::xml2array($row['piVars'], 'piVars'); // xml2array
+						if (!is_array($values)) $values = t3lib_div::xml2array(utf8_encode($row['piVars']), 'piVars'); // xml2array
+						else $values = t3lib_div::xml2array(utf8_decode($row['piVars']), 'piVars'); // xml2array
+						
 						foreach ($this->rowconfig as $key => $value) { // every row from config
 							if ($key == 'number') $table .= '"'.$i.'."'.$this->seperator; // if current row is number
 							elseif ($key == 'date') $table .= '"'.date($this->dateformat, $row['crdate']).'"'.$this->seperator; // if current row is date

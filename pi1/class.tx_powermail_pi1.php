@@ -32,6 +32,7 @@ require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_function
 
 
 class tx_powermail_pi1 extends tslib_pibase {
+
 	var $prefixId      = 'tx_powermail_pi1';		// Same as class name
 	var $scriptRelPath = 'pi1/class.tx_powermail_pi1.php';	// Path to this script relative to the extension dir.
 	var $extKey        = 'powermail';	// The extension key.
@@ -49,7 +50,7 @@ class tx_powermail_pi1 extends tslib_pibase {
 		$this->content = $content;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
-		//$GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode
+		
 		
 		// Instances
 		$this->div = t3lib_div::makeInstance('tx_powermail_functions_div'); // Create new instance for submit class
@@ -70,6 +71,7 @@ class tx_powermail_pi1 extends tslib_pibase {
 		$this->sessionfields = $this->sessions->getSession(0); // give me all piVars from session (without not needed values)
 		
 		// Start main choose
+		$this->hook_main_content_before(); // hook for content manipulation 1
 		if(t3lib_div::GPvar('type') != 3131) { // typenum is not 3131
 			if(isset($this->piVars['multiple']) || isset($this->piVars['mailID']) || isset($this->piVars['sendNow'])) {
 				// What kind of function should be showed in frontend
@@ -117,27 +119,13 @@ class tx_powermail_pi1 extends tslib_pibase {
 							
 						}
 					}
+					
 				} else { // multiple link is set, so show form again
 					$this->form->init($this->conf,$this); // init
 					if(!$this->check()) $this->content = $this->form->main($this->content,$this->conf); // Show form
 					else $this->content = $this->check(); // Error message
 				}
-				/*
-				if ($this->piVars['basket']) {  // this is used for onBlur in Formfields. Called by AJAX to set the values into a session.
-					
-					$postarray = $GLOBALS['TSFE']->fe_user->getKey("ses", "tx_powermail_pi1"); // first get the stored data
-					$values = $this->piVars; // get the submitted value
-					foreach($values as $k => $v) {
-						if($k != 'basket') {
-							$postarray[$k] = $v; // add new value or overwrite the old one
-							$GLOBALS['TSFE']->fe_user->setKey("ses", "tx_powermail_pi1", $postarray); // Session aufbauen
-							$GLOBALS['TSFE']->storeSessionData(); // Session speichern
-						}
-					}
-					$session = $GLOBALS['TSFE']->fe_user->getKey("ses", "tx_powermail_pi1");
-					print_r($session);
-				}
-				*/
+				
 			} else { // No piVars so show form
 				$this->form->init($this->conf,$this); // init
 				if(!$this->check()) $this->content = $this->form->main($this->content,$this->conf); // Show form
@@ -151,7 +139,7 @@ class tx_powermail_pi1 extends tslib_pibase {
 			return $validationJS;
 		}
 		
-
+		$this->hook_main_content_after(); // hook for content manipulation 2
 		return $this->pi_wrapInBaseClass($this->content);
 	}
 	
@@ -168,6 +156,29 @@ class tx_powermail_pi1 extends tslib_pibase {
 		}
 		return $error;
 	}
+	
+
+	// Function hook_main_content_before() to change the main content 1
+	function hook_main_content_before() {
+		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MainContentHookBefore'])) { // Adds hook for processing
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MainContentHookBefore'] as $_classRef) {
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$_procObj->PM_MainContentBeforeHook($this->sessionfields, $this->piVars, $this); // Get new marker Array from other extensions
+			}
+		}
+	}
+	
+
+	// Function hook_main_content_after() to change the main content 2
+	function hook_main_content_after() {
+		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MainContentHookAfter'])) { // Adds hook for processing
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MainContentHookAfter'] as $_classRef) {
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$_procObj->PM_MainContentAfterHook($this->content, $this->piVars, $this); // Get new marker Array from other extensions
+			}
+		}
+	}
+	
 }
 
 

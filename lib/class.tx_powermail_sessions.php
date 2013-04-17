@@ -141,7 +141,7 @@ class tx_powermail_sessions extends tslib_pibase {
 
 	// Function for initialisation.
 	// to call cObj, make $this->pibase->cObj->function()
-	function init(&$conf,&$pibase) {
+	function init($conf,$pibase) {
 		$this->conf = $conf;
 		$this->pibase = $pibase;
 		$this->div_functions = t3lib_div::makeInstance('tx_powermail_functions_div'); // New object: div functions

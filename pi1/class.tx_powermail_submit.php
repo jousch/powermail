@@ -39,7 +39,7 @@ class tx_powermail_submit extends tslib_pibase {
 	var $dbInsert = 1; // Enable db insert of every sent item (disable for testing only)
 	var $ok = 0; // disallow sending (standard false)
 
-	function main($content,$conf){
+	function main($content,$conf) {
 		$this->conf=$conf;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
@@ -74,9 +74,9 @@ class tx_powermail_submit extends tslib_pibase {
 		if(!$this->hook_submit_beforeEmails()) { // All is ok (no spam maybe)
 			
 			$this->ok = 1; // sending allowed
-			if($this->conf['allow.']['email2receiver']) $this->sendMail('recipient_mail'); // 2a. Email: Generate the Mail for the recipient (if allowed via TS)
-			if($this->conf['allow.']['email2sender'] && $this->pibase->cObj->data['tx_powermail_sender'] && t3lib_div::validEmail($this->sessiondata[$this->pibase->cObj->data['tx_powermail_sender']])) $this->sendMail('sender_mail'); // 2b. Email: Generate the Mail for the sender (if allowed via TS and sender is selected and email exists)
-			if($this->conf['allow.']['dblog']) $this->saveMail(); // 2c. Safe values to DB (if allowed via TS)
+			if ($this->conf['allow.']['email2receiver']) $this->sendMail('recipient_mail'); // 2a. Email: Generate the Mail for the recipient (if allowed via TS)
+			if ($this->conf['allow.']['email2sender'] && $this->pibase->cObj->data['tx_powermail_sender'] && t3lib_div::validEmail($this->sessiondata[$this->pibase->cObj->data['tx_powermail_sender']])) $this->sendMail('sender_mail'); // 2b. Email: Generate the Mail for the sender (if allowed via TS and sender is selected and email exists)
+			if ($this->conf['allow.']['dblog']) $this->saveMail(); // 2c. Safe values to DB (if allowed via TS)
 			
 		} else { // Spam hook is true (maybe spam recognized)
 			$this->markerArray = array(); // clear markerArray
@@ -92,6 +92,7 @@ class tx_powermail_submit extends tslib_pibase {
 			$this->content // current content
 		);
 		$this->content = preg_replace("|###.*?###|i","",$this->content); // Finally clear not filled markers
+		$this->hook_submit_LastOne(); // add hook for manipulation thx message
 		
 		// 4. Additional db storing if wanted
 		$this->dbImport->main($this->conf, $this->sessiondata, $this->ok);
@@ -271,7 +272,7 @@ class tx_powermail_submit extends tslib_pibase {
 				$link = $this->pibase->cObj->typolink('x', $typolink_conf); // Create target url
 				
 				if (intval($this->pibase->cObj->data['tx_powermail_redirect']) > 0 || strpos($this->pibase->cObj->data['tx_powermail_redirect'],'fileadmin/') !== false) { // PID (intern link) OR file
-					$link = $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'].$link; // Add baseurl to link
+					$link = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : 'http://'.$_SERVER['HTTP_HOST'].'/') . $link; // Add baseurl to link
 				} 
 				elseif (t3lib_div::validEmail($this->pibase->cObj->data['tx_powermail_redirect'])) { // if email recognized
 					$link = 'mailto:'.$link; // add mailto: 
@@ -291,7 +292,7 @@ class tx_powermail_submit extends tslib_pibase {
 		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitEmailHook'])) { // Adds hook for processing
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitEmailHook'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				$_procObj->PM_SubmitEmailHook($this->subpart,$this->maildata,$this->sessiondata,$this->markerArray,$this); // Get new marker Array from other extensions
+				$_procObj->PM_SubmitEmailHook($this->subpart, $this->maildata, $this->sessiondata, $this->markerArray, $this); // Get new marker Array from other extensions
 			}
 		}
 	}
@@ -302,10 +303,21 @@ class tx_powermail_submit extends tslib_pibase {
 		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitBeforeMarkerHook'])) { // Adds hook for processing of extra global markers
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitBeforeMarkerHook'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				return $_procObj->PM_SubmitBeforeMarkerHook($this,$this->markerArray,$this->sessiondata); // Get new marker Array from other extensions - if TRUE, don't send mails (maybe spam)
+				return $_procObj->PM_SubmitBeforeMarkerHook($this, $this->markerArray, $this->sessiondata); // Get new marker Array from other extensions - if TRUE, don't send mails (maybe spam)
 			}
 		} else { // if hook is not set
 			return FALSE; // Return False is default (no spam, so emails could be sent)
+		}
+	}
+	
+
+	// Function hook_submit_LastOne() to add a hook and maybe change thx message
+	function hook_submit_LastOne() {
+		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitLastOne'])) { // Adds hook for processing
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitLastOne'] as $_classRef) {
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$_procObj->PM_SubmitLastOneHook($this->content, $this->conf, $this->sessiondata, $this->ok, $this); // Get new marker Array from other extensions
+			}
 		}
 	}
 	
