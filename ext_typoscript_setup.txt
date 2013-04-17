@@ -1,5 +1,6 @@
 # POWERMAIL PLUGIN #
 plugin.tx_powermail_pi1 {
+	# get constants
 	template.fieldWrap = {$plugin.powermail.template.fieldWrap}
 	template.formWrap = {$plugin.powermail.template.formWrap}
 	template.thxMessage = {$plugin.powermail.template.thxMessage}
@@ -12,12 +13,16 @@ plugin.tx_powermail_pi1 {
 	allow.email2sender = {$plugin.powermail.allow.email2sender}
 	allow.dblog = {$plugin.powermail.allow.dblog}
 	email.noreply = {$plugin.powermail.email.noreply}
+	email.checkMX = {$plugin.powermail.email.checkMX}
+	markerALL.hideLabel = {$plugin.powermail.markerALL.hideLabel}
 	markerALL.notIn = {$plugin.powermail.markerALL.notIn}
 	PID.dblog = {$plugin.powermail.PID.dblog}
 	form.method = {$plugin.powermail.form.method}
 	format.datetime = {$plugin.powermail.format.datetime}
 	format.date = {$plugin.powermail.format.date}
 	label.allowTags = {$plugin.powermail.label.allowTags}
+	html.removeXSS = {$plugin.powermail.html.removeXSS}
+	countryselect.charset = {$plugin.powermail.countryselect.charset}
 	mandatory.symbol = {$plugin.powermail.mandatory.symbol}
 	mandatory.wrap = {$plugin.powermail.mandatory.wrap}
 	captcha.use = {$plugin.powermail.captcha.use}
@@ -30,10 +35,82 @@ plugin.tx_powermail_pi1 {
 	js.mandatorycheck = {$plugin.powermail.js.mandatorycheck}
 	js.mandatorydivclass = {$plugin.powermail.js.mandatorydivclass}
 	js.onfocus = {$plugin.powermail.js.onfocus}
-	js.onchange = {$plugin.powermail.js.onchange}
 	js.Prototype = {$plugin.powermail.js.Prototype}
 	js.HTMLentities = {$plugin.powermail.js.HTMLentities}
+	field.checkboxJS = {$plugin.powermail.field.checkboxJS}
+	powermail.charset = {$plugin.powermail.powermail.charset}
+	
+	
+	# adding (or changing) flexible locallang markers in any HTML template or RTE field (example)
+	_LOCAL_LANG.en {
+		locallangmarker_yourvalue = this is a new text
+	}
+	
+	
+	# adding flexible typoscript markers in any HTML template or RTE field (example)
+	dynamicTyposcript {
+		yourmarker = TEXT
+		yourmarker.value = This is a new text
+	}
+	
+	
+	# prefilling form fields (example)
+	prefill {
+		# fill field uid997 with a static text
+		uid997 = TEXT
+		uid997.value = example value
+		
+		# fill field uid998 with current timestamp
+		uid998 = TEXT
+		uid998.data = date:U
+		
+		# fill field uid998 with current date like "Date: 20.01.2009"
+		uid996 = TEXT
+		uid996.data = date:U
+		uid996.strftime = Date: %d.%m.%Y
+		
+		# fill field uid995 with IP address of the user
+		uid995 = TEXT
+		uid995.data = getIndpEnv:REMOTE_ADDR
+	}
+	
+	
+	
+	# extern db entry (example)
+	# example DYNAMIC
+	dbEntry {
+		# Enable or disable db insert for table tt_address (0/1)
+		tt_address.enable = TEXT
+		tt_address.enable.value = 1
+
+		# Enter values from piVars (POST parameter)
+		tt_address.uid998 = email
+		tt_address.uid999 = last_name,first_name
+		
+		# Enter default value (second level)
+		tt_address.uid997_0 = phone
+		tt_address.uid997_1 = mobile
+	}
+	# example STATIC (only if dynamic is enabled - see above)
+	dbEntryDefault {
+		# Enter current page id
+		tt_address.pid = TEXT
+		tt_address.pid.field = uid
+		
+		# Enter default value (old way)
+		tt_address.name = Alex
+		
+		# Enter default value (new way - via TS)
+		tt_address.www = TEXT
+		tt_address.www.value = www.test.de
+		
+		# Enter current timestamp
+		tt_address.tstamp = TEXT
+		tt_address.tstamp.data = date:U
+	}
 }
+
+
 
 # TypeNum 3131 offers a dynamic javascript for powermail which allows to validate different fields
 powermailJS = PAGE

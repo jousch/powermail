@@ -1,17 +1,27 @@
-Powermail HTML Template mandatory, if fields where not filled
+Powermail HTML Template mandatory, errormessages if fields where not filled (e.g.)
 
-For displaying complete content: 					###POWERMAIL_ALL###
-Use special marker of any sent value: 				###UID5###
-Displaying any value from pi1/locallang.xml:		###POWERMAIL_LOCALLANG_MYFIELD### (###POWERMAIL_LOCALLANG_$field###)
+	--- MARKERS OUTSIDE SUBPARTS ---
+	Title for errormessages: 							###POWERMAIL_LOCALLANG_MANDATORY_MESSAGE###
+	Form name for backlink (formname_mandatory): 		###POWERMAIL_NAME###
+	Target for backlink:								###POWERMAIL_TARGET###
+	Form method for backlink:							###POWERMAIL_METHOD###
+	Submitbutton value:									###POWERMAIL_LOCALLANG_MANDATORY_SUBMIT###
+	
+	-- MARKERS INSIDE SUBPARTS ---
+	Current Errormessage:								###POWERMAIL_MANDATORY_LABEL###
+	
+	--- GENERAL MARKERS (INSIDE/OUTSIDE) --
+	Displaying any value from pi1/locallang.xml:		###POWERMAIL_LOCALLANG_YOURFIELD### (Could be filled via locallang.xml or typoscript - see manual for details)
+	Displaying any value from typoscript:				###POWERMAIL_TYPOSCRIPT_YOURFIELD### (Could be filled via typoscript - see manual for details)
 
 
 <!-- ###POWERMAIL_MANDATORY_ALL### begin -->
 	<div class="tx-powermail-pi1_mandatory">
 		<strong>###POWERMAIL_LOCALLANG_MANDATORY_MESSAGE###</strong><br />
 		
-		<ul>
+		<ul class="powermail_mandatory_list">
 		<!-- ###CONTENT### --><!-- ###ITEM### -->
-			<li><span style="color: red;">###POWERMAIL_MANDATORY_LABEL###</span></li>
+			<li class="powermail_mandatory_listitem"><strong>###POWERMAIL_MANDATORY_LABEL###</strong></li>
 		<!-- ###ITEM### --><!-- ###CONTENT### -->
 		</ul>
 		

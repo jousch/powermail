@@ -25,6 +25,7 @@
 require_once(PATH_tslib.'class.tslib_pibase.php');
 require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_functions_div.php'); // file for div functions
 require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_markers.php'); // file for marker functions
+require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_dynamicmarkers.php'); // file for dynamicmarker functions
 
 class tx_powermail_mandatory extends tslib_pibase {
 	var $extKey        = 'powermail';	// The extension key.
@@ -40,8 +41,9 @@ class tx_powermail_mandatory extends tslib_pibase {
 		
 		// Instances
 		$this->div_functions = t3lib_div::makeInstance('tx_powermail_functions_div'); // New object: div functions
+		$this->dynamicMarkers = t3lib_div::makeInstance('tx_powermail_dynamicmarkers'); // New object: TYPO3 dynamicmarker function
 		$this->markers = t3lib_div::makeInstance('tx_powermail_markers'); // New object: TYPO3 mail functions
-		$this->markers->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions.
+		$this->markers->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions
 		
 		// Template
 		$this->tmpl = array();
@@ -70,10 +72,20 @@ class tx_powermail_mandatory extends tslib_pibase {
 			$limit
 		);
 		if ($res) { // If there is a result
-			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every field
-				if($this->pi_getFFvalue(t3lib_div::xml2array($row['flexform']),'mandatory') == 1) { // if in current xml mandatory == 1
-					if(!trim($this->sessionfields['uid'.$row['uid']]) || !isset($this->sessionfields['uid'.$row['uid']])) { // only if current value is not set in session (piVars)
-						$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_mandatory_emptyfield').' <b>'.$row['title'].'</b>'; // set current error to sessionlist
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every field
+				if ($this->pi_getFFvalue(t3lib_div::xml2array($row['flexform']),'mandatory') == 1) { // if in current xml mandatory == 1
+					if (!is_array($this->sessionfields['uid'.$row['uid']])) { // first level
+						if (!trim($this->sessionfields['uid'.$row['uid']]) || !isset($this->sessionfields['uid'.$row['uid']])) { // only if current value is not set in session (piVars)
+							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_mandatory_emptyfield').' <b>'.$row['title'].'</b>'; // set current error to sessionlist
+						}
+					} else { // second level (maybe for checkboxes
+						if (isset($this->sessionfields['uid'.$row['uid']])) {
+							$error=1; // errors on start (by default)
+							foreach ($this->sessionfields['uid'.$row['uid']] as $key => $value) { // one loop for every field
+								if ($this->sessionfields['uid'.$row['uid']][$key] != '') $error = 0; // set error
+							}
+							if ($error) $this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_mandatory_emptyfield').' <b>'.$row['title'].'</b>'; // set current error to sessionlist
+						}
 					}
 				}
 			}
@@ -96,11 +108,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 		// Return
 		$this->hook(); // adds hook
 		$this->content = $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['mandatory']['all'],$this->markerArray,$subpartArray); // substitute Marker in Template
-		$this->content = preg_replace_callback ( // Automaticly fill locallangmarkers with fitting value of locallang.xml
-			'#\#\#\#POWERMAIL_LOCALLANG_(.*)\#\#\##Uis', // regulare expression
-			array($this->markers,'DynamicLocalLangMarker'), // open function
-			$this->content // current content
-		);
+		$this->content = $this->dynamicMarkers->main($this->conf, $this->pibase->cObj, $this->content); // Fill dynamic locallang or typoscript markers
 		$this->content = preg_replace("|###.*?###|i","",$this->content); // Finally clear not filled markers
 		if($this->error == 1) { // if there is an error
 			$this->clearErrorsInSession();
@@ -156,6 +164,8 @@ class tx_powermail_mandatory extends tslib_pibase {
 			if($this->sessionfields[$this->pibase->cObj->data['tx_powermail_sender']]) { // if there is content in the email sender field
 				if(!t3lib_div::validEmail($this->sessionfields[$this->pibase->cObj->data['tx_powermail_sender']])) { // Value is not an email address
 					$this->sessionfields['ERROR'][str_replace('uid','',$this->pibase->cObj->data['tx_powermail_sender'])][] = $this->pi_getLL('error_validemail'); // write error message to session
+				} else { // Syntax of email address is correct - check for MX Record
+					if( !$this->div_functions->checkMX( $this->sessionfields[$this->pibase->cObj->data['tx_powermail_sender']] ) && $this->conf['email.']['checkMX'] ) $this->sessionfields['ERROR'][str_replace('uid','',$this->pibase->cObj->data['tx_powermail_sender'])][] = $this->pi_getLL('error_nomx'); // write error message to session
 				}
 			}
 		}

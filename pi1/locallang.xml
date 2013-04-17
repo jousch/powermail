@@ -25,7 +25,8 @@
 			<label index="error_captcha_empty">Captcha Code empty</label>
 			<label index="error_captcha_wrong">Captcha Code wrong</label>
 			<label index="error_backend_noip">IP logging disabled</label>
-			<label index="error_validemail">Email addres is not valid</label>
+			<label index="error_validemail">Email address is not valid</label>
+			<label index="error_nomx">Email address don't exist</label>
 			<label index="error_expression_validation">Validation failed</label>
 			<label index="multiple_forward">Next step</label>
 			<label index="multiple_back">Previous step</label>
@@ -64,6 +65,7 @@
 			<label index="error_captcha_wrong">Der eingetragene Code war leider falsch</label>
 			<label index="error_backend_noip">IP Speicherung deaktiviert</label>
 			<label index="error_validemail">Die eingegebenen E-Mail Adresse enthält Fehler</label>
+			<label index="error_nomx">Die eingegebene E-Mail Adresse existiert nicht</label>
 			<label index="error_expression_validation">Check fehlgeschlagen</label>
 			<label index="multiple_forward">Nächster Schritt</label>
 			<label index="multiple_back">Vorheriger Schritt</label>
@@ -102,6 +104,7 @@
 			<label index="error_captcha_wrong">Captcha Code wrong</label>
 			<label index="error_backend_noip">IP logging disabled</label>
 			<label index="error_validemail">Email addres is not valid</label>
+			<label index="error_nomx">Email address don't exist</label>
 			<label index="error_expression_validation">Validation failed</label>
 			<label index="multiple_forward">Next step</label>
 			<label index="multiple_back">Previous step</label>

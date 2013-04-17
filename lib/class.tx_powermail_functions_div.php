@@ -22,8 +22,6 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_removeXSS.php'); // file for removeXSS function
-
 /**
  * Class with collection of different functions (like string and array functions)
  *
@@ -31,6 +29,10 @@ require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_removeXS
  * @package	TYPO3
  * @subpackage	tx_powermail
  */
+ 
+require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_removexss.php'); // file for removexss function class
+
+
 class tx_powermail_functions_div {
 
 	var $extKey = 'powermail';
@@ -77,7 +79,8 @@ class tx_powermail_functions_div {
 	// Function sec() is a security function against all bad guys :) 
 	function sec($array) {
 		if(isset($array) && is_array($array)) { // if array
-			$this->removeXSS = t3lib_div::makeInstance('tx_powermail_RemoveXSS'); // New object: function for removing XSS
+			$this->removeXSS = t3lib_div::makeInstance('tx_powermail_removexss'); // New object: removeXSS function
+			//t3lib_div::addSlashesOnArray($array); // addslashes for every piVar (He'l"lo => He\'l\"lo)
 			
 			foreach ($array as $key => $value) { // one loop for every key in first level
 				
@@ -88,8 +91,8 @@ class tx_powermail_functions_div {
 				if(!is_array($value)) {	// if value is not an array
 				
 					$array[$key] = strip_tags(trim($value)); // strip_tags removes html and php code
-					$array[$key] = $this->removeXSS->RemoveXSS($array[$key]); // remove XSS
 					$array[$key] = addslashes($array[$key]); // use addslashes
+					$array[$key] = $this->removeXSS->RemoveXSS($array[$key]); // use remove XSS for piVars
 					
 				} else { // value is still an array (second level)
 					
@@ -97,8 +100,8 @@ class tx_powermail_functions_div {
 						foreach ($value as $key2 => $value2) { // one loop for every key in second level
 						
 							$array[$key][$key2] = strip_tags(trim($value2)); // strip_tags removes html and php code
-							$array[$key][$key2] = $this->removeXSS->RemoveXSS($array[$key][$key2]); // remove XSS
 							$array[$key][$key2] = addslashes($array[$key][$key2]); // use addslashes
+							$array[$key][$key2] = $this->removeXSS->RemoveXSS($array[$key][$key2]); // use remove XSS for piVars
 							
 						}
 					} else unset($array[$key][$key2]); // if array with 3 or more dimensions - delete this value
@@ -154,6 +157,24 @@ class tx_powermail_functions_div {
 				
 			}
 		}
+	}
+	
+	
+	// Function checkMX() checks if a domain exists
+	function checkMX($email,$record = 'MX') {
+		list($user,$domain) = split('@',$email); // split email in user and domain
+		
+		if (checkdnsrr($domain,$record) == 1) return TRUE; // return true if mx record exist
+		else return FALSE; // return false if not
+	}
+	
+	
+	// Function charset() changes content with utf8_decode or utf8_encode or nothing
+	function charset($content, $function = '') {
+		if ($function == 'utf8_encode') $content = utf8_encode($content);
+		elseif ($function == 'utf8_decode') $content = utf8_decode($content);
+		
+		if (!empty($content)) return $content;
 	}
 
 

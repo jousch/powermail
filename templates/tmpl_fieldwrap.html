@@ -1,22 +1,26 @@
 Powermail HTML Template for fieldwraps
 
-Global markers are:
-###LABEL###					Field label
-###LABEL_NAME###			"uid" + uid
-###MANDATORY_SYMBOL###		Symbol if mandatory field
-###NAME###					Field name
-###VALUE###					Standard-value
-###CLASS###					Field's class
-###ID###					Field's id
-###SIZE###					Field's size
-###MULTIPLE###				If multiple is allowed in select
-###MAXLENGTH###				Field's maximum length
-###READONLY###				Is this field readonly?
-###POWERMAIL_FIELD_UID###	UID of current field
-###COLS###					Rows for textarea
-###ROWS###					Cols for textarea
-###ONFOCUS###				includes eventhandlers like onFocus and onBlur
-###ONCHANGE###				includes eventhandlers for changing fields like select
+	--- GLOBAL MARKERS ---
+	###LABEL###					Field label
+	###LABEL_NAME###			"uid" + uid
+	###MANDATORY_SYMBOL###		Symbol if mandatory field
+	###NAME###					Field name
+	###VALUE###					Standard-value
+	###CLASS###					Field's class
+	###ID###					Field's id
+	###SIZE###					Field's size
+	###MULTIPLE###				If multiple is allowed in select
+	###MAXLENGTH###				Field's maximum length
+	###READONLY###				Is this field readonly?
+	###POWERMAIL_FIELD_UID###	UID of current field
+	###COLS###					Rows for textarea
+	###ROWS###					Cols for textarea
+	###ONFOCUS###				includes eventhandlers like onFocus and onBlur
+	###ONCHANGE###				includes eventhandlers for changing fields like select
+	
+	--- GENERAL MARKERS --
+	Displaying any value from pi1/locallang.xml:		###POWERMAIL_LOCALLANG_YOURFIELD### (Could be filled via locallang.xml or typoscript - see manual for details)
+	Displaying any value from typoscript:				###POWERMAIL_TYPOSCRIPT_YOURFIELD### (Could be filled via typoscript - see manual for details)
 
 
 
@@ -79,6 +83,24 @@ Fieldwrap for checkboxen like <input type="checkbox" />
 	Special markers:
 	###CHECKED###		Preselection
 
+NEW HTML Template for checkboxes (uses hidden fields)
+<!-- ###POWERMAIL_FIELDWRAP_HTML_CHECKJS### begin -->
+	<div class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_check tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###">
+		 <p class="tx_powermail_pi1_fieldwrap_html_checkbox_title">###LABEL_MAIN######MANDATORY_SYMBOL###</p>
+		 <!-- ###CONTENT### begin -->
+		 	<!-- ###ITEM### begin -->
+				<div class="powermail_check_inner powermail_check_inner_###LABEL_NAME###">
+					<label for="###LABEL_NAME###">###LABEL###</label>
+					<input type="checkbox" name="check_###LABEL_NAME###" onClick="checkbox('###LABEL_NAME###');" ###CHECKED######CLASS###/>
+					<input type="hidden" ###VALUE### name="value_###LABEL_NAME###"/>
+					<input type="hidden" ###ID######NAME######HIDDENVALUE###/>
+				</div>
+		 	<!-- ###ITEM### end -->
+		 <!-- ###CONTENT### end -->
+	</div>
+<!-- ###POWERMAIL_FIELDWRAP_HTML_CHECKJS### end -->
+
+OLD HTML Template for checkboxes (don't use hidden fields - just checkboxes)
 <!-- ###POWERMAIL_FIELDWRAP_HTML_CHECK### begin -->
 	<div class="tx_powermail_pi1_fieldwrap_html tx_powermail_pi1_fieldwrap_html_check tx_powermail_pi1_fieldwrap_html_###POWERMAIL_FIELD_UID###">
 		 <p class="tx_powermail_pi1_fieldwrap_html_checkbox_title">###LABEL_MAIN######MANDATORY_SYMBOL###</p>
@@ -86,9 +108,7 @@ Fieldwrap for checkboxen like <input type="checkbox" />
 		 	<!-- ###ITEM### begin -->
 				<div class="powermail_check_inner powermail_check_inner_###LABEL_NAME###">
 					<label for="###LABEL_NAME###">###LABEL###</label>
-					<input type="checkbox" ###CHECKED###  name="check_###LABEL_NAME###" onClick="checkbox('###LABEL_NAME###');" />
-					<input type="hidden" ###VALUE### name="value_###LABEL_NAME###"/>
-					<input type="hidden" ###ID######NAME######HIDDENVALUE###/>
+					<input type="checkbox" ###NAME######VALUE######CLASS######ID######CHECKED###/>
 				</div>
 		 	<!-- ###ITEM### end -->
 		 <!-- ###CONTENT### end -->

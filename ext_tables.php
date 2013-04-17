@@ -1,6 +1,5 @@
 <?php
 if (!defined ('TYPO3_MODE')) die ('Access denied.');
-//$GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode 
 $confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['powermail']); // Get backandconfig
 t3lib_extMgm::allowTableOnStandardPages('tx_powermail_fieldsets');
 
@@ -90,8 +89,6 @@ $TCA["tx_powermail_mails"] = array (
 		"fe_admin_fieldList" => "formid, recipient, subject_r, sender, content, piVars, senderIP, UserAgent, Referer, SP_TZ, hidden",
 	)
 );
-
-t3lib_extMgm::addStaticFile($_EXTKEY,'static/powermail/', 'powermail');
 
 t3lib_div::loadTCA("tt_content");
 

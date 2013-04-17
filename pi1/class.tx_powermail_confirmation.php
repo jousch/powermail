@@ -24,6 +24,7 @@
 
 require_once(PATH_tslib.'class.tslib_pibase.php');
 require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_markers.php'); // file for marker functions
+require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_dynamicmarkers.php'); // file for dynamicmarker functions
 
 class tx_powermail_confirmation extends tslib_pibase {
 	var $extKey        = 'powermail';	// The extension key.
@@ -36,7 +37,8 @@ class tx_powermail_confirmation extends tslib_pibase {
 		$this->pi_initPIflexform(); // Init and get the flexform data of the plugin
 		
 		// Instances
-		$this->markers = t3lib_div::makeInstance('tx_powermail_markers'); // New object: TYPO3 mail functions
+		$this->dynamicMarkers = t3lib_div::makeInstance('tx_powermail_dynamicmarkers'); // New object: TYPO3 dynamicmarker function
+		$this->markers = t3lib_div::makeInstance('tx_powermail_markers'); // New object: TYPO3 marker functions
 		$this->markers->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions.
 		
 		// Template
@@ -54,11 +56,7 @@ class tx_powermail_confirmation extends tslib_pibase {
 		// Return
 		$this->hook(); // adds hook
 		$this->content = $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['all'],$this->markerArray); // substitute Marker in Template
-		$this->content = preg_replace_callback ( // Automaticly fill locallangmarkers with fitting value of locallang.xml
-			'#\#\#\#POWERMAIL_LOCALLANG_(.*)\#\#\##Uis', // regulare expression
-			array($this->markers,'DynamicLocalLangMarker'), // open function
-			$this->content // current content
-		);
+		$this->content = $this->dynamicMarkers->main($this->conf, $this->pibase->cObj, $this->content); // Fill dynamic locallang or typoscript markers
 		$this->content = preg_replace("|###.*?###|i","",$this->content); // Finally clear not filled markers
 		return $this->content; // return HTML
 	}

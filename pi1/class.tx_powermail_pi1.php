@@ -52,12 +52,12 @@ class tx_powermail_pi1 extends tslib_pibase {
 		$this->pi_loadLL();
 		
 		// Instances
-		$this->div = t3lib_div::makeInstance('tx_powermail_functions_div'); // Create new instance for submit class
+		$this->div = t3lib_div::makeInstance('tx_powermail_functions_div'); // Create new instance for div class
 		$this->sessions = t3lib_div::makeInstance('tx_powermail_sessions'); // New object: session functions
 		$this->form = t3lib_div::makeInstance('tx_powermail_form'); // Initialise the new instance to make cObj availabla in all other functions.
 		$this->submit = t3lib_div::makeInstance('tx_powermail_submit'); // Create new instance for submit class
-		$this->confirmation = t3lib_div::makeInstance('tx_powermail_confirmation'); // Create new instance for submit class
-		$this->mandatory = t3lib_div::makeInstance('tx_powermail_mandatory'); // Create new instance for submit class
+		$this->confirmation = t3lib_div::makeInstance('tx_powermail_confirmation'); // Create new instance for confirmation class
+		$this->mandatory = t3lib_div::makeInstance('tx_powermail_mandatory'); // Create new instance for mandatory class
 		$this->mandatory->init($this->conf,$this); // mandatory init
 		
 		// Security for piVars
@@ -138,7 +138,9 @@ class tx_powermail_pi1 extends tslib_pibase {
 			return $validationJS;
 		}
 		
+		$this->content = $this->div->charset($this->content, $this->conf['powermail.']['charset']); // use utf8_encode or _decode if wanted (set via constants)
 		$this->hook_main_content_after(); // hook for content manipulation 2
+		
 		return $this->pi_wrapInBaseClass($this->content);
 	}
 	

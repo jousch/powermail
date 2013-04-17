@@ -25,7 +25,7 @@
 require_once(PATH_tslib.'class.tslib_pibase.php'); // get pibase
 require_once('class.tx_powermail_html.php'); // get html and field functions
 require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_functions_div.php'); // file for div functions
-require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_markers.php'); // file for marker functions
+require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_dynamicmarkers.php'); // file for dynamicmarker functions
 require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_sessions.php'); // load session class
 
 
@@ -38,7 +38,9 @@ class tx_powermail_form extends tslib_pibase {
 	// Function main chooses what to show
 	function main($content, $conf) {
 		// config
+		$this->conf = $conf;
 		$this->baseurl = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : 'http://'.$_SERVER['HTTP_HOST'].'/'); // set baseurl
+		$this->dynamicMarkers = t3lib_div::makeInstance('tx_powermail_dynamicmarkers'); // New object: TYPO3 marker function
 		
 		// load mandatory javascript in header if needed
 		$js = '';
@@ -46,7 +48,6 @@ class tx_powermail_form extends tslib_pibase {
 		if ($this->conf['js.']['mandatorycheck'] == 1) {
 			$js .= $this->includeJavaScript("js/mandatoryjs/src/","effects.js"); // add file 2
 			$js .= $this->includeJavaScript("js/mandatoryjs/","fabtabulous.js"); // add file 3
-			$js .= $this->includeJavaScript("js/checkbox/","checkbox.js"); // add file 3
 			
 			// add dynamic file (current page with type=3131)
 			if ($GLOBALS['TSFE']->tmpl->setup['config.']['simulateStaticDocuments'] != '1') { // simulatestaticdocuments is not activated
@@ -164,6 +165,7 @@ class tx_powermail_form extends tslib_pibase {
 		
 		$this->hook(); // adds hook
 		$this->contentForm = $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['formwrap']['all'],$this->OuterMarkerArray,$this->subpartArray); // substitute Marker in Template
+		$this->contentForm = $this->dynamicMarkers->main($this->conf, $this->pibase->cObj, $this->contentForm); // Fill dynamic locallang or typoscript markers
 		$this->contentForm = preg_replace("|###.*?###|i","",$this->contentForm); // Finally clear not filled markers
 		return $this->contentForm; // return HTML
 	}
@@ -238,6 +240,7 @@ class tx_powermail_form extends tslib_pibase {
 				}
 				$subpartArray['###POWERMAIL_CONTENT###'] = $content_item; 
 				$content = $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['multiplejs']['all'], array(), $subpartArray);
+				$content = $this->dynamicMarkers->main($this->conf, $this->pibase->cObj, $content); // Fill dynamic locallang or typoscript markers
 				$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
 			}
 		

@@ -27,6 +27,7 @@ require_once(PATH_t3lib.'class.t3lib_htmlmail.php');
 require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_functions_div.php'); // file for div functions
 require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_markers.php'); // file for marker functions
 require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_db.php'); // file for marker functions
+require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_dynamicmarkers.php'); // file for dynamicmarker functions
 
 
 class tx_powermail_submit extends tslib_pibase {
@@ -40,7 +41,7 @@ class tx_powermail_submit extends tslib_pibase {
 	var $ok = 0; // disallow sending (standard false)
 
 	function main($content,$conf) {
-		$this->conf=$conf;
+		$this->conf = $conf;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
 		$this->pi_initPIflexform(); // Init and get the flexform data of the plugin
@@ -48,6 +49,7 @@ class tx_powermail_submit extends tslib_pibase {
 		// Instances
 		$this->div_functions = t3lib_div::makeInstance('tx_powermail_functions_div'); // New object: div functions
 		$this->dbImport = t3lib_div::makeInstance('tx_powermail_db'); // New object: For additional db import (if wanted)
+		$this->dynamicMarkers = t3lib_div::makeInstance('tx_powermail_dynamicmarkers'); // New object: TYPO3 dynamicmarker function
 		$this->markers = t3lib_div::makeInstance('tx_powermail_markers'); // New object: TYPO3 mail functions
 		$this->markers->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions.
 		$this->confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]); // Get config from localconf.php
@@ -86,11 +88,7 @@ class tx_powermail_submit extends tslib_pibase {
 		// 3. Return Message to FE
 		$this->hook_submit_afterEmails(); // add hook for manipulation of data after E-Mails where sent
 		$this->content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['thx'],$this->markerArray); // substitute Marker in Template
-		$this->content = preg_replace_callback ( // Automaticly fill locallangmarkers with fitting value of locallang.xml
-			'#\#\#\#POWERMAIL_LOCALLANG_(.*)\#\#\##Uis', // regulare expression
-			array($this->markers,'DynamicLocalLangMarker'), // open function
-			$this->content // current content
-		);
+		$this->content = $this->dynamicMarkers->main($this->conf, $this->pibase->cObj, $this->content); // Fill dynamic locallang or typoscript markers
 		$this->content = preg_replace("|###.*?###|i","",$this->content); // Finally clear not filled markers
 		$this->hook_submit_LastOne(); // add hook for manipulation thx message
 		
@@ -116,12 +114,8 @@ class tx_powermail_submit extends tslib_pibase {
 		// Configuration
 		$this->subpart = $subpart;
 		$this->tmpl['emails'][$this->subpart] = $this->pibase->cObj->getSubpart($this->tmpl['emails']['all'],'###POWERMAIL_'.strtoupper($this->subpart).'###'); // Content for HTML Template
-		$this->mailcontent[$this->subpart] = $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['emails'][$this->subpart],$this->markerArray); // substitute markerArray for HTML content
-		$this->mailcontent[$this->subpart] = preg_replace_callback ( // Automaticly fill locallangmarkers with fitting value of locallang.xml
-			'#\#\#\#POWERMAIL_LOCALLANG_(.*)\#\#\##Uis', // regulare expression
-			array($this->markers,'DynamicLocalLangMarker'), // open function
-			$this->mailcontent[$this->subpart] // current content
-		);
+		$this->mailcontent[$this->subpart] = $this->pibase->cObj->substituteMarkerArrayCached(trim($this->tmpl['emails'][$this->subpart]),$this->markerArray); // substitute markerArray for HTML content
+		$this->mailcontent[$this->subpart] = $this->dynamicMarkers->main($this->conf, $this->pibase->cObj, $this->mailcontent[$this->subpart]); // Fill dynamic locallang or typoscript markers
 		$this->mailcontent[$this->subpart] = preg_replace("|###.*?###|i","",$this->mailcontent[$this->subpart]); // Finally clear not filled markers
 		$this->maildata = array();
 		
@@ -170,7 +164,7 @@ class tx_powermail_submit extends tslib_pibase {
 		$this->htmlMail->defaultCharset = $GLOBALS['TSFE']->metaCharset; // set current charset
 		$this->htmlMail->addPlain($this->mailcontent[$this->subpart]);
 		$this->htmlMail->setHTML($this->htmlMail->encodeMsg($this->mailcontent[$this->subpart]));
-		$this->htmlMail->send($this->maildata['receiver']);
+		if ($this->email_send) $this->htmlMail->send($this->maildata['receiver']);
 	}
 	
 	
@@ -197,7 +191,7 @@ class tx_powermail_submit extends tslib_pibase {
 			'Referer' => $_SERVER['HTTP_REFERER'],
 			'SP_TZ' => $_SERVER['SP_TZ']
 		);
-		if($this->dbInsert) $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_powermail_mails',$db_values); // DB entry
+		if ($this->dbInsert) $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_powermail_mails',$db_values); // DB entry
 	}
 	
 	

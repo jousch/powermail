@@ -1,5 +1,6 @@
 <?php
 if (!defined ('TYPO3_MODE')) die ('Access denied.');
+$confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['powermail']); // Get backandconfig
 t3lib_extMgm::addUserTSConfig('options.saveDocNew.tx_powermail_fieldsets=1');
 t3lib_extMgm::addUserTSConfig('options.saveDocNew.tx_powermail_fields=1');
 t3lib_extMgm::addPItoST43($_EXTKEY,'pi1/class.tx_powermail_pi1.php','_pi1','CType',0);
@@ -16,7 +17,7 @@ $TYPO3_CONF_VARS['EXTCONF']['cms']['db_layout']['addTables']['tx_powermail_field
 
 
 // Set realurlconf for type = 3131 (needed to get a dynamic JavaScript for formcheck)
-if(t3lib_extMgm::isLoaded('realurl',0)) { // only if realurl is loaded
+if(t3lib_extMgm::isLoaded('realurl',0) && $confArr['disablePMRealUrlConfig'] != 1) { // only if realurl is loaded and automatic configuration should be activated
 	
 	// $TYPO3_CONF_VARS['EXTCONF']['realurl']['_DEFAULT']
 	if(isset($TYPO3_CONF_VARS['EXTCONF']['realurl']['_DEFAULT'])) { // only if array is already set in localconf.php
