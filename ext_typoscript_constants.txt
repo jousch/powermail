@@ -75,12 +75,18 @@ plugin.powermail {
 	# cat=plugin.powermail//370; type=boolean; label= Clear Session: Check if session should be cleared after submit (emails sent)
 	clear.session = 0
 	
-	# cat=plugin.powermail//900; type=boolean; label= OnFocus JavaScript: (De)activate onfocus javascript in fields - removes standard value of (e.g. text-) fields onclick, so the user can click and begin to write
+	# cat=plugin.powermail//900; type=boolean; label= Check for mandatory fields: (De)activate JavaScript check for mandatory fields (and other fields like email, url, etc..).
+	js.mandatorycheck = 1
+	
+	# cat=plugin.powermail//910; type=text; label= Mandatory JS DIV class: Enter your own css class for the mandatory javascript div layer (div layer which is shown, if a field was not filled, etc...)
+	js.mandatordivclass = powermail_mandatory_js
+	
+	# cat=plugin.powermail//920; type=boolean; label= OnFocus JavaScript: (De)activate onfocus javascript in fields - removes standard value of (e.g. text-) fields onclick, so the user can click and begin to write
 	js.onfocus = 1
 	
-	# cat=plugin.powermail//910; type=boolean; label= Init JavaScript: (De)activate init javascript in fields - adds an onblur javascript to each field like init(tx_powermail_pi1[textfeld],textfeld,index.php?id=index,'')
+	# cat=plugin.powermail//930; type=boolean; label= Init JavaScript: (De)activate init javascript in fields - adds an onblur javascript to each field like init(tx_powermail_pi1[textfeld],textfeld,index.php?id=index,'')
 	js.init = 1
 	
-	# cat=plugin.powermail//920; type=boolean; label= Onchange JavaScript: (De)activate onchange javascript for select fields - adds an onchange javascript to all select fields - automatic submit onchange
+	# cat=plugin.powermail//940; type=boolean; label= Onchange JavaScript: (De)activate onchange javascript for select fields - adds an onchange javascript to all select fields - automatic submit onchange
 	js.onchange = 0
 }

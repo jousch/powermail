@@ -19,14 +19,22 @@
 			<label index="locallangmarker_error_file_toolarge">This file is too large:</label>
 			<label index="locallangmarker_error_file_extension">This file extension is not allowed:</label>
 			<label index="error_check_prefix">PowerMail error!! Please fill in this backend fields: </label>
-			<label index="error_check_subject_r">Email receiver subject
-
-			</label>
-			<label index="error_check_recipient">Email address of receiver
-
-			</label>
+			<label index="error_check_subject_r">Email receiver subject</label>
+			<label index="error_check_recipient">Email address of receiver</label>
 			<label index="multiple_forward">Next step</label>
 			<label index="multiple_back">Last step</label>
+			<label index="JSvalidation_label_required">This is a required field</label>
+			<label index="JSvalidation_label_validate_number">Please enter a valid number in this field</label>
+			<label index="JSvalidation_label_validate_digits">Please use numbers only in this field. please avoid spaces or other characters such as dots or commas</label>
+			<label index="JSvalidation_label_validate_alpha">Please use letters only (a-z) in this field</label>
+			<label index="JSvalidation_label_validate_alphanum">Please use only letters (a-z) or numbers (0-9) only in this field. No spaces or other characters are allowed</label>
+			<label index="JSvalidation_label_validate_date">Please enter a valid date</label>
+			<label index="JSvalidation_label_validate_email">Please enter a valid email address (test@test.com)</label>
+			<label index="JSvalidation_label_validate_url">Please enter a valid URL (http://www.test.com)</label>
+			<label index="JSvalidation_label_validate_date_au">Please use this date format: dd/mm/yyyy. For example 17/03/2006 for the 17th of March, 2006</label>
+			<label index="JSvalidation_label_validate_currency_dollar">Please enter a valid $ amount. For example $100.00</label>
+			<label index="JSvalidation_label_validate_selection">Please make a selection</label>
+			<label index="JSvalidation_label_validate_one_required">Please select one of the above options</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="locallangmarker_confirmation_question">Sind diese Angaben korrekt?</label>
@@ -42,14 +50,22 @@
 			<label index="locallangmarker_error_file_toolarge">Diese Datei ist zu groß:</label>
 			<label index="locallangmarker_error_file_extension">Diese Datei Endung ist nicht erlaubt:</label>
 			<label index="error_check_prefix">PowerMail Fehler!! Bitte füllen Sie folgende Felder im Backend aus: </label>
-			<label index="error_check_subject_r">Betreff für Empfängermail
-			
-			</label>
-			<label index="error_check_recipient">Empfänger
-			
-			</label>
+			<label index="error_check_subject_r">Betreff für Empfängermail</label>
+			<label index="error_check_recipient">Empfänger</label>
 			<label index="multiple_forward">Nächster Schritt</label>
 			<label index="multiple_back">Letzter Schritt</label>
+			<label index="JSvalidation_label_required">Das ist ein Pflichtfeld</label>
+			<label index="JSvalidation_label_validate_number">Bitte tragen Sie eine Nummer ein</label>
+			<label index="JSvalidation_label_validate_digits">Bitte tragen Sie eine Nummer ohne Komma oder Punkt ein</label>
+			<label index="JSvalidation_label_validate_alpha">Bitte nutzen Sie nur Buchstaben (a-z)</label>
+			<label index="JSvalidation_label_validate_alphanum">Bitte nutzen Sie hier nur Buchstaben (a-z) oder Zahlen (0-9) nur in diesem Feld. Leer- oder andere Zeichen sind nicht erlaubt</label>
+			<label index="JSvalidation_label_validate_date">Bitte tragen Sie ein korrektes Datum ein</label>
+			<label index="JSvalidation_label_validate_email">Bitte tragen Sie eine gültige E-Mail Adresse ein (test@test.de)</label>
+			<label index="JSvalidation_label_validate_url">Bitte tragen Sie eine gültige URL ein (http://www.test.de)</label>
+			<label index="JSvalidation_label_validate_date_au">Bitte tragen Sie das Datum so ein: dd/mm/yyyy.(Beispiel 17/03/2006)</label>
+			<label index="JSvalidation_label_validate_currency_dollar">Bitte tragen Sie einen gültigen Betrag ein ($100.00)</label>
+			<label index="JSvalidation_label_validate_selection">Bitte treffen Sie eine Auswahl</label>
+			<label index="JSvalidation_label_validate_one_required">Bitte füllen Sie min. 1 Feld aus</label>
 		</languageKey>
 	</data>
 </T3locallang>

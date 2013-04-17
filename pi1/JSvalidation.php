@@ -21,8 +21,7 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-//echo $this->pi_getLL('JSvalidation_label_required');
-//echo '<br /><hr /><br />';
+
 $validationJS = '
 	/*
 	* Really easy field validation with Prototype
@@ -102,7 +101,6 @@ $validationJS = '
 				onSubmit : true,
 				stopOnFirst : false,
 				immediate : false,
-
 				focusOnError : true,
 				useTitles : false,
 				onFormValidate : function(result, form) {},
@@ -164,7 +162,7 @@ $validationJS = '
 					var advice = Validation.getAdvice(name, elm);
 					if(advice == null) {
 						var errorMsg = useTitle ? ((elm && elm.title) ? elm.title : v.error) : v.error;
-						advice = \'<div class="'.$this->conf['js.']['mandatorydivclass'].'" id="advice-\' + name + \'-\' + Validation.getElmID(elm) +\'" style="display:none">\' + errorMsg + \'</div>\'
+						advice = \'<div class="'.$this->conf['js.']['mandatordivclass'].'" id="advice-\' + name + \'-\' + Validation.getElmID(elm) +\'" style="display:none">\' + errorMsg + \'</div>\'
 						switch (elm.type.toLowerCase()) {
 							case \'checkbox\':
 							case \'radio\':
@@ -254,32 +252,32 @@ $validationJS = '
 				});
 	
 	Validation.addAllThese([
-		[\'required\', \''.str_replace("'",'',$this->pi_getLL('JSvalidation_label_required')).'\', function(v) {
+		[\'required\', \''.$this->pi_getLL('JSvalidation_label_required').'\', function(v) {
 					return !Validation.get(\'IsEmpty\').test(v);
 				}],
-		[\'validate-number\', \''.str_replace("'",'',$this->pi_getLL('JSvalidation_label_validate_number')).'\', function(v) {
+		[\'validate-number\', \''.$this->pi_getLL('JSvalidation_label_validate_number').'\', function(v) {
 					return Validation.get(\'IsEmpty\').test(v) || (!isNaN(v) && !/^\s+$/.test(v));
 				}],
-		[\'validate-digits\', \''.str_replace("'",'',$this->pi_getLL('JSvalidation_label_validate_digits')).'\', function(v) {
+		[\'validate-digits\', \''.$this->pi_getLL('JSvalidation_label_validate_digits').'\', function(v) {
 					return Validation.get(\'IsEmpty\').test(v) ||  !/[^\d]/.test(v);
 				}],
-		[\'validate-alpha\', \''.str_replace("'",'',$this->pi_getLL('JSvalidation_label_validate_alpha')).'\', function (v) {
-					return Validation.get(\'IsEmpty\').test(v) ||  /^[a-zA-Z\-\' '.utf8_encode('öäüÖÄÜß').']+$/.test(v)
+		[\'validate-alpha\', \''.$this->pi_getLL('JSvalidation_label_validate_alpha').'\', function (v) {
+					return Validation.get(\'IsEmpty\').test(v) ||  /^[a-zA-Z]+$/.test(v)
 				}],
-		[\'validate-alphanum\', \''.str_replace("'",'',$this->pi_getLL('JSvalidation_label_validate_alphanum')).'\', function(v) {
+		[\'validate-alphanum\', \''.$this->pi_getLL('JSvalidation_label_validate_alphanum').'\', function(v) {
 					return Validation.get(\'IsEmpty\').test(v) ||  !/\W/.test(v)
 				}],
-		[\'validate-date\', \''.str_replace("'",'',$this->pi_getLL('JSvalidation_label_validate_date')).'\', function(v) {
+		[\'validate-date\', \''.$this->pi_getLL('JSvalidation_label_validate_date').'\', function(v) {
 					var test = new Date(v);
 					return Validation.get(\'IsEmpty\').test(v) || !isNaN(test);
 				}],
-		[\'validate-email\', \''.str_replace("'",'',$this->pi_getLL('JSvalidation_label_validate_email')).'\', function (v) {
+		[\'validate-email\', \''.$this->pi_getLL('JSvalidation_label_validate_email').'\', function (v) {
 					return Validation.get(\'IsEmpty\').test(v) || /\w{1,}[@][\w\-]{1,}([.]([\w\-]{1,})){1,3}$/.test(v)
 				}],
-		[\'validate-url\', \''.str_replace("'",'',$this->pi_getLL('JSvalidation_label_validate_url')).'\', function (v) {
+		[\'validate-url\', \''.$this->pi_getLL('JSvalidation_label_validate_url').'\', function (v) {
 					return Validation.get(\'IsEmpty\').test(v) || /^(http|https|ftp):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i.test(v)
 				}],
-		[\'validate-date-au\', \''.str_replace("'",'',$this->pi_getLL('JSvalidation_label_validate_date_au')).'\', function(v) {
+		[\'validate-date-au\', \''.$this->pi_getLL('JSvalidation_label_validate_date_au').'\', function(v) {
 					if(Validation.get(\'IsEmpty\').test(v)) return true;
 					var regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
 					if(!regex.test(v)) return false;
@@ -288,17 +286,17 @@ $validationJS = '
 								(parseInt(RegExp.$1, 10) == d.getDate()) && 
 								(parseInt(RegExp.$3, 10) == d.getFullYear() );
 				}],
-		[\'validate-currency-dollar\', \''.str_replace("'",'',$this->pi_getLL('JSvalidation_label_validate_currency_dollar')).'\', function(v) {
+		[\'validate-currency-dollar\', \''.$this->pi_getLL('JSvalidation_label_validate_currency_dollar').'\', function(v) {
 					// [$]1[##][,###]+[.##]
 					// [$]1###+[.##]
 					// [$]0.##
 					// [$].##
 					return Validation.get(\'IsEmpty\').test(v) ||  /^\$?\-?([1-9]{1}[0-9]{0,2}(\,[0-9]{3})*(\.[0-9]{0,2})?|[1-9]{1}\d*(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/.test(v)
 				}],
-		[\'validate-selection\', \''.str_replace("'",'',$this->pi_getLL('JSvalidation_label_validate_selection')).'\', function(v,elm){
+		[\'validate-selection\', \''.$this->pi_getLL('JSvalidation_label_validate_selection').'\', function(v,elm){
 					return elm.options ? elm.selectedIndex > 0 : !Validation.get(\'IsEmpty\').test(v);
 				}],
-		[\'validate-one-required\', \''.str_replace("'",'',$this->pi_getLL('JSvalidation_label_validate_one_required')).'\', function (v,elm) {
+		[\'validate-one-required\', \''.$this->pi_getLL('JSvalidation_label_validate_one_required').'\', function (v,elm) {
 					var p = elm.parentNode;
 					var options = p.getElementsByTagName(\'INPUT\');
 					return $A(options).any(function(elm) {

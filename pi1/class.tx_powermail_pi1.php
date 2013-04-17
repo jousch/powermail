@@ -65,78 +65,87 @@ class tx_powermail_pi1 extends tslib_pibase {
 		$this->sessionfields = $this->sessions->getSession(0); // give me all piVars from session (without not needed values)
 		
 		// Start main choose
-		if(isset($this->piVars['multiple']) || isset($this->piVars['mailID']) || isset($this->piVars['sendNow'])) {
-			// What kind of function should be showed in frontend
-			if(!$this->piVars['multiple']) { // if multiple is not set
-				if($this->piVars['mailID']) { // submitted
-					if($this->cObj->data['tx_powermail_confirm']) { // Confirm page activated
-					
-						if(!$this->piVars['sendNow']) { // If sendNow is not set
+		if($_GET['type'] != 3131) {
+			if(isset($this->piVars['multiple']) || isset($this->piVars['mailID']) || isset($this->piVars['sendNow'])) {
+				// What kind of function should be showed in frontend
+				if(!$this->piVars['multiple']) { // if multiple is not set
+					if($this->piVars['mailID']) { // submitted
+						if($this->cObj->data['tx_powermail_confirm']) { // Confirm page activated
 						
-							$this->confirmation->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions.
-							if(!$this->check()) { // if all needed fields in backend where filled
-								if(!$this->mandatory->main($this->conf,$this->sessionfields)) { // Mandatory check negative
-									$this->content = $this->confirmation->main($this->content,$this->conf); // Call the confirmation function.
-								} else { // Mandatory check positive
-									$this->content = $this->mandatory->main($this->conf,$this->sessionfields); // Call the mandatory function
-								}
-							}
-							else $this->content = $this->check(); // Error message
+							if(!$this->piVars['sendNow']) { // If sendNow is not set
 							
-						} else { // sendNow is set - so call submit function
-						
+								$this->confirmation->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions.
+								if(!$this->check()) { // if all needed fields in backend where filled
+									if(!$this->mandatory->main($this->conf,$this->sessionfields)) { // Mandatory check negative
+										$this->content = $this->confirmation->main($this->content,$this->conf); // Call the confirmation function.
+									} else { // Mandatory check positive
+										$this->content = $this->mandatory->main($this->conf,$this->sessionfields); // Call the mandatory function
+									}
+								}
+								else $this->content = $this->check(); // Error message
+								
+							} else { // sendNow is set - so call submit function
+							
+								$this->submit->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions.
+								if(!$this->check()) { // if all needed fields in backend where filled
+									if(!$this->mandatory->main($this->conf,$this->sessionfields)) { // Mandatory check negative
+										$this->content = $this->submit->main($this->content,$this->conf); // Call the submit function.
+									} else { // Mandatory check positive
+										$this->content = $this->mandatory->main($this->conf,$this->sessionfields); // Call the mandatory function
+									}
+								}
+								else $this->content = $this->check(); // Error message
+								
+							}
+							
+						} else { // No confirm page active, so start submit
+							
 							$this->submit->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions.
-							if(!$this->check()) { // if all needed fields in backend where filled
+							if(!$this->check()) {
 								if(!$this->mandatory->main($this->conf,$this->sessionfields)) { // Mandatory check negative
 									$this->content = $this->submit->main($this->content,$this->conf); // Call the submit function.
 								} else { // Mandatory check positive
 									$this->content = $this->mandatory->main($this->conf,$this->sessionfields); // Call the mandatory function
-								}
+								}			
 							}
 							else $this->content = $this->check(); // Error message
 							
 						}
-						
-					} else { // No confirm page active, so start submit
-						
-						$this->submit->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions.
-						if(!$this->check()) {
-							if(!$this->mandatory->main($this->conf,$this->sessionfields)) { // Mandatory check negative
-								$this->content = $this->submit->main($this->content,$this->conf); // Call the submit function.
-							} else { // Mandatory check positive
-								$this->content = $this->mandatory->main($this->conf,$this->sessionfields); // Call the mandatory function
-							}			
-						}
-						else $this->content = $this->check(); // Error message
-						
 					}
+				} else { // multiple link is set, so show form again
+					$this->form->init($this->conf,$this); // init
+					if(!$this->check()) $this->content = $this->form->main($this->content,$this->conf); // Show form
+					else $this->content = $this->check(); // Error message
 				}
-			} else { // multiple link is set, so show form again
+				/*
+				if ($this->piVars['basket']) {  // this is used for onBlur in Formfields. Called by AJAX to set the values into a session.
+					
+					$postarray = $GLOBALS['TSFE']->fe_user->getKey("ses", "tx_powermail_pi1"); // first get the stored data
+					$values = $this->piVars; // get the submitted value
+					foreach($values as $k => $v) {
+						if($k != 'basket') {
+							$postarray[$k] = $v; // add new value or overwrite the old one
+							$GLOBALS['TSFE']->fe_user->setKey("ses", "tx_powermail_pi1", $postarray); // Session aufbauen
+							$GLOBALS['TSFE']->storeSessionData(); // Session speichern
+						}
+					}
+					$session = $GLOBALS['TSFE']->fe_user->getKey("ses", "tx_powermail_pi1");
+					print_r($session);
+				}
+				*/
+			} else { // No piVars so show form
 				$this->form->init($this->conf,$this); // init
 				if(!$this->check()) $this->content = $this->form->main($this->content,$this->conf); // Show form
 				else $this->content = $this->check(); // Error message
 			}
-			/*
-			if ($this->piVars['basket']) {  // this is used for onBlur in Formfields. Called by AJAX to set the values into a session.
-				
-				$postarray = $GLOBALS['TSFE']->fe_user->getKey("ses", "tx_powermail_pi1"); // first get the stored data
-				$values = $this->piVars; // get the submitted value
-				foreach($values as $k => $v) {
-					if($k != 'basket') {
-						$postarray[$k] = $v; // add new value or overwrite the old one
-						$GLOBALS['TSFE']->fe_user->setKey("ses", "tx_powermail_pi1", $postarray); // Session aufbauen
-						$GLOBALS['TSFE']->storeSessionData(); // Session speichern
-					}
-				}
-				$session = $GLOBALS['TSFE']->fe_user->getKey("ses", "tx_powermail_pi1");
-				print_r($session);
-			}
-			*/
-		} else { // No piVars so show form
-			$this->form->init($this->conf,$this); // init
-			if(!$this->check()) $this->content = $this->form->main($this->content,$this->conf); // Show form
-			else $this->content = $this->check(); // Error message
+		
+		
+		} else { // typenum 3131 - show js for mandatory
+			include 'JSvalidation.php'; // load JSvalidation.php from pi1 folder (load dynamic js)
+			
+			return $validationJS;
 		}
+		
 
 		return $this->pi_wrapInBaseClass($this->content);
 	}
@@ -147,10 +156,10 @@ class tx_powermail_pi1 extends tslib_pibase {
 		$error = ''; // init
 		$prefix = $this->pi_getLL('error_check_prefix','<strong>PowerMail error</strong> - Please fill in this backend field: ');
 		if (!$this->cObj->data['tx_powermail_subject_r']) { // If subject of receiver is not set
-			$error .= $prefix.$this->pi_getLL('error_check_subject_r','<strong>Email receiver subject</strong><br />'); // Error MSG
+			$error .= $prefix.'<b>'.$this->pi_getLL('error_check_subject_r','<strong>Email receiver subject</strong>').'</b><br />'; // Error MSG
 		}
 		if (!$this->cObj->data['tx_powermail_recipient'] && !$this->cObj->data['tx_powermail_recip_id'] && !$this->cObj->data['tx_powermail_recip_field']) { // If email of receiver is not set
-			$error .= $prefix.$this->pi_getLL('error_check_recipient','<strong>Email address of receiver</strong><br />'); // Error MSG
+			$error .= $prefix.'<b>'.$this->pi_getLL('error_check_recipient','<strong>Email address of receiver</strong>').'</b><br />'; // Error MSG
 		}
 		return $error;
 	}

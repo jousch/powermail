@@ -136,14 +136,11 @@ Object.extend(Validation, {
 				var advice = Validation.getAdvice(name, elm);
 				if(advice == null) {
 					var errorMsg = useTitle ? ((elm && elm.title) ? elm.title : v.error) : v.error;
-					advice = '<div class="<!-- ###DIV_CLASS### -->powermail_mandatory_js<!-- ###DIV_CLASS### -->" id="advice-' + name + '-' + Validation.getElmID(elm) +'" style="display:none">' + errorMsg + '</div>'
+					advice = '<div class="powermail_mandatory_js" id="advice-' + name + '-' + Validation.getElmID(elm) +'" style="display:none">' + errorMsg + '</div>'
 					switch (elm.type.toLowerCase()) {
 						case 'checkbox':
 						case 'radio':
-							/*var p = elm.parentNode; // 20090224 #2694 Powermail update */
-							var p = elm.parentNode.parentNode;
-							advice = '<div class="<!-- ###DIV_CLASS### -->powermail_mandatory_js<!-- ###DIV_CLASS### -->" id="advice-' + name + '-' + Validation.getElmID(p) +'" style="display:none">' + errorMsg + '</div>'
-
+							var p = elm.parentNode;
 							if(p) {
 								new Insertion.Bottom(p, advice);
 							} else {
@@ -151,7 +148,6 @@ Object.extend(Validation, {
 							}
 							break;
 						default:
-							advice = '<div class="<!-- ###DIV_CLASS### -->powermail_mandatory_js<!-- ###DIV_CLASS### -->" id="advice-' + name + '-' + Validation.getElmID(elm) +'" style="display:none">' + errorMsg + '</div>'
 							new Insertion.After(elm, advice);
 				    }
 					advice = Validation.getAdvice(name, elm);
@@ -186,18 +182,7 @@ Object.extend(Validation, {
 		return true;
 	},
 	getAdvice : function(name, elm) {
-		/* return $('advice-' + name + '-' + Validation.getElmID(elm)) || $('advice-' + Validation.getElmID(elm)); // 20090224 #2694 Powermail update */
-		switch (elm.type.toLowerCase()) {
-			case 'checkbox':
-			case 'radio':
-				var p = elm.parentNode.parentNode;
-				advice = $('advice-' + name + '-' + Validation.getElmID(p)) || $('advice-' + Validation.getElmID(p));
-				break;
-
-			default:
-				advice = $('advice-' + name + '-' + Validation.getElmID(elm)) || $('advice-' + Validation.getElmID(elm));
-		}
-		return advice;
+		return $('advice-' + name + '-' + Validation.getElmID(elm)) || $('advice-' + Validation.getElmID(elm));
 	},
 	getElmID : function(elm) {
 		return elm.id ? elm.id : elm.name;
@@ -241,34 +226,32 @@ Validation.add('IsEmpty', '', function(v) {
 			});
 
 Validation.addAllThese([
-	['required', '<!-- ###REQUIRED### -->This is a required field.<!-- ###REQUIRED### -->', function(v) {
+	['required', 'This is a required field.', function(v) {
 				return !Validation.get('IsEmpty').test(v);
 			}],
-	['validate-number', '<!-- ###VALIDATE_REQUIRED### -->Please enter a valid number in this field.<!-- ###VALIDATE_REQUIRED### -->', function(v) {
+	['validate-number', 'Please enter a valid number in this field.', function(v) {
 				return Validation.get('IsEmpty').test(v) || (!isNaN(v) && !/^\s+$/.test(v));
 			}],
-	['validate-digits', '<!-- ###VALIDATE_DIGITS### -->Please use numbers only in this field. please avoid spaces or other characters such as dots or commas.<!-- ###VALIDATE_DIGITS### -->', function(v) {
+	['validate-digits', 'Please use numbers only in this field. please avoid spaces or other characters such as dots or commas.', function(v) {
 				return Validation.get('IsEmpty').test(v) ||  !/[^\d]/.test(v);
 			}],
-	['validate-alpha', '<!-- ###VALIDATE_ALPHA### -->Please use letters only (a-z) in this field.<!-- ###VALIDATE_ALPHA### -->', function (v) {
-				//return Validation.get('IsEmpty').test(v) ||  /^[a-zA-Z]+$/.test(v);
-				return Validation.get('IsEmpty').test(v) || /^[\sa-z\u00C0-\u00FF-]+$/i.test(v);
+	['validate-alpha', 'Please use letters only (a-z) in this field.', function (v) {
+				return Validation.get('IsEmpty').test(v) ||  /^[a-zA-Z]+$/.test(v)
 			}],
-	['validate-alphanum', '<!-- ###VALIDATE_ALPHANUM### -->Please use only letters (a-z) or numbers (0-9) only in this field. No spaces or other characters are allowed.<!-- ###VALIDATE_ALPHANUM### -->', function(v) {
-				//return Validation.get('IsEmpty').test(v) ||  !/\W/.test(v);
-				return Validation.get('IsEmpty').test(v) || /^[\sa-z0-9\u00C0-\u00FF-]+$/i.test(v);
+	['validate-alphanum', 'Please use only letters (a-z) or numbers (0-9) only in this field. No spaces or other characters are allowed.', function(v) {
+				return Validation.get('IsEmpty').test(v) ||  !/\W/.test(v)
 			}],
-	['validate-date', '<!-- ###VALIDATE_DATE### -->Please enter a valid date.<!-- ###VALIDATE_DATE### -->', function(v) {
+	['validate-date', 'Please enter a valid date.', function(v) {
 				var test = new Date(v);
 				return Validation.get('IsEmpty').test(v) || !isNaN(test);
 			}],
-	['validate-email', '<!-- ###VALIDATE_EMAIL### -->Please enter a valid email address. For example fred@domain.com .<!-- ###VALIDATE_EMAIL### -->', function (v) {
-				return Validation.get('IsEmpty').test(v) || /\w{1,}[@][\w\-]{1,}([.]([\w\-]{1,})){1,3}$/.test(v);
+	['validate-email', 'Please enter a valid email address. For example fred@domain.com .', function (v) {
+				return Validation.get('IsEmpty').test(v) || /\w{1,}[@][\w\-]{1,}([.]([\w\-]{1,})){1,3}$/.test(v)
 			}],
-	['validate-url', '<!-- ###VALIDATE_URL### -->Please enter a valid URL.<!-- ###VALIDATE_URL### -->', function (v) {
-				return Validation.get('IsEmpty').test(v) || /^(http|https|ftp):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i.test(v);
+	['validate-url', 'Please enter a valid URL.', function (v) {
+				return Validation.get('IsEmpty').test(v) || /^(http|https|ftp):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i.test(v)
 			}],
-	['validate-date-au', '<!-- ###VALIDATE_DATE_AU### -->Please use this date format: dd/mm/yyyy. For example 17/03/2006 for the 17th of March, 2006.<!-- ###VALIDATE_DATE_AU### -->', function(v) {
+	['validate-date-au', 'Please use this date format: dd/mm/yyyy. For example 17/03/2006 for the 17th of March, 2006.', function(v) {
 				if(Validation.get('IsEmpty').test(v)) return true;
 				var regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
 				if(!regex.test(v)) return false;
@@ -277,36 +260,21 @@ Validation.addAllThese([
 							(parseInt(RegExp.$1, 10) == d.getDate()) && 
 							(parseInt(RegExp.$3, 10) == d.getFullYear() );
 			}],
-	['validate-currency-dollar', '<!-- ###VALIDATE_CURRENCY_DOLLAR### -->Please enter a valid $ amount. For example $100.00 .<!-- ###VALIDATE_CURRENCY_DOLLAR### -->', function(v) {
+	['validate-currency-dollar', 'Please enter a valid $ amount. For example $100.00 .', function(v) {
 				// [$]1[##][,###]+[.##]
 				// [$]1###+[.##]
 				// [$]0.##
 				// [$].##
 				return Validation.get('IsEmpty').test(v) ||  /^\$?\-?([1-9]{1}[0-9]{0,2}(\,[0-9]{3})*(\.[0-9]{0,2})?|[1-9]{1}\d*(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/.test(v)
 			}],
-	['validate-selection', '<!-- ###VALIDATE_SELECTION### -->Please make a selection<!-- ###VALIDATE_SELECTION### -->', function(v,elm){
+	['validate-selection', 'Please make a selection', function(v,elm){
 				return elm.options ? elm.selectedIndex > 0 : !Validation.get('IsEmpty').test(v);
 			}],
-	['validate-one-required', '<!-- ###VALIDATE_ONE_REQUIRED### -->Please select one of the above options.<!-- ###VALIDATE_ONE_REQUIRED### -->', function (v,elm) {
-			// Search for field class powermail_uid###UID-OF-FIELD### e.g. "powermail_uid840"
-			// This is needed because this original library "Really Easy Field Validation" search only 
-			// in the parent element for all checkboxes / radio buttons of a group
-			// We use the css class, because we can`t use the "name" attribute for checkboxes
-			// Powermail chose the name for checkboxes like "check_uid4711_0", "check_uid4711_1", ...
-		var uidFieldClassName = '';
-		$w(elm.className).each(function(value) {
-			if(value.startsWith('powermail_uid')) {
-				uidFieldClassName = value;
-				throw $break;
-			}
-		});
-
-		var options = $$('input.' + uidFieldClassName);
-		return $A(options).any(function(fieldElement) {
-				// 2009-02-24: #2695 Powermail update
-			if(fieldElement.type.toLowerCase() == 'radio' || fieldElement.type.toLowerCase() == 'checkbox') {  
-				return $F(fieldElement);
-			}
-		});
-	}]
+	['validate-one-required', 'Please select one of the above options.', function (v,elm) {
+				var p = elm.parentNode;
+				var options = p.getElementsByTagName('INPUT');
+				return $A(options).any(function(elm) {
+					return $F(elm);
+				});
+			}]
 ]);

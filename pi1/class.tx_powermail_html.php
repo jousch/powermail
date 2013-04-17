@@ -707,7 +707,12 @@ class tx_powermail_html extends tslib_pibase {
 			$this->markerArray['###ID###'] = 'id="'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').'"'; // add label name to markerArray
 			
 			// ###CLASS###
-			$this->markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').'" '; // add class name to markerArray
+			$required = '';
+			if($this->conf['js.']['mandatorycheck'] == 1) { // only if javascript mandatory is activated in constants
+				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $required = 'required '; // add class="required" if javascript mandatory should be activated
+				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'validate') != '') $required .= $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'validate').' '; // add another key in class if javascript mandatory should be activated
+			}  
+			$this->markerArray['###CLASS###'] = 'class="'.$required.'powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').'" '; // add class name to markerArray
 		}
 		
 		// ###SIZE###

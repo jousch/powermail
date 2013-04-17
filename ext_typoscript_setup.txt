@@ -24,7 +24,21 @@ plugin.tx_powermail_pi1 {
 	upload.file_extensions = {$plugin.powermail.upload.file_extensions}
 	upload.filesize = {$plugin.powermail.upload.filesize}
 	clear.session = {$plugin.powermail.clear.session}
+	js.mandatorycheck = {$plugin.powermail.js.mandatorycheck}
+	js.mandatordivclass = {$plugin.powermail.js.mandatordivclass}
 	js.onfocus = {$plugin.powermail.js.onfocus}
 	js.init = {$plugin.powermail.js.init}
 	js.onchange = {$plugin.powermail.js.onchange}
+}
+
+powermailJS = PAGE
+powermailJS {
+	typeNum = 3131
+	10 < plugin.tx_powermail_pi1
+	
+	config {
+		disableAllHeaderCode = 1
+		xhtml_cleaning = 0
+		admPanel = 0
+	}
 }

@@ -38,8 +38,26 @@ class tx_powermail_form extends tslib_pibase {
 	// Function main chooses what to show
 	function main($content, $conf) {
 		// config
-		if(!$GLOBALS['TSFE']->tmpl->setup['config.']['baseURL']) $this->baseurl = 'http://'.$_SERVER['HTTP_HOST'].'/'; // if no baseurl take http_host
+		if (!$GLOBALS['TSFE']->tmpl->setup['config.']['baseURL']) $this->baseurl = 'http://'.$_SERVER['HTTP_HOST'].'/'; // if no baseurl take http_host
 		else $this->baseurl = $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL']; // set baseurl
+		
+		// load mandatory javascript in header if needed
+		if ($this->conf['js.']['mandatorycheck'] == 1) {
+			//include 'validation.php';
+			$js = $this->includeJavaScript("js/mandatoryjs/lib/","prototype.js"); // add file 1
+			$js .= $this->includeJavaScript("js/mandatoryjs/src/","effects.js"); // add file 2
+			$js .= $this->includeJavaScript("js/mandatoryjs/","fabtabulous.js"); // add file 3
+			// add dynamic file (current page with type=3131)
+			$js .= '<script src="'.$this->pibase->cObj->typolink('x', 
+				array(
+					'returnLast'=>'url',
+					'parameter'=>$GLOBALS['TSFE']->id,
+					'additionalParams'=>'&type=3131'
+				)
+			).'" type="text/javascript"></script>';
+			
+			$GLOBALS['TSFE']->additionalHeaderData[$this->extKey] = $js; // write to html header
+		}
 		
 		// what to show
 		if ($this->pibase->cObj->data['tx_powermail_multiple'] == 2) { // If multiple (PHP) active (load tmpl_multiple.html)
@@ -75,6 +93,7 @@ class tx_powermail_form extends tslib_pibase {
 		$this->OuterMarkerArray['###POWERMAIL_NAME###'] = $this->pibase->cObj->data['tx_powermail_title']; // Fill Marker with formname
 		$this->OuterMarkerArray['###POWERMAIL_METHOD###'] = $this->conf['form.']['method']; // Form method
 		$this->OuterMarkerArray['###POWERMAIL_FORM_UID###'] = $this->pibase->cObj->data['uid']; // Form method
+		$this->OuterMarkerArray['###POWERMAIL_MANDATORY_JS###'] = $this->AddMandatoryJS();
 		if($limit) { // If multiple is set
 			$this->OuterMarkerArray['###POWERMAIL_MULTIPLE_BACKLINK###'] = $this->multipleLink(-1); // Backward Link (-1)
 			$this->OuterMarkerArray['###POWERMAIL_MULTIPLE_FORWARDLINK###'] = $this->multipleLink(1); // Forward Link (+1)
@@ -184,6 +203,27 @@ class tx_powermail_form extends tslib_pibase {
 				$_procObj->PM_FormWrapMarkerHook($this); // Open function to manipulate datas
 			}
 		}
+	}
+	
+	// Generates JavaScript HTML output
+	function includeJavaScript($path,$file) {
+		if($file) {
+			$js = "\t".'<script src="'.t3lib_extMgm::siteRelPath($this->extKey).$path.$file.'" type="text/javascript"></script>'."\n";
+			return $js;
+		}
+	}
+	
+	// Add Javascript after form output for mandatory check
+	function AddMandatoryJS() {
+		$js = '
+			<script type="text/javascript">
+				function formCallback(result, form) {
+					window.status = "valiation callback for form \'" + form.id + "\': result = " + result;
+				}
+				var valid = new Validation(\''.$this->OuterMarkerArray['###POWERMAIL_NAME###'].'\', {immediate : true, onFormValidate : formCallback});
+			</script>
+		';
+		return $js;
 	}
 
 	function init(&$conf,&$pibase) {

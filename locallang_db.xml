@@ -101,6 +101,13 @@
 			<label index="tx_powermail_forms.xml.preselect">Country shortage for preselect</label>
 			<label index="tx_powermail_forms.xml.within">Only show this countries</label>
 			<label index="tx_powermail_forms.xml.without">Show list without this countries</label>
+			<label index="tx_powermail_forms.xml.validate">Validate this field for</label>
+			<label index="tx_powermail_forms.xml.validate.1">email-address</label>
+			<label index="tx_powermail_forms.xml.validate.2">URL</label>
+			<label index="tx_powermail_forms.xml.validate.3">digits only</label>
+			<label index="tx_powermail_forms.xml.validate.4">digits only (without comma or point)</label>
+			<label index="tx_powermail_forms.xml.validate.5">letters only</label>
+			<label index="tx_powermail_forms.xml.validate.6">letters and digits only</label>
 			<label index="tx_powermail_forms.xml.error">Please select a fieldtype to continue.</label>
 
 		</languageKey>
@@ -200,6 +207,14 @@
 			<label index="tx_powermail_forms.xml.preselect">Länderkürzel für Vorauswahl</label>
 			<label index="tx_powermail_forms.xml.within">Zeige nur diese Länder</label>
 			<label index="tx_powermail_forms.xml.without">Schließe diese Länder aus Liste aus</label>
+			<label index="tx_powermail_forms.xml.validate">Dieses Feld überprüfen nach</label>
+			<label index="tx_powermail_forms.xml.validate.0">Keine Prüfung</label>
+			<label index="tx_powermail_forms.xml.validate.1">E-Mail-Adresse</label>
+			<label index="tx_powermail_forms.xml.validate.2">URL</label>
+			<label index="tx_powermail_forms.xml.validate.3">nur Zahlen</label>
+			<label index="tx_powermail_forms.xml.validate.4">nur Zahlen (ohne Komma oder Punkt)</label>
+			<label index="tx_powermail_forms.xml.validate.5">nur Buchstaben</label>
+			<label index="tx_powermail_forms.xml.validate.6">nur Buchstaben und Zahlen</label>
 			<label index="tx_powermail_forms.xml.error">Bitte wählen Sie einen Feldtypen um fortzufahren.</label>
 
 		</languageKey>
