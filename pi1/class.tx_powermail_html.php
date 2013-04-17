@@ -200,7 +200,7 @@ class tx_powermail_html extends tslib_pibase {
 				$markerArray['###LABEL_NAME###'] = 'uid'.$this->uid.'_'.$i; // add labelname
 				$markerArray['###ID###'] = 'id="uid'.$this->uid.'_'.$i.'" '; // add labelname
 				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow($optionlines[$i]).'" '; // add labelname
-				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.'powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
+				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
 				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
 				
 				// ###CHECKED###
@@ -419,7 +419,14 @@ class tx_powermail_html extends tslib_pibase {
 			$tag = '<input type="text" ';
 			$tag .= $this->markerArray['###NAME###']; // add name to field
 			$tag .= $this->markerArray['###ID###']; // add id to field
-			if($this->markerArray['###VALUE###'] && $this->markerArray['###VALUE###'] != 'value="0" ') $tag .= $this->markerArray['###VALUE###']; // add value to field
+			
+			// ###VALUE###
+			$value_tag = false;
+			if(intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')) != 0) $value_tag = 'value="'.strftime($this->conf['format.']['datetime'], intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value'))).'" '; // add value to markerArray (don't allow html/php tags)
+			if($this->fe_field && $GLOBALS['TSFE']->fe_user->user[$this->fe_field]) $value_tag = 'value="'.$this->dontAllow(strip_tags($GLOBALS['TSFE']->fe_user->user[$this->fe_field])).'" '; // add value to markerArray if should filled from feuser data
+			if(isset($this->piVarsFromSession['uid'.$this->uid])) $value_tag = 'value="'.$this->dontAllow($this->div_functions->nl2nl2($this->piVarsFromSession['uid'.$this->uid])).'" '; // Overwrite value from session value
+			if($value_tag) $tag .= $value_tag;
+			
 			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')) $tag .= $this->markerArray['###SIZE###']; // add size to field
 			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'readonly')) $tag .= $this->markerArray['###READONLY###']; // add readonly to field
 			$tag .= $this->markerArray['###CLASS###'];
@@ -467,7 +474,14 @@ class tx_powermail_html extends tslib_pibase {
 			$tag = '<input type="text" ';
 			$tag .= $this->markerArray['###NAME###']; // add name to field
 			$tag .= $this->markerArray['###ID###']; // add id to field
-			if($this->markerArray['###VALUE###'] && $this->markerArray['###VALUE###'] != 'value="0" ') $tag .= $this->markerArray['###VALUE###']; // add value to field
+			
+			// ###VALUE###
+			$value_tag = false;
+			if(intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')) != 0) $value_tag = 'value="'.strftime($this->conf['format.']['date'], intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value'))).'" '; // add value to markerArray (don't allow html/php tags)
+			if($this->fe_field && $GLOBALS['TSFE']->fe_user->user[$this->fe_field]) $value_tag = 'value="'.$this->dontAllow(strip_tags($GLOBALS['TSFE']->fe_user->user[$this->fe_field])).'" '; // add value to markerArray if should filled from feuser data
+			if(isset($this->piVarsFromSession['uid'.$this->uid])) $value_tag = 'value="'.$this->dontAllow($this->div_functions->nl2nl2($this->piVarsFromSession['uid'.$this->uid])).'" '; // Overwrite value from session value
+			if($value_tag) $tag .= $value_tag;
+			
 			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')) $tag .= $this->markerArray['###SIZE###']; // add size to field
 			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'readonly')) $tag .= $this->markerArray['###READONLY###']; // add readonly to field
 			$tag .= $this->markerArray['###CLASS###'];
@@ -514,7 +528,14 @@ class tx_powermail_html extends tslib_pibase {
 			$tag = '<input type="text" ';
 			$tag .= $this->markerArray['###NAME###']; // add name to field
 			$tag .= $this->markerArray['###ID###']; // add id to field
-			if($this->markerArray['###VALUE###'] && $this->markerArray['###VALUE###'] != 'value="0" ') $tag .= $this->markerArray['###VALUE###']; // add value to field
+			
+			// ###VALUE###
+			$value_tag = false;
+			if(intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')) != 0) $value_tag = 'value="'.strftime($this->conf['format.']['time'], intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value'))).'" '; // add value to markerArray (don't allow html/php tags)
+			if($this->fe_field && $GLOBALS['TSFE']->fe_user->user[$this->fe_field]) $value_tag = 'value="'.$this->dontAllow(strip_tags($GLOBALS['TSFE']->fe_user->user[$this->fe_field])).'" '; // add value to markerArray if should filled from feuser data
+			if(isset($this->piVarsFromSession['uid'.$this->uid])) $value_tag = 'value="'.$this->dontAllow($this->div_functions->nl2nl2($this->piVarsFromSession['uid'.$this->uid])).'" '; // Overwrite value from session value
+			if($value_tag) $tag .= $value_tag;
+			
 			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')) $tag .= $this->markerArray['###SIZE###']; // add size to field
 			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'readonly')) $tag .= $this->markerArray['###READONLY###']; // add readonly to field
 			$tag .= $this->markerArray['###CLASS###'];
