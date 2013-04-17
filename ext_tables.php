@@ -1,6 +1,6 @@
 <?php
 if (!defined ('TYPO3_MODE')) die ('Access denied.');
-$GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode 
+//$GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode 
 $confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['powermail']); // Get backandconfig
 t3lib_extMgm::allowTableOnStandardPages('tx_powermail_fieldsets');
 

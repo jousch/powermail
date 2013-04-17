@@ -49,7 +49,7 @@ class tx_powermail_pi1 extends tslib_pibase {
 		$this->content = $content;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
-		$GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode
+		//$GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode
 		
 		// Instances
 		$this->div = t3lib_div::makeInstance('tx_powermail_functions_div'); // Create new instance for submit class
