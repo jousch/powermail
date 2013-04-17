@@ -46,6 +46,7 @@ class tx_powermail_form extends tslib_pibase {
 		if ($this->conf['js.']['mandatorycheck'] == 1) {
 			$js .= $this->includeJavaScript("js/mandatoryjs/src/","effects.js"); // add file 2
 			$js .= $this->includeJavaScript("js/mandatoryjs/","fabtabulous.js"); // add file 3
+			$js .= $this->includeJavaScript("js/checkbox/","checkbox.js"); // add file 3
 			
 			// add dynamic file (current page with type=3131)
 			if ($GLOBALS['TSFE']->tmpl->setup['config.']['simulateStaticDocuments'] != '1') { // simulatestaticdocuments is not activated

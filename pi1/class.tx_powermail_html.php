@@ -229,13 +229,21 @@ class tx_powermail_html extends tslib_pibase {
 				$markerArray['###ID###'] = 'id="uid'.$this->uid.'_'.$i.'" '; // add labelname
 				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow(isset($options[$i][1])?$options[$i][1]:$options[$i][0]).'" '; // add value (take value after pipe symbol or all if no pipe: "red | rd")
 				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
+				$markerArray['###HIDDENVALUE###'] = 'value="'.$this->piVarsFromSession['uid'.$this->uid][$i].'"'; // add value for hidden field to markerArray
 				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
 				
 				// ###CHECKED###
-				if ($options[$i][2] == '*') $markerArray['###CHECKED###'] = 'checked="checked" '; // checked from backend
+				if ($options[$i][2] == '*')  {
+				    $markerArray['###CHECKED###'] = 'checked="checked" '; // checked from backend
+    				$markerArray['###HIDDENVALUE###'] = 'value="'.$this->dontAllow(isset($options[$i][1])?$options[$i][1]:$options[$i][0]).'" '; // add value for hidden field to markerArray
+    			}
 				else $markerArray['###CHECKED###'] = ''; // clear
 				if (isset($this->piVarsFromSession['uid'.$this->uid])) { // Preselection from session
-					if (isset($this->piVarsFromSession['uid'.$this->uid][$i])) $markerArray['###CHECKED###'] = 'checked="checked" '; // mark as checked
+					if (isset($this->piVarsFromSession['uid'.$this->uid][$i]) && $this->piVarsFromSession['uid'.$this->uid][$i] != '') {
+					    $markerArray['###CHECKED###'] = 'checked="checked" '; // mark as checked
+        				$markerArray['###HIDDENVALUE###'] = 'value="'.$this->piVarsFromSession['uid'.$this->uid][$i].'"'; // add value for hidden field to markerArray
+        			}
+
 					else $markerArray['###CHECKED###'] = ''; // clear
 				}
 				

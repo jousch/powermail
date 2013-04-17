@@ -46,7 +46,6 @@ class tx_powermail_sessions extends tslib_pibase {
 				$oldPiVars = $this->getSession(0); // Get Old piVars from Session (without not allowed piVars)
 				if(isset($oldPiVars) && is_array($oldPiVars)) $piVars = array_merge($oldPiVars, $piVars); // Add old piVars to new piVars
 			}
-			
 			// Set Session (overwrite all values)
 			$GLOBALS['TSFE']->fe_user->setKey("ses", $this->extKey.'_'.$this->pibase->cObj->data['uid'], $piVars); // Generate Session with piVars array
 			$GLOBALS['TSFE']->storeSessionData(); // Save session

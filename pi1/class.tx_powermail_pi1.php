@@ -51,7 +51,6 @@ class tx_powermail_pi1 extends tslib_pibase {
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
 		
-		
 		// Instances
 		$this->div = t3lib_div::makeInstance('tx_powermail_functions_div'); // Create new instance for submit class
 		$this->sessions = t3lib_div::makeInstance('tx_powermail_sessions'); // New object: session functions
