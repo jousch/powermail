@@ -6,10 +6,20 @@
 	<ROOT>
 		<type>array</type>
 		<el>
+			<name>
+				<TCEforms>
+					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.name</label>
+					<config>
+						<type>input</type>
+						<size>35</size>
+						<max>20</max>
+						<eval>required,trim,lower,alphanum_x,nospace</eval>
+					</config>
+				</TCEforms>
+			</name>
 			<cols>
 				<TCEforms>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.cols</label>
-					<exclude>1</exclude>
 					<config>
 						<type>input</type>
 						<size>5</size>
@@ -19,27 +29,36 @@
 			<rows>
 				<TCEforms>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.rows</label>
-					<exclude>1</exclude>
 					<config>
 						<type>input</type>
 						<size>5</size>
 					</config>
 				</TCEforms>
 			</rows>
-			<maxlength>
+			<wrap>
 				<TCEforms>
-					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.maxlength</label>
-					<exclude>1</exclude>
+					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.wrap</label>
 					<config>
-						<type>input</type>
-						<size>5</size>
+						<type>select</type>
+						<items type="array">
+							<numIndex index="0" type="array">
+								<numIndex index="0">LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.wrap.0</numIndex>
+								<numIndex index="1">0</numIndex>
+							</numIndex>
+							<numIndex index="1" type="array">
+								<numIndex index="0">LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.wrap.1</numIndex>
+								<numIndex index="1">hard</numIndex>
+							</numIndex>
+						</items>
+						<minitems>0</minitems>
+						<maxitems>1</maxitems>
+						<size>1</size>
 					</config>
 				</TCEforms>
-			</maxlength>
+			</wrap>
 			<readonly>
 				<TCEforms>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.readonly</label>
-					<exclude>1</exclude>
 					<config>
 						<type>check</type>
 					</config>
@@ -48,7 +67,6 @@
 			<mandatory>
 				<TCEforms>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.mandatory</label>
-					<exclude>1</exclude>
 					<config>
 						<type>check</type>
 					</config>
@@ -64,37 +82,6 @@
 					</config>
 				</TCEforms>
 			</value>
-			<placeholder>
-				<TCEforms>
-					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.placeholder</label>
-					<exclude>1</exclude>
-					<config>
-						<type>input</type>
-						<size>35</size>
-					</config>
-				</TCEforms>
-			</placeholder>
-			<name>
-				<TCEforms>
-					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.name</label>
-					<config>
-						<type>user</type>
-						<userFunc>user_powermail_tx_powermail_uid->main</userFunc>
-						<field>text</field>
-					</config>
-				</TCEforms>
-			</name>
-			<example>
-				<TCEforms>
-					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.example</label>
-					<exclude>1</exclude>
-					<config>
-						<type>user</type>
-						<userFunc>user_powermail_tx_powermail_example->main</userFunc>
-						<field>textarea</field>
-					</config>
-				</TCEforms>
-			</example>
 		</el>
 	</ROOT>
 </T3DataStructure>

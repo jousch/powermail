@@ -3,7 +3,7 @@
 /***************************************************************
  * Extension Manager/Repository config file for ext "powermail".
  *
- * Auto generated 09-01-2013 13:07
+ * Auto generated 17-04-2013 11:13
  *
  * Manual updates:
  * Only the data in the array - everything else is removed by next
@@ -12,34 +12,32 @@
 
 $EM_CONF[$_EXTKEY] = array (
 	'title' => 'powermail',
-	'description' => 'Powermail is a well-known, powerful and easy to use mailform extension with a lots of features (spam prevention, marketing, double-optin, etc...)',
+	'description' => 'Powerful and easy mailform extension with many features like database storing, different HTML templates for sender and receiver, morestep forms, and many more...',
 	'category' => 'plugin',
 	'shy' => 0,
-	'version' => '2.0.5',
+	'version' => '0.1.3',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
 	'loadOrder' => '',
 	'module' => '',
-	'state' => 'beta',
+	'state' => 'alpha',
 	'uploadfolder' => 0,
-	'createDirs' => 'uploads/tx_powermail',
+	'createDirs' => '',
 	'modify_tables' => '',
-	'clearcacheonload' => 0,
+	'clearcacheonload' => 1,
 	'lockType' => '',
-	'author' => 'Powermail dev team',
-	'author_email' => 'alexander.kellner@in2code.de',
-	'author_company' => 'in2code.de',
+	'author' => 'Mischa HeiÃÂmann, Alexander Kellner',
+	'author_email' => 'typo3@heissmann.org, alexander.kellner@einpraegsam.net',
+	'author_company' => '',
 	'CGLcompliance' => NULL,
 	'CGLcompliance_note' => NULL,
 	'constraints' => 
 	array (
 		'depends' => 
 		array (
-			'typo3' => '4.6.0-7.0.0',
-			'cms' => '',
-			'extbase' => '',
-			'fluid' => '',
+			'php' => '4.0.0-0.0.0',
+			'typo3' => '4.1.0-0.0.0',
 		),
 		'conflicts' => 
 		array (

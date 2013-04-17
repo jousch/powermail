@@ -23,17 +23,6 @@
 					</config>
 				</TCEforms>
 			</alt>
-			<example>
-				<TCEforms>
-					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.example</label>
-					<exclude>1</exclude>
-					<config>
-						<type>user</type>
-						<userFunc>user_powermail_tx_powermail_example->main</userFunc>
-						<field>submitgraphic</field>
-					</config>
-				</TCEforms>
-			</example>
 		</el>
 	</ROOT>
 </T3DataStructure>
