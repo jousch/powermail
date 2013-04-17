@@ -43,41 +43,41 @@ plugin.powermail {
 	
 	
 	
-	# cat=plugin.powermail_additionalconfig//400; type=text; label= Exclude fields from marker ALL: Exclude some fields from marker ###POWERMAIL_ALL### (e.g.: ###UID14###,###UID22### or UID14,UID22)
+	# cat=plugin.powermail_additionalconfig//400; type=text; label= Standard sender address: This email address is important, if no sender field was chosen in the backend, so this email address will be used for the sender (###DOMAIN### will be replaced with current domain like test.com)
+	email.noreply = noreply@###DOMAIN###
+	
+	# cat=plugin.powermail_additionalconfig//410; type=text; label= Exclude fields from marker ALL: Exclude some fields from marker ###POWERMAIL_ALL### (e.g.: ###UID14###,###UID22### or UID14,UID22)
 	markerALL.notIn = 
 	
-	# cat=plugin.powermail_additionalconfig//410; type=text; label= Form method: use post or get as post format (details see on selfhtml.org)
+	# cat=plugin.powermail_additionalconfig//420; type=text; label= Form method: use post or get as post format (details see on selfhtml.org)
 	form.method = post
 	
-	# cat=plugin.powermail_additionalconfig//420; type=text; label= Datetime format: Frontend datetime format if datetime field is in use (see http://php.net/manual/function.strftime.php for strftime details)
+	# cat=plugin.powermail_additionalconfig//430; type=text; label= Datetime format: Frontend datetime format if datetime field is in use (see http://php.net/manual/function.strftime.php for strftime details)
 	format.datetime = %H:%M %d-%m-%Y
 	
-	# cat=plugin.powermail_additionalconfig//430; type=text; label= Date format: Frontend date format if date field is in use (see http://php.net/manual/function.strftime.php for strftime details)
+	# cat=plugin.powermail_additionalconfig//440; type=text; label= Date format: Frontend date format if date field is in use (see http://php.net/manual/function.strftime.php for strftime details)
 	format.date = %d-%m-%Y
 	
-	# cat=plugin.powermail_additionalconfig//440; type=text; label= Date format: Frontend time format if time field is in use (see http://php.net/manual/function.strftime.php for strftime details)
-	format.time = %H:%M
-	
-	# cat=plugin.powermail_additionalconfig//450; type=text; label= Allowed tags in labels: Allow some tags for label fields
+	# cat=plugin.powermail_additionalconfig//460; type=text; label= Allowed tags in labels: Allow some tags for label fields
 	label.allowTags = <p><br><b><strong><a>
 	
-	# cat=plugin.powermail_additionalconfig//460; type=text; label= Add symbol for mandatory fields: If any field is a mandatory field, add this at the end of the label
+	# cat=plugin.powermail_additionalconfig//470; type=text; label= Add symbol for mandatory fields: If any field is a mandatory field, add this at the end of the label
 	mandatory.symbol = *
 	
-	# cat=plugin.powermail_additionalconfig//470; type=wrap; label= Wrap mandatory symbol: You can wrap the mandatory symbol with any html code
+	# cat=plugin.powermail_additionalconfig//480; type=wrap; label= Wrap mandatory symbol: You can wrap the mandatory symbol with any html code
 	mandatory.wrap = <span class="powermail_mandatory">|</span>
 	
-	# cat=plugin.powermail_additionalconfig//480; type=options[sr_freecap,captcha]; label= Use captcha extension: If you have installed sr_freecap and captcha, you can select which extension should be used
+	# cat=plugin.powermail_additionalconfig//490; type=options[sr_freecap,captcha]; label= Use captcha extension: If you have installed sr_freecap and captcha, you can select which extension should be used
 	captcha.use = sr_freecap
 	
-	# cat=plugin.powermail_additionalconfig//490; type=wrap; label= Wrap pagebrowser: If you use multiple pages (PHP), you can show the current page like 1 of 3
+	# cat=plugin.powermail_additionalconfig//500; type=wrap; label= Wrap pagebrowser: If you use multiple pages (PHP), you can show the current page like 1 of 3
 	pagebrowser.wrap = <p class="powermail_pagebrowser">|</p>
 	
-	# cat=plugin.powermail_additionalconfig//500; type=text; label= Folder for uploaded files: If you are using min. one upload field in frontend, you can change the folder where the uploaded file is safed
+	# cat=plugin.powermail_additionalconfig//510; type=text; label= Folder for uploaded files: If you are using min. one upload field in frontend, you can change the folder where the uploaded file is safed
 	upload.folder = uploads/tx_powermail/files/
 	
-	# cat=plugin.powermail_additionalconfig//510; type=text; label= Allow files for upload: If you are using min. one upload field in frontend, you can set the allowed extension of this files
-	upload.file_extensions = jpg,gif,png,tif,txt,doc,xls,sxw,html,swf
+	# cat=plugin.powermail_additionalconfig//520; type=text; label= Allow files for upload: If you are using min. one upload field in frontend, you can set the allowed extension of this files (use small letters)
+	upload.file_extensions = jpg,jpeg,gif,png,tif,txt,doc,xls,sxw,html,swf
 	
 	# cat=plugin.powermail_additionalconfig//600; type=int; label= Allow filesize for upload: If you are using min. one upload field in frontend, you can set the allowed filesize of the files (in kB)
 	upload.filesize = 1000

@@ -11,12 +11,12 @@ plugin.tx_powermail_pi1 {
 	allow.email2receiver = {$plugin.powermail.allow.email2receiver}
 	allow.email2sender = {$plugin.powermail.allow.email2sender}
 	allow.dblog = {$plugin.powermail.allow.dblog}
+	email.noreply = {$plugin.powermail.email.noreply}
 	markerALL.notIn = {$plugin.powermail.markerALL.notIn}
 	PID.dblog = {$plugin.powermail.PID.dblog}
 	form.method = {$plugin.powermail.form.method}
 	format.datetime = {$plugin.powermail.format.datetime}
 	format.date = {$plugin.powermail.format.date}
-	format.time = {$plugin.powermail.format.time}
 	label.allowTags = {$plugin.powermail.label.allowTags}
 	mandatory.symbol = {$plugin.powermail.mandatory.symbol}
 	mandatory.wrap = {$plugin.powermail.mandatory.wrap}

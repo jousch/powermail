@@ -26,6 +26,7 @@ require_once(PATH_tslib.'class.tslib_pibase.php');
 require_once(PATH_t3lib.'class.t3lib_htmlmail.php');
 require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_functions_div.php'); // file for div functions
 require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_markers.php'); // file for marker functions
+require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_db.php'); // file for marker functions
 
 
 class tx_powermail_submit extends tslib_pibase {
@@ -34,9 +35,9 @@ class tx_powermail_submit extends tslib_pibase {
 	var $extKey        = 'powermail';	// The extension key.
 	var $pi_checkCHash = true;
 	var $locallangmarker_prefix = 'locallangmarker_'; // prefix for automatic locallangmarker
-	var $noreply_prefix = 'noreply'; // prefix for email sender if not defined (default noreply@currentdomain.com)
 	var $email_send = 1; // Enable email send function (disable for testing only)
 	var $dbInsert = 1; // Enable db insert of every sent item (disable for testing only)
+	var $ok = 0; // disallow sending (standard false)
 
 	function main($content,$conf){
 		$this->conf=$conf;
@@ -45,15 +46,16 @@ class tx_powermail_submit extends tslib_pibase {
 		$this->pi_initPIflexform(); // Init and get the flexform data of the plugin
 
 		// Instances
-		//$this->htmlMail = t3lib_div::makeInstance('t3lib_htmlmail'); // New object: TYPO3 mail functions
 		$this->div_functions = t3lib_div::makeInstance('tx_powermail_functions_div'); // New object: div functions
+		$this->dbImport = t3lib_div::makeInstance('tx_powermail_db'); // New object: For additional db import (if wanted)
 		$this->markers = t3lib_div::makeInstance('tx_powermail_markers'); // New object: TYPO3 mail functions
 		$this->markers->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions.
-		$this->confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
+		$this->confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]); // Get config from localconf.php
 		
 		// Configuration
+		$this->noReplyEmail = str_replace('###DOMAIN###',$_SERVER['SERVER_NAME'],$this->conf['email.']['noreply']); // no reply email address from TS setup
 		$this->sessiondata = $GLOBALS['TSFE']->fe_user->getKey('ses',$this->extKey.'_'.$this->pibase->cObj->data['uid']); // Get piVars from session
-		$this->sender = ($this->pibase->cObj->data['tx_powermail_sender'] ? $this->sessiondata[$this->pibase->cObj->data['tx_powermail_sender']] : $this->noreply_prefix.'@'.$_SERVER['SERVER_NAME']); // email sender
+		$this->sender = ($this->pibase->cObj->data['tx_powermail_sender'] && t3lib_div::validEmail($this->sessiondata[$this->pibase->cObj->data['tx_powermail_sender']]) ? $this->sessiondata[$this->pibase->cObj->data['tx_powermail_sender']] : $this->noReplyEmail); // email sender (if sender is selected and email exists)
 		$this->emailReceiver(); // Receiver mail
 		$this->subject_r = $this->pibase->cObj->data['tx_powermail_subject_r']; // Subject of mails (receiver)
 		$this->subject_s = $this->pibase->cObj->data['tx_powermail_subject_s']; // Subject of mails (sender)
@@ -71,8 +73,9 @@ class tx_powermail_submit extends tslib_pibase {
 		// 2. add hook for manipulation of data after E-Mails where sent
 		if(!$this->hook_submit_beforeEmails()) { // All is ok (no spam maybe)
 			
+			$this->ok = 1; // sending allowed
 			if($this->conf['allow.']['email2receiver']) $this->sendMail('recipient_mail'); // 2a. Email: Generate the Mail for the recipient (if allowed via TS)
-			if($this->conf['allow.']['email2sender']) $this->sendMail('sender_mail'); // 2b. Email: Generate the Mail for the sender (if allowed via TS)
+			if($this->conf['allow.']['email2sender'] && $this->pibase->cObj->data['tx_powermail_sender'] && t3lib_div::validEmail($this->sessiondata[$this->pibase->cObj->data['tx_powermail_sender']])) $this->sendMail('sender_mail'); // 2b. Email: Generate the Mail for the sender (if allowed via TS and sender is selected and email exists)
 			if($this->conf['allow.']['dblog']) $this->saveMail(); // 2c. Safe values to DB (if allowed via TS)
 			
 		} else { // Spam hook is true (maybe spam recognized)
@@ -90,13 +93,16 @@ class tx_powermail_submit extends tslib_pibase {
 		);
 		$this->content = preg_replace("|###.*###|i","",$this->content); // Finally clear not filled markers
 		
-		// 4. Now clear the session if option is set in TS
+		// 4. Additional db storing if wanted
+		$this->dbImport->main($this->conf, $this->sessiondata, $this->ok);
+		
+		// 5. Now clear the session if option is set in TS
 		$this->clearSession();
 		
-		// 5. Clear sessions of captcha
+		// 6. Clear sessions of captcha
 		$this->clearCaptchaSession();
 		
-		// 6. Redirect if wanted
+		// 7. Redirect if wanted
 		$this->redirect();
 		
 		return $this->content; // return HTML for THX Message
@@ -254,26 +260,28 @@ class tx_powermail_submit extends tslib_pibase {
 	
 	// Function redirect() forward the user to a new location after submit
 	function redirect() {
-		if($this->pibase->cObj->data['tx_powermail_redirect']) { // only if redirect target was set in backend
+		if($this->ok) { // only if spamhook is not set
+			if($this->pibase->cObj->data['tx_powermail_redirect']) { // only if redirect target was set in backend
+					
+				$typolink_conf = array (
+				  "returnLast" => "url", // Give me only the string
+				  "parameter" => $this->pibase->cObj->data['tx_powermail_redirect'], // target pid
+				  "useCacheHash" => 0 // Don't use cache
+				);
+				$link = $this->pibase->cObj->typolink('x', $typolink_conf); // Create target url
 				
-			$typolink_conf = array (
-			  "returnLast" => "url", // Give me only the string
-			  "parameter" => $this->pibase->cObj->data['tx_powermail_redirect'], // target pid
-			  "useCacheHash" => 0 // Don't use cache
-			);
-			$link = $this->pibase->cObj->typolink('x', $typolink_conf); // Create target url
-			
-			if (intval($this->pibase->cObj->data['tx_powermail_redirect']) > 0 || strpos($this->pibase->cObj->data['tx_powermail_redirect'],'fileadmin/') !== false) { // PID (intern link) OR file
-				$link = $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'].$link; // Add baseurl to link
-			} 
-			elseif (t3lib_div::validEmail($this->pibase->cObj->data['tx_powermail_redirect'])) { // if email recognized
-				$link = 'mailto:'.$link; // add mailto: 
+				if (intval($this->pibase->cObj->data['tx_powermail_redirect']) > 0 || strpos($this->pibase->cObj->data['tx_powermail_redirect'],'fileadmin/') !== false) { // PID (intern link) OR file
+					$link = $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'].$link; // Add baseurl to link
+				} 
+				elseif (t3lib_div::validEmail($this->pibase->cObj->data['tx_powermail_redirect'])) { // if email recognized
+					$link = 'mailto:'.$link; // add mailto: 
+				}
+				
+				// Header for redirect
+				header("Location: $link"); 
+				header("Connection: close");
+		
 			}
-			
-			// Header for redirect
-			header("Location: $link"); 
-			header("Connection: close");
-	
 		}
 	}
 	
@@ -315,9 +323,11 @@ class tx_powermail_submit extends tslib_pibase {
 	
 	// Function to clear the Session after submitting the form. Will only be cleared when option is selected in Constant-Editor oder set by TS
 	function clearSession() {
-		if($this->conf['clear.']['session'] == 1) {
-			$GLOBALS['TSFE']->fe_user->setKey("ses", $this->extKey.'_'.$this->pibase->cObj->data['uid'], array()); // Generate Session without ERRORS
-			$GLOBALS['TSFE']->storeSessionData(); // Save session*/
+		if($this->ok) { // only if spamhook is not set
+			if($this->conf['clear.']['session'] == 1) { // If set in constants // setup
+				$GLOBALS['TSFE']->fe_user->setKey("ses", $this->extKey.'_'.$this->pibase->cObj->data['uid'], array()); // Generate Session without ERRORS
+				$GLOBALS['TSFE']->storeSessionData(); // Save session*/
+			}
 		}
 	}
 	
