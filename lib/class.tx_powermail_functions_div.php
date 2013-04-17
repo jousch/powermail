@@ -85,13 +85,20 @@ class tx_powermail_functions_div {
 	}
 	
 	
-	// Function clearName() to disable not allowed letters (only A-Z and 0-9 allowed) (e.g. Perfect Extension -> perfectextension)
+	/**
+	 * Function clearName() to disable not allowed letters (only A-Z and 0-9 allowed) (e.g. Perfect Extension -> perfectextension)
+	 *
+	 * @param	string		$string: String to change
+	 * @param	boolean		$strtolower: Should the string be changed to lower characters?
+	 * @param	int			$cut: Should the string cutted after X signs?
+	 * @return	string		$string: Manipulated string
+	 */
 	function clearName($string, $strtolower = 0, $cut = 0) {
-		$string = preg_replace("/[^a-zA-Z0-9]/","",$string); // replace not allowed letters with nothing
-		if($strtolower) $string = strtolower($string); // string to lower if active
-		if($cut) $string = substr($string,0,$cut); // cut after X signs if active
+		$string = preg_replace('/[^a-zA-Z0-9]/' ,'', $string); // replace not allowed letters with nothing
+		if ($strtolower) $string = strtolower($string); // string to lower if active
+		if ($cut) $string = substr($string, 0, $cut); // cut after X signs if active
 		
-		if(isset($string)) return $string;
+		if (!empty($string)) return $string;
 	}
 	
 	

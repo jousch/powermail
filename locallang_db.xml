@@ -74,6 +74,7 @@
 			<label index="tx_powermail_mails.Referer">Link to page with form</label>
 			<label index="tx_powermail_mails.SP_TZ">User location</label>
 			<label index="tx_powermail_mails.Additional">Additional information</label>
+			<label index="tx_powermail_mails.feuser">Filled out from FE_User</label>
 			<label index="tt_content.list_type_pi1">Powermail</label>
 
 			<!--For BE-Labels-->
@@ -217,6 +218,7 @@
 			<label index="tx_powermail_mails.Referer">URL der Seite des verwendeten Formulares</label>
 			<label index="tx_powermail_mails.SP_TZ">Sender Ort</label>
 			<label index="tx_powermail_mails.Additional">Weitere Informationen</label>
+			<label index="tx_powermail_mails.feuser">Ausgefüllt von FE_User</label>
 			<label index="tt_content.list_type_pi1">Powermail</label>
 
 			<!--For BE-Labels-->
@@ -356,6 +358,7 @@
 			<label index="tx_powermail_mails.Referer">Link to page with form</label>
 			<label index="tx_powermail_mails.SP_TZ">User location</label>
 			<label index="tx_powermail_mails.Additional">Additional information</label>
+			<label index="tx_powermail_mails.feuser">Filled out from FE_User</label>
 			<label index="tt_content.list_type_pi1">Powermail</label>
 
 			<!--For BE-Labels-->

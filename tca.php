@@ -2,6 +2,11 @@
 if (!defined ('TYPO3_MODE')) die ('Access denied.');
 $confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['powermail']); // Get backandconfig
 
+
+#######################################
+### TABLE 1: tx_powermail_fieldsets ###
+#######################################
+
 $TCA['tx_powermail_fieldsets'] = array (
 	'ctrl' => $TCA['tx_powermail_fieldsets']['ctrl'],
 	'interface' => array (
@@ -121,15 +126,33 @@ $TCA['tx_powermail_fieldsets'] = array (
 				),
 			)
 		),
-		'class' => array (        
-            'exclude' => 1,        
-            'label' => 'LLL:EXT:powermail/locallang_db.xml:tx_powermail_fieldsets.class',        
+		'class' => array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:powermail/locallang_db.xml:tx_powermail_fieldsets.class',        
             'config' => array (
-                'type' => 'input',
-                'size' => '10',
-				'eval' => 'trim,lower,alphanum_x'
-            )
-        ),
+				'type' => 'select',
+				'eval' => 'trim,lower,alphanum_x',
+				'items' => array (
+					array (
+						'', 
+						''
+					),
+					array (
+						'Style 1',
+						'style1'
+					),
+					array (
+						'Style 2',
+						'style2'
+					),
+					array (
+						'Style 3',
+						'style3'
+					)
+				),
+				'allowNonIdValues' => 1
+			)
+		)
 	),
 	'types' => array (
 		'0' => array (
@@ -144,6 +167,21 @@ $TCA['tx_powermail_fieldsets'] = array (
 		)
 	)
 );
+
+
+
+// Check if css input field should be shown instead of selection
+if ($confArr['cssSelection'] == 0) { // selector box is not wanted
+	$TCA['tx_powermail_fieldsets']['columns']['class'] = array (        
+		'exclude' => 1,        
+		'label' => 'LLL:EXT:powermail/locallang_db.xml:tx_powermail_fieldsets.class',        
+		'config' => array (
+			'type' => 'input',
+			'size' => '10',
+			'eval' => 'trim,lower,alphanum_x'
+		)
+	);
+}
 
 // Make powermail available in older TYPO3 version (fieldsets)
 if (t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.1.0') || $confArr['useIRRE'] == 0) { // if current version older than 4.1 or IRRE deaktivated in ext manager
@@ -161,6 +199,14 @@ if (t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.1.0') ||
 	$TCA['tx_powermail_fieldsets']['types']['0']['showitem'] = 'tt_content, ' . $TCA['tx_powermail_fieldsets']['types']['0']['showitem']; // add "tt_content" field in front of all fields
 }
 
+
+
+
+
+
+#######################################
+### TABLE 2: tx_powermail_fields ######
+#######################################
 
 $TCA['tx_powermail_fields'] = array (
 	'ctrl' => $TCA['tx_powermail_fields']['ctrl'],
@@ -345,15 +391,28 @@ $TCA['tx_powermail_fields'] = array (
 				'maxitems' => 1,
 			)
 		),
-		'class' => array (        
-            'exclude' => 1,        
-            'label' => 'LLL:EXT:powermail/locallang_db.xml:tx_powermail_fields.class',        
+		'class' => array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:powermail/locallang_db.xml:tx_powermail_fields.class',        
             'config' => array (
-                'type' => 'input',
-                'size' => '10',
-				'eval' => 'trim,lower,alphanum_x'
-            )
-        ),
+				'type' => 'select',
+				'items' => array (
+					array (
+						'style1', 
+						'style1'
+					),
+					array (
+						'style2', 
+						'style2'
+					),
+					array (
+						'style3', 
+						'style3'
+					)
+				),
+				'allowNonIdValues' => 1
+			)
+		)
 	),
 	'types' => array (
 		'0' => array (
@@ -373,13 +432,26 @@ $TCA['tx_powermail_fields'] = array (
 	)
 );
 
+// Check if css input field should be shown instead of selection
+if ($confArr['cssSelection'] == 0) { // selector box is not wanted
+	$TCA['tx_powermail_fields']['columns']['class'] = array (        
+		'exclude' => 1,        
+		'label' => 'LLL:EXT:powermail/locallang_db.xml:tx_powermail_fields.class',        
+		'config' => array (
+			'type' => 'input',
+			'size' => '10',
+			'eval' => 'trim,lower,alphanum_x'
+		)
+	);
+}
+
 // Check if static_info_tables is loaded. If not, display error on flexform and prevent from executing an SQL-Query
-if(!t3lib_extMgm::isLoaded('static_info_tables',0)) {
+if (!t3lib_extMgm::isLoaded('static_info_tables',0)) {
 	$TCA['tx_powermail_fields']['columns']['flexform']['config']['ds']['countryselect'] = 'FILE:EXT:powermail/lib/def/def_field_countryselect_error.xml';
 }
 
 // Check if date2cal is loaded. If not, show a note
-if(!t3lib_extMgm::isLoaded('date2cal',0)) {
+if (!t3lib_extMgm::isLoaded('date2cal',0)) {
 	$TCA['tx_powermail_fields']['columns']['flexform']['config']['ds']['date'] = 'FILE:EXT:powermail/lib/def/def_field_date_error.xml';
 	$TCA['tx_powermail_fields']['columns']['flexform']['config']['ds']['datetime'] = 'FILE:EXT:powermail/lib/def/def_field_date_error.xml';
 	//$TCA['tx_powermail_fields']['columns']['flexform']['config']['ds']['time'] = 'FILE:EXT:powermail/lib/def/def_field_date_error.xml';
@@ -404,6 +476,12 @@ if(t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.1.0') || 
 
 
 
+
+
+
+#######################################
+### TABLE 3: tx_powermail_mails #######
+#######################################
 
 $TCA['tx_powermail_mails'] = array (
 	'ctrl' => $TCA['tx_powermail_mails']['ctrl'],
@@ -486,6 +564,18 @@ $TCA['tx_powermail_mails'] = array (
 				'rows' => '5',
 			)
 		),
+		'feuser' => array (		
+			'exclude' => 1,		
+			'label' => 'LLL:EXT:powermail/locallang_db.xml:tx_powermail_mails.feuser',		
+			'config' => array (
+				'type' => 'group',
+				'internal_type' => 'db',
+				'allowed' => 'fe_users',
+				'size' => 1,	
+				'minitems' => 0,
+				'maxitems' => 1
+			)
+		),
 		'senderIP' => array (		
 			'exclude' => 1,		
 			'label' => 'LLL:EXT:powermail/locallang_db.xml:tx_powermail_mails.senderIP',		
@@ -528,7 +618,7 @@ $TCA['tx_powermail_mails'] = array (
 		),
 	),
 	'types' => array (
-		'0' => array('showitem' => 'hidden;;1;;1-1-1, formid, recipient, subject_r, sender, content;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_powermail/rte/], piVars, senderIP, UserAgent, Referer, SP_TZ, Additional')
+		'0' => array('showitem' => 'hidden;;1;;1-1-1, formid, recipient, subject_r, sender, content;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_powermail/rte/], piVars, feuser, senderIP, UserAgent, Referer, SP_TZ, Additional')
 	),
 	'palettes' => array (
 		'1' => array('showitem' => '')

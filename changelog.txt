@@ -4,6 +4,14 @@
 
 
 ## Powermail version 1.5.x stable ##
+- Update on 13.11.2009 version 1.5.1
+Bugfix #5265: Refill fields if user go back from confirmation page to form in other FE languages
+Bugfix #5076: Add CSS class does not affect Radiobuttons
+Feature #5323: Redirect target via typoscript stdWrap enabled
+Feature #5271: Show fe_user in list view of mails
+Feature #5228: Custom server side validation of field inputs (via userFunc)
+Feature #5089: Using selectorboxes to choose Field design in Backend
+
 - Update on 21.10.2009 version 1.5.0
 Major Feature #5071: Charts to BE added
 Bugfix #4998: Countryselector Fallback to english

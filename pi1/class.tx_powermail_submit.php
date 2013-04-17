@@ -98,14 +98,14 @@ class tx_powermail_submit extends tslib_pibase {
 		// 3. Additional db storing if wanted
 		$this->dbImport->main($this->conf, $this->sessiondata, $this->cObj, $this->ok);
 		
-		// 4. Now clear the session if option is set in TS
+		// 4. Redirect if wanted
+		$this->redirect();
+		
+		// 5. Now clear the session if option is set in TS
 		$this->clearSession();
 		
-		// 5. Clear sessions of captcha
+		// 6. Clear sessions of captcha
 		$this->clearCaptchaSession();
-		
-		// 6. Redirect if wanted
-		$this->redirect();
 		
 		// 7. Check html templates
 		if (!$this->div->subpartsExists($this->tmpl)) $this->content = $this->pi_getLL('error_templateNotFound', 'Template not found, check path to your powermail templates');
@@ -331,34 +331,48 @@ class tx_powermail_submit extends tslib_pibase {
 	}
 
 	
-	// Function redirect() forward the user to a new location after submit
+	/**
+	 * Function redirect() forward the user to a new location after submit
+	 *
+	 * @return	void
+	 */
 	function redirect() {
 		if ($this->ok) { // only if spamhook is not set
-			if ($this->cObj->data['tx_powermail_redirect']) { // only if redirect target was set in backend
+		
+			// 1. Get Target from Flexform or Typoscript
+			if (!empty($this->cObj->data['tx_powermail_redirect'])) {
+				$target = $this->cObj->data['tx_powermail_redirect']; // get target from flexform in Backend
+			} elseif (is_array($this->conf['redirect.']) && count($this->conf['redirect.']) > 0) {
+				$target = $this->cObj->cObjGetSingle($this->conf['redirect'], $this->conf['redirect.']); // get target from TS
+			} else {
+				$target = 0; // disable target
+			}
+			
+			
+			// 2. Create Redirection Header
+			if ($target) { // only if there is a redirect target
 					
 				$typolink_conf = array (
 				  'returnLast' => 'url', // Give me only the string
-				  'parameter' => $this->cObj->data['tx_powermail_redirect'], // target pid
+				  'parameter' => $target, // target pid
 				  'useCacheHash' => 0, // Don't use cache
 				  'section' => '' // clear section value if any
 				);
 				$link = $this->cObj->typolink('x', $typolink_conf); // Create target url
 				
-				if (intval($this->cObj->data['tx_powermail_redirect']) > 0 || strpos($this->cObj->data['tx_powermail_redirect'], 'fileadmin/') !== false) { // PID (intern link) OR file
-					// if ($GLOBALS['TSFE']->tmpl->setup['config.']['absRefPrefix'] == '') { // only if absRefPrefix is not in use
-					// if ($GLOBALS['TSFE']->tmpl->setup['config.']['absRefPrefix'] == '' && strpos('://', $link) !== false ) { // only if absRefPrefix is not in use AND if the link didn't already have a HTTP-Host
+				if (intval($target) > 0 || strpos($target, 'fileadmin/') !== false) { // PID (intern link) OR file
 					if (!strstr($link, '://')) { // if no http:// could be found in current link
 						$link = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')) . $link; // Add baseurl or host in front of the link
 					} 
 				
-				} elseif (t3lib_div::validEmail($this->cObj->data['tx_powermail_redirect'])) { // if email recognized
-					$link = 'mailto:'.$link; // add mailto: 
+				} elseif (t3lib_div::validEmail($target)) { // if email recognized
+					$link = 'mailto:' . $link; // add mailto: 
 				}
 				
 				$link = preg_replace('#([^:])//#', '$1/', $link); // strip out "//"
 				
 				// Set Header for redirect
-				header('Location: '.$link); 
+				header('Location: ' . $link); 
 				header('Connection: close');
 		
 			}

@@ -1,6 +1,6 @@
 <?php
 if (!defined ('TYPO3_MODE')) die ('Access denied.');
-t3lib_extMgm::addStaticFile($_EXTKEY,'static/default_css/', 'Add default CSS');
+t3lib_extMgm::addStaticFile($_EXTKEY, 'static/default_css/', 'Add default CSS');
 $confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['powermail']); // Get backandconfig
 t3lib_extMgm::allowTableOnStandardPages('tx_powermail_fieldsets');
 
@@ -15,7 +15,7 @@ if (TYPO3_MODE=='BE') {
 	include_once(t3lib_extMgm::extPath('powermail') . 'lib/class.user_powermail_tx_powermail_uid.php');
 	include_once(t3lib_extMgm::extPath('powermail') . 'lib/user_powermail_updateError.php');
 }
-$TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi1'] = 'layout,select_key,pages,recursive';
+$TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY . '_pi1'] = 'layout,select_key,pages,recursive';
 
 t3lib_extMgm::addToInsertRecords('tx_powermail_fieldsets');
 
@@ -39,8 +39,8 @@ $TCA['tx_powermail_fieldsets'] = array (
 			'starttime' => 'starttime',
 			'endtime' => 'endtime'
 		),
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
-		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_powermail_fieldsets.gif',
+		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'tca.php',
+		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY) . 'icon_tx_powermail_fieldsets.gif',
 	),
 	'feInterface' => array (
 		'fe_admin_fieldList' => 'fe_group, form, title, felder, hidden',
@@ -73,8 +73,8 @@ $TCA['tx_powermail_fields'] = array (
 			'starttime' => 'starttime',
 			'endtime' => 'endtime'
 		),
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
-		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_powermail_fields.gif',
+		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'tca.php',
+		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY) . 'icon_tx_powermail_fields.gif',
 	),
 	'feInterface' => array (
 		'fe_admin_fieldList' => 'fieldset, title, name, flexform, value, size, maxsize, mandantory, more, fe_field, hidden',
@@ -99,8 +99,8 @@ $TCA['tx_powermail_mails'] = array (
 		'enablecolumns' => array (		
 			'disabled' => 'hidden'
 		),
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
-		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_powermail_mails.gif',
+		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'tca.php',
+		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY) . 'icon_tx_powermail_mails.gif',
 	),
 	'feInterface' => array (
 		'fe_admin_fieldList' => 'formid, recipient, subject_r, sender, content, piVars, senderIP, UserAgent, Referer, SP_TZ, hidden',
@@ -112,8 +112,8 @@ t3lib_div::loadTCA('tt_content');
 t3lib_extMgm::addPlugin(
 	array(
 		'LLL:EXT:powermail/locallang_db.xml:tt_content.CType_pi1', 
-		$_EXTKEY.'_pi1', 
-		t3lib_extMgm::extRelPath($_EXTKEY).'ext_icon.gif'
+		$_EXTKEY . '_pi1', 
+		t3lib_extMgm::extRelPath($_EXTKEY) . 'ext_icon.gif'
 	),
 	'CType'
 );
@@ -350,7 +350,7 @@ if (strlen($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['powermail']) > 1) unse
 
 t3lib_div::loadTCA('tt_content');
 t3lib_extMgm::addTCAcolumns('tt_content',$tempColumns,1);
-$TCA['tt_content']['types'][$_EXTKEY.'_pi1']['showitem'] = '
+$TCA['tt_content']['types'][$_EXTKEY . '_pi1']['showitem'] = '
 	CType;;4;button;1-1-1, hidden,1-1-1, header;;3;;3-3-3, linkToTop;;;;3-3-3,
 	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div1, tx_powermail_title;;;;2-2-2, tx_powermail_pages;;;;3-3-3, tx_powermail_confirm;;;;3-3-3, tx_powermail_multiple,
 	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div2, tx_powermail_fieldsets;;;;4-4-4, user_powermail_updateError, tx_powermail_preview,
@@ -360,7 +360,7 @@ $TCA['tt_content']['types'][$_EXTKEY.'_pi1']['showitem'] = '
 	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div8' . (t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.2.0') ? '' : ', starttime, endtime');
 	
 // If preview window is deactivated, clear tx_powermail_preview
-if($confArr['usePreview'] != 1) $TCA['tt_content']['types'][$_EXTKEY.'_pi1']['showitem'] = str_replace('tx_powermail_preview,','',$TCA['tt_content']['types'][$_EXTKEY.'_pi1']['showitem']); // remove field
+if($confArr['usePreview'] != 1) $TCA['tt_content']['types'][$_EXTKEY . '_pi1']['showitem'] = str_replace('tx_powermail_preview,','',$TCA['tt_content']['types'][$_EXTKEY . '_pi1']['showitem']); // remove field
 
 
 
@@ -376,7 +376,7 @@ if (t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.2.0')) {
 t3lib_extMgm::addLLrefForTCAdescr('tt_content','EXT:powermail/lang/locallang_csh_tt_content.php');
 
 if (TYPO3_MODE=='BE') {	
-	$TBE_MODULES_EXT['xMOD_db_new_content_el']['addElClasses']['tx_powermail_pi1_wizicon'] = t3lib_extMgm::extPath($_EXTKEY).'pi1/class.tx_powermail_pi1_wizicon.php';
+	$TBE_MODULES_EXT['xMOD_db_new_content_el']['addElClasses']['tx_powermail_pi1_wizicon'] = t3lib_extMgm::extPath($_EXTKEY) . 'pi1/class.tx_powermail_pi1_wizicon.php';
 	t3lib_extMgm::addModule('web', 'txpowermailM1', '', t3lib_extMgm::extPath($_EXTKEY) . 'mod1/');
 }
 ?>

@@ -286,6 +286,19 @@ plugin.tx_powermail_pi1 {
 #		tt_address.company.data = TSFE:fe_user|sesData|powermail_88|uid21|1
 	}
 	
+	
+	### Redirection after submit ###
+	# 	Return a Number: Typolink to the pid
+	# 	Return a URL: Link to an intern or extern URL
+	# 	Return a File: Link to a file (within fileadmin folder)
+#	redirect = COA
+#	redirect {
+#		10 = TEXT
+#		10.value = x
+#		10.typolink.parameter = 100
+#		10.typolink.returnLast = url
+#	}
+	
 }
 
 
