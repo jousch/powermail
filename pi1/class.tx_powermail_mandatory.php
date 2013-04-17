@@ -176,8 +176,8 @@ class tx_powermail_mandatory extends tslib_pibase {
 			if ($res) { // If there is a result
 				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every captcha field
 					
-					if(t3lib_extMgm::isLoaded('sr_freecap',0)) { // use sr_freecap if available
-					
+					if (t3lib_extMgm::isLoaded('sr_freecap',0) && $this->conf['captcha.']['use'] == 'sr_freecap') { // use sr_freecap if available
+						
 						session_start(); // start session
 						if($this->sessionfields['uid'.$row['uid']] == '') { // if captcha value is empty
 							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('error_captcha_empty'); // write error message to session
@@ -190,17 +190,12 @@ class tx_powermail_mandatory extends tslib_pibase {
 							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('error_captcha_wrong'); // write error message to session
 							
 						}
-						// clear session values in submit.php
-						//$_SESSION['sr_freecap_attempts'] = 0; // clear values
-						//$_SESSION['sr_freecap_word_hash'] = false; // clear values
 					}
 					
-					elseif (t3lib_extMgm::isLoaded('captcha',0)) { // use captcha if available
+					elseif (t3lib_extMgm::isLoaded('captcha',0) && $this->conf['captcha.']['use'] == 'captcha') { // use captcha if available
 					
 						session_start(); // start session
 						$captchaStr = $_SESSION['tx_captcha_string']; // get captcha value from session
-						// clear session values in submit.php
-						//$_SESSION['tx_captcha_string'] = ''; // clear value in session
 						
 						if ($this->sessionfields['uid'.$row['uid']] == '') { // if captcha value is empty
 							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('error_captcha_empty'); // write error message to session

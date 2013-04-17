@@ -18,7 +18,7 @@ plugin.powermail {
 	# cat=plugin.powermail_mainconfig/file/050; type=file[html,htm,tmpl,txt]; label= Template File confirmation: HTML-template file to change html code of the confirmation page (if confirmation is active) (see EXT:powermail/templates/tmpl_confirmation.html for an example)
 	template.confirmation = EXT:powermail/templates/tmpl_confirmation.html
 	
-	# cat=plugin.powermail_mainconfig/file/060; type=file[html,htm,tmpl,txt]; label= Template File ALL marker: HTML-template file if you want to use the marker ###ALL### - here you can set the HTML code for each line (see EXT:powermail/templates/tmpl_all.html for an example)
+	# cat=plugin.powermail_mainconfig/file/060; type=file[html,htm,tmpl,txt]; label= Template File ALL marker: HTML-template file if you want to use the marker ###POWERMAIL_ALL### - here you can set the HTML code for each line (see EXT:powermail/templates/tmpl_all.html for an example)
 	template.all = EXT:powermail/templates/tmpl_all.html
 	
 	# cat=plugin.powermail_mainconfig/file/070; type=file[html,htm,tmpl,txt]; label= Template File mandatory: HTML-template file for mandatory page (if any mandatory field was not filled) (see EXT:powermail/templates/tmpl_mandatory.html for an example)
@@ -67,19 +67,25 @@ plugin.powermail {
 	# cat=plugin.powermail_additionalconfig//470; type=wrap; label= Wrap mandatory symbol: You can wrap the mandatory symbol with any html code
 	mandatory.wrap = <span class="powermail_mandatory">|</span>
 	
-	# cat=plugin.powermail_additionalconfig//480; type=wrap; label= Wrap pagebrowser: If you use multiple pages (PHP), you can show the current page like 1 of 3
+	# cat=plugin.powermail_additionalconfig//480; type=options[sr_freecap,captcha]; label= Use captcha extension: If you have installed sr_freecap and captcha, you can select which extension should be used
+	captcha.use = sr_freecap
+	
+	# cat=plugin.powermail_additionalconfig//490; type=wrap; label= Wrap pagebrowser: If you use multiple pages (PHP), you can show the current page like 1 of 3
 	pagebrowser.wrap = <p class="powermail_pagebrowser">|</p>
 	
-	# cat=plugin.powermail_additionalconfig//490; type=text; label= Folder for uploaded files: If you are using min. one upload field in frontend, you can change the folder where the uploaded file is safed
+	# cat=plugin.powermail_additionalconfig//500; type=text; label= Folder for uploaded files: If you are using min. one upload field in frontend, you can change the folder where the uploaded file is safed
 	upload.folder = uploads/tx_powermail/files/
 	
-	# cat=plugin.powermail_additionalconfig//500; type=text; label= Allow files for upload: If you are using min. one upload field in frontend, you can set the allowed extension of this files
+	# cat=plugin.powermail_additionalconfig//510; type=text; label= Allow files for upload: If you are using min. one upload field in frontend, you can set the allowed extension of this files
 	upload.file_extensions = jpg,gif,png,tif,txt,doc,xls,sxw,html,swf
 	
 	# cat=plugin.powermail_additionalconfig//600; type=int; label= Allow filesize for upload: If you are using min. one upload field in frontend, you can set the allowed filesize of the files (in kB)
 	upload.filesize = 1000
+	
+	# cat=plugin.powermail_additionalconfig//610; type=boolean; label= Upload and attach: If checked, all files will be sent as an attachment to the receiver (if disabled, files will only stored on server)
+	upload.attachment = 1
 
-	# cat=plugin.powermail_additionalconfig//610; type=boolean; label= Clear Session: Check if session should be cleared after submit (emails sent)
+	# cat=plugin.powermail_additionalconfig//620; type=boolean; label= Clear Session: Check if session should be cleared after submit (emails sent)
 	clear.session = 0
 	
 	# cat=plugin.powermail_additionalconfig//900; type=boolean; label= Check for mandatory fields: (De)activate JavaScript check for mandatory fields (and other fields like email, url, etc..).

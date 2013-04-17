@@ -60,7 +60,7 @@ class tx_powermail_sessions extends tslib_pibase {
 		if($all == 0) { // delete not allowed values from piVars
 			if(isset($piVars)) {
 				foreach($piVars as $key => $value) { // one loop for every piVar
-					if(!is_numeric(str_replace('uid','',$key))) {
+					if(!is_numeric(str_replace('uid','',$key)) && $key != 'FILE') {
 						unset($piVars[$key]); // delete current value (like mailID or sendnow)
 					}
 				}
@@ -73,13 +73,13 @@ class tx_powermail_sessions extends tslib_pibase {
 	
 	// change Date to manipulate piVars (maybe uploads should be changed, sender email address should be valid, etc..)
 	function changeData($piVars) {
+		
 		// config
 		$this->pi_loadLL();
 		
+		
 		// 1. CHECK FOR UPLOAD FIELDS AND COPY UPLOADED FILE...
 		$this->allowedFileExtensions = t3lib_div::trimExplode(',',$this->conf['upload.']['file_extensions'],1); // get all allowed fileextensions
-		
-		// check for upload fields
 		$this->uids = '';
 		if(is_array($_FILES['tx_powermail_pi1']['name'])) {
 			foreach ($_FILES['tx_powermail_pi1']['name'] as $key => $value) { // one loop for every piVar
@@ -106,7 +106,8 @@ class tx_powermail_sessions extends tslib_pibase {
 							if(in_array($fileinfo['extension'],$this->allowedFileExtensions)) { // if current fileextension is allowed
 								// upload copy move uploaded files to destination
 								if(t3lib_div::upload_copy_move($_FILES['tx_powermail_pi1']['tmp_name']['uid'.$row['uid']], t3lib_div::getFileAbsFileName($this->div_functions->correctPath($this->conf['upload.']['folder']).$newfilename))) {
-									$piVars['uid'.$row['uid']] = $newfilename; // write new filename to session
+									$piVars['uid'.$row['uid']] = $newfilename; // write new filename to session (area for normal fields)
+									$piVars['FILE'][] = $newfilename; // write new filename to session (area for files)
 								} else { // could not be copied (maybe write permission error or wrong path)
 									$piVars['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_error_file_main').' <b>'.$_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']].'</b>'; // write error to session
 								}

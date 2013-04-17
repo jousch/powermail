@@ -45,7 +45,7 @@ class tx_powermail_submit extends tslib_pibase {
 		$this->pi_initPIflexform(); // Init and get the flexform data of the plugin
 
 		// Instances
-		$this->htmlMail = t3lib_div::makeInstance('t3lib_htmlmail'); // New object: TYPO3 mail functions
+		//$this->htmlMail = t3lib_div::makeInstance('t3lib_htmlmail'); // New object: TYPO3 mail functions
 		$this->div_functions = t3lib_div::makeInstance('tx_powermail_functions_div'); // New object: div functions
 		$this->markers = t3lib_div::makeInstance('tx_powermail_markers'); // New object: TYPO3 mail functions
 		$this->markers->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions.
@@ -131,6 +131,8 @@ class tx_powermail_submit extends tslib_pibase {
 			$cc = ''; // no cc
 		}
 		
+		// start main mail function
+		$this->htmlMail = t3lib_div::makeInstance('t3lib_htmlmail'); // New object: TYPO3 mail class
 		$this->htmlMail->start(); // start htmlmail
 		$this->htmlMail->recipient = $receiver; // main receiver email address
 		$this->htmlMail->recipient_copy = $cc; // cc field (other email addresses)
@@ -140,6 +142,18 @@ class tx_powermail_submit extends tslib_pibase {
 		$this->htmlMail->returnPath = $sender; // return path
 		$this->htmlMail->replyto_email = ''; // clear replyto email
 		$this->htmlMail->replyto_name = ''; // clear replyto name
+		
+		// add atachment if neeeded
+		if(isset($this->sessiondata['FILE']) && $this->conf['upload.']['attachment'] == 1) { // if there are uploaded files AND attachment to emails is activated via constants
+			if(is_array($this->sessiondata['FILE']) && $subpart == 'recipient_mail') { // only if array and mail to receiver
+				foreach ($this->sessiondata['FILE'] as $file) { // one loop for every file
+					if (is_file(t3lib_div::getFileAbsFileName($this->div_functions->correctPath($this->conf['upload.']['folder']).$file))) { // If file exists
+						$this->htmlMail->addAttachment($this->div_functions->correctPath($this->conf['upload.']['folder']).$file); // add attachment
+					}
+				}
+			}
+		}
+		
 		$this->htmlMail->charset = $GLOBALS['TSFE']->metaCharset; // set current charset
 		$this->htmlMail->defaultCharset = $GLOBALS['TSFE']->metaCharset; // set current charset
 		$this->htmlMail->addPlain($this->mailcontent[$subpart]);

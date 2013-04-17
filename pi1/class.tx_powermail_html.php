@@ -644,7 +644,8 @@ class tx_powermail_html extends tslib_pibase {
 		if(t3lib_extMgm::isLoaded('captcha',0) || t3lib_extMgm::isLoaded('sr_freecap',0)) { // only if a captcha extension is loaded
 			$this->tmpl['html_captcha'] = tslib_cObj::getSubpart($this->tmpl['all'],'###POWERMAIL_FIELDWRAP_HTML_CAPTCHA###'); // work on subpart
 			
-			if (t3lib_extMgm::isLoaded('sr_freecap',0)) { // use sr_freecap if available
+			if (t3lib_extMgm::isLoaded('sr_freecap',0) && $this->conf['captcha.']['use'] == 'sr_freecap') { // use sr_freecap if available
+				
 				require_once(t3lib_extMgm::extPath('sr_freecap').'pi2/class.tx_srfreecap_pi2.php'); // include freecap class
 				$this->freeCap = t3lib_div::makeInstance('tx_srfreecap_pi2'); // new object
 				$freecaparray = $this->freeCap->makeCaptcha(); // array with freecap marker
@@ -653,12 +654,12 @@ class tx_powermail_html extends tslib_pibase {
 				$this->markerArray['###POWERMAIL_CAPTCHA_PICTURERELOAD###'] = $freecaparray['###SR_FREECAP_CANT_READ###'];
 				$this->markerArray['###LABEL###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'label');
 			
-			} elseif (t3lib_extMgm::isLoaded('captcha',0)) { // use captcha if available
+			} elseif (t3lib_extMgm::isLoaded('captcha',0) && $this->conf['captcha.']['use'] == 'captcha') { // use captcha if available
 			
 				$this->markerArray['###POWERMAIL_CAPTCHA_PICTURE###'] = '<img src="'.t3lib_extMgm::siteRelPath('captcha').'captcha/captcha.php" alt="" class="powermail_captcha powermail_captcha_captcha" />';
 				$this->markerArray['###LABEL###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'label');
 			
-			}
+			} else return 'Powermail ERROR: Please check if you have chosen the right captcha extension in the powermail constants!';
 			
 			$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_captcha'],$this->markerArray); // substitute Marker in Template
 			$content = preg_replace("|###.*###|i","",$content); // Finally clear not filled markers

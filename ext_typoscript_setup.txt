@@ -20,10 +20,12 @@ plugin.tx_powermail_pi1 {
 	label.allowTags = {$plugin.powermail.label.allowTags}
 	mandatory.symbol = {$plugin.powermail.mandatory.symbol}
 	mandatory.wrap = {$plugin.powermail.mandatory.wrap}
+	captcha.use = {$plugin.powermail.captcha.use}
 	pagebrowser.wrap = {$plugin.powermail.pagebrowser.wrap}
 	upload.folder = {$plugin.powermail.upload.folder}
 	upload.file_extensions = {$plugin.powermail.upload.file_extensions}
 	upload.filesize = {$plugin.powermail.upload.filesize}
+	upload.attachment = {$plugin.powermail.upload.attachment}
 	clear.session = {$plugin.powermail.clear.session}
 	js.mandatorycheck = {$plugin.powermail.js.mandatorycheck}
 	js.mandatorydivclass = {$plugin.powermail.js.mandatorydivclass}
