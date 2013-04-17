@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2008 Mischa Hei√ümann, Alexander Kellner <typo3@heissmann.org, alexander.kellner@wunschtacho.de>
+*  (c) 2008 Mischa Heiﬂmann, Alexander Kellner <typo3@heissmann.org, alexander.kellner@wunschtacho.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,6 +29,7 @@ require_once('conf.php');
 require_once($BACK_PATH.'init.php');
 require_once($BACK_PATH.'template.php');
 require_once('class.tx_powermail_belist.php'); // include Backend list function
+require_once('../lib/class.tx_powermail_functions_div.php'); // include div functions
 
 $LANG->includeLLFile('EXT:powermail/mod1/locallang.xml');
 require_once(PATH_t3lib.'class.t3lib_scbase.php');
@@ -40,11 +41,11 @@ $BE_USER->modAccess($MCONF,1);	// This checks permissions and exits if the users
 /**
  * Module 'Powermail' for the 'powermail' extension.
  *
- * @author	Mischa Hei√ümann, Alexander Kellner <typo3@heissmann.org, alexander.kellner@wunschtacho.de>
+ * @author	Mischa Heiﬂmann, Alexander Kellner <typo3@heissmann.org, alexander.kellner@wunschtacho.de>
  * @package	TYPO3
  * @subpackage	tx_powermail
  */
-class  tx_powermail_module1 extends t3lib_SCbase {
+class tx_powermail_bedetails extends t3lib_SCbase {
 	var $pageinfo;
 	
 	function main()	{
@@ -98,7 +99,7 @@ class  tx_powermail_module1 extends t3lib_SCbase {
 	
 			$this->content.=$this->doc->spacer(10);
 		} else {
-				// If no access or if ID == zero
+			// If no access or if ID == zero
 	
 			$this->doc = t3lib_div::makeInstance('mediumDoc');
 			$this->doc->backPath = $BACK_PATH;
@@ -108,19 +109,6 @@ class  tx_powermail_module1 extends t3lib_SCbase {
 			$this->content.=$this->doc->spacer(5);
 			$this->content.=$this->doc->spacer(10);
 		}
-	}
-	
-	// Dropdown for menu
-	function menuConfig()	{
-		global $LANG;
-		$this->MOD_MENU = Array (
-			'function' => Array (
-				'1' => $LANG->getLL('function1'),
-				//'2' => $LANG->getLL('function2'),
-				//'3' => $LANG->getLL('function3'),
-			)
-		);
-		parent::menuConfig();
 	}
 	
 	// Final output
@@ -137,11 +125,37 @@ class  tx_powermail_module1 extends t3lib_SCbase {
 			case 1:
 			default:
 				$this->belist = t3lib_div::makeInstance('tx_powermail_belist');
-				$this->content .= $this->belist->main($this->id,$BACK_PATH);
+				$this->content .= $this->belist->main($this->id,$BACK_PATH,$_GET['mailID']);
+				$this->getDetails();
 			break;
-			case 2:
-				$this->content = 'xx';
-			break;
+		}
+	}
+	
+	// Get details of an email
+	function getDetails() {
+		$this->divfunctions = t3lib_div::makeInstance('tx_powermail_functions_div'); // make instance with dif functions
+		$this->content .= '<br /><br />';
+		
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
+			'piVars',
+			'tx_powermail_mails',
+			$where_clause = 'hidden = 0 AND deleted = 0 AND uid = '.$_GET['mailID'],
+			$groupBy = '',
+			$orderBy = '',
+			$limit = ''
+		);
+		if ($res) $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		if (isset($row)) { // if is set
+			$values = t3lib_div::xml2array($row['piVars'],'pivars'); // xml2array
+			
+			$this->content .= '<table>';
+			foreach ($values as $key => $value) { // one loop for every piVar
+				$this->content .= '<tr>';
+				$this->content .= '<td style="padding: 0 5px;"><strong>'.$key.':</strong></td>'; // write table cell
+				$this->content .= '<td style="padding: 0 5px;">'.$this->divfunctions->linker($value,' style="text-decoration: underline;"').'</td>'; // write table cell
+				$this->content .= '</tr>';
+			}
+			$this->content .= '</table>';
 		}
 	}
 	
@@ -155,19 +169,19 @@ class  tx_powermail_module1 extends t3lib_SCbase {
 
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/powermail/mod1/index.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/powermail/mod1/index.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/powermail/mod1/tx_powermail_bedetails.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/powermail/mod1/tx_powermail_bedetails.php']);
 }
 
 
 
 
 // Make instance:
-$SOBE = t3lib_div::makeInstance('tx_powermail_module1');
+$SOBE = t3lib_div::makeInstance('tx_powermail_bedetails');
 $SOBE->init();
 
 // Include files?
-foreach($SOBE->include_once as $INC_FILE)	include_once($INC_FILE);
+foreach($SOBE->include_once as $INC_FILE) include_once($INC_FILE);
 
 $SOBE->main();
 $SOBE->printContent();

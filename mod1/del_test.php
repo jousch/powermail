@@ -110,19 +110,6 @@ class  tx_powermail_module1 extends t3lib_SCbase {
 		}
 	}
 	
-	// Dropdown for menu
-	function menuConfig()	{
-		global $LANG;
-		$this->MOD_MENU = Array (
-			'function' => Array (
-				'1' => $LANG->getLL('function1'),
-				//'2' => $LANG->getLL('function2'),
-				//'3' => $LANG->getLL('function3'),
-			)
-		);
-		parent::menuConfig();
-	}
-	
 	// Final output
 	function printContent()	{
 		$this->content.=$this->doc->endPage();

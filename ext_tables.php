@@ -249,5 +249,9 @@ $TCA['tt_content']['ctrl']['dividers2tabs'] = $confArr['noTabDividers']?FALSE:TR
 
 t3lib_extMgm::addLLrefForTCAdescr('tt_content','EXT:powermail/lang/locallang_csh_tt_content.php');
 
-if (TYPO3_MODE=="BE")	$TBE_MODULES_EXT["xMOD_db_new_content_el"]["addElClasses"]["tx_powermail_pi1_wizicon"] = t3lib_extMgm::extPath($_EXTKEY).'pi1/class.tx_powermail_pi1_wizicon.php';
+if (TYPO3_MODE=="BE") {	
+	$TBE_MODULES_EXT["xMOD_db_new_content_el"]["addElClasses"]["tx_powermail_pi1_wizicon"] = t3lib_extMgm::extPath($_EXTKEY).'pi1/class.tx_powermail_pi1_wizicon.php';
+	t3lib_extMgm::addModule('web','txpowermailM1','',t3lib_extMgm::extPath($_EXTKEY).'mod1/');
+	
+}
 ?>
