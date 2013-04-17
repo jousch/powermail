@@ -63,6 +63,7 @@ class tx_powermail_html extends tslib_pibase {
 		// Main functions
 		$this->GetSessionValue(); // get value from session (if any)
 		$this->setGlobalMarkers(); // set global markers
+		$this->html_hook1(); // adds hook to manipulate some stuff
 
 		// selection
 		if($this->type) { // If type exists
@@ -142,7 +143,7 @@ class tx_powermail_html extends tslib_pibase {
 			$this->content = 'POWERMAIL: <strong>no field type</strong> in backend selected (field uid '.$row['f_uid'].')<br />'; // errormessage
 		}
 		
-		$this->html_hook(); // adds hook to manipulate content before return
+		$this->html_hook2(); // adds hook to manipulate content before return
 		if (!$this->div->subpartsExists($this->tmpl)) $this->content = $this->pi_getLL('error_templateNotFound', 'Template not found, check path to your powermail templates').'<br />';
 		
 		if(isset($this->content)) return $this->content;
@@ -661,7 +662,7 @@ class tx_powermail_html extends tslib_pibase {
 	 */
 	function html_countryselect() {
 		
-		if(t3lib_extMgm::isLoaded('static_info_tables',0)) { // only if static_info_tables is loaded
+		if (t3lib_extMgm::isLoaded('static_info_tables',0)) { // only if static_info_tables is loaded
 			$this->tmpl['html_countryselect']['all'] = tslib_cObj::getSubpart($this->tmpl['all'],'###POWERMAIL_FIELDWRAP_HTML_COUNTRYSELECT###'); // work on subpart 1
 			$this->tmpl['html_countryselect']['item'] = tslib_cObj::getSubpart($this->tmpl['html_countryselect']['all'],'###ITEM###'); // work on subpart 2
 			$content_item = ''; $valuearray = array(); $longvaluearray = array(); // init
@@ -677,9 +678,9 @@ class tx_powermail_html extends tslib_pibase {
 			
 			// Give me all needed fields from static_info_tables
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
-				'uid,cn_iso_2,cn_short_local,cn_short_'.$uselang.' cn_short,uid',
+				'uid, cn_iso_2, cn_short_local, cn_short_'.$uselang.' cn_short,uid',
 				'static_countries',
-				$where_clause = '1=1'.$whereadd,
+				$where_clause = '1=1' . $whereadd,
 				$groupBy = '',
 				$orderBy = 'cn_short',
 				$limit = ''
@@ -696,7 +697,7 @@ class tx_powermail_html extends tslib_pibase {
 					if ($row['uid'] == $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'preselect') && $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'preselect') > 0) $markerArray['###SELECTED###'] = ' selected="selected"'; // preselect one country
 					else $markerArray['###SELECTED###'] = '';
 					if (isset($this->piVarsFromSession['uid'.$this->uid])) { // if there is a session entry
-						if ($this->piVarsFromSession['uid'.$this->uid] == $row['cn_iso_2'] || $this->piVarsFromSession['uid'.$this->uid] == $row['cn_short']) {
+						if ($this->piVarsFromSession['uid'.$this->uid] == $row['cn_iso_2'] || $this->piVarsFromSession['uid'.$this->uid] == $row['cn_short']) { // check for short or long value
 							$markerArray['###SELECTED###'] = ' selected="selected"'; // preselect one country
 						} else $markerArray['###SELECTED###'] = '';
 					}
@@ -986,8 +987,19 @@ class tx_powermail_html extends tslib_pibase {
 	}
 	
 	
-	// function html_hook() to add a hook at the end of this file to manipulate content
-	function html_hook() {
+	// function html_hook1() to add a hook to manipulate some content
+	function html_hook1() {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FieldWrapMarkerHook1'])) { // Adds hook for processing of extra global markers
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FieldWrapMarkerHook1'] as $_classRef) {
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$_procObj->PM_FieldWrapMarkerHook1($this->uid, $this->xml, $this->type, $this->title, $this->markerArray, $this->piVarsFromSession, $this); // Get new marker Array from other extensions
+			}
+		}
+	}
+	
+	
+	// function html_hook2() to add a hook at the end of this file to manipulate content
+	function html_hook2() {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FieldWrapMarkerHook'])) { // Adds hook for processing of extra global markers
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FieldWrapMarkerHook'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);

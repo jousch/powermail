@@ -130,7 +130,7 @@ class tx_powermail_form extends tslib_pibase {
 
 		// Give me all needed fieldsets
 		$res1 = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
-			'uid,title',
+			'*', // 'uid,title', before
 			'tx_powermail_fieldsets',
 			$where_clause = 'tt_content = '.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']).tslib_cObj::enableFields('tx_powermail_fieldsets'),
 			$groupBy = '',
@@ -143,7 +143,7 @@ class tx_powermail_form extends tslib_pibase {
 
 				// Give me all fields in current fieldset, which are related to current content
 				$res2 = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
-					'tx_powermail_fieldsets.uid fs_uid, tx_powermail_fields.uid f_uid, tx_powermail_fieldsets.felder fs_fields, tx_powermail_fields.title fs_title, tx_powermail_fields.title f_title, tx_powermail_fields.formtype f_type, tx_powermail_fields.flexform f_field, tt_content.tx_powermail_title c_title, tx_powermail_fields.fe_field f_fefield',
+					'tx_powermail_fieldsets.uid fs_uid, tx_powermail_fields.uid f_uid, tx_powermail_fieldsets.felder fs_fields, tx_powermail_fieldsets.title fs_title, tx_powermail_fields.title f_title, tx_powermail_fields.formtype f_type, tx_powermail_fields.flexform f_field, tt_content.tx_powermail_title c_title, tx_powermail_fields.fe_field f_fefield',
 					'tx_powermail_fieldsets LEFT JOIN tx_powermail_fields ON (tx_powermail_fieldsets.uid = tx_powermail_fields.fieldset) LEFT JOIN tt_content ON (tx_powermail_fieldsets.tt_content = tt_content.uid)',
 					$where_clause = 'tx_powermail_fieldsets.tt_content = '.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']).' AND tx_powermail_fields.fieldset = '.$row_fs['uid'].tslib_cObj::enableFields('tx_powermail_fieldsets').tslib_cObj::enableFields('tx_powermail_fields'),
 					$groupBy = '',
@@ -161,7 +161,7 @@ class tx_powermail_form extends tslib_pibase {
 				$this->InnerMarkerArray['###POWERMAIL_FIELDSETNAME###'] = $row_fs['title']; // Name of fieldset
 				$this->InnerMarkerArray['###POWERMAIL_FIELDSETNAME_small###'] = $this->div->clearName($row_fs['title'],1,32); // Fieldsetname clear (strtolower = 1 / cut after 32 letters)
 				$this->InnerMarkerArray['###POWERMAIL_FIELDSET_UID###'] = $row_fs['uid']; // uid of fieldset
-				$this->hookInner(); // adds hookInner
+				$this->hookInner($row_fs); // adds hookInner
 				$this->content_item .= $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['formwrap']['item'],$this->InnerMarkerArray);
 			}
 		}
@@ -294,11 +294,11 @@ class tx_powermail_form extends tslib_pibase {
 	
 	
 	// Function hookInner() to enable manipulation datas with another extension(s) within loop
-	function hookInner() {
+	function hookInner(&$row) {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FormWrapMarkerHookInner'])) { // Adds hook for processing of extra global markers
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FormWrapMarkerHookInner'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				$_procObj->PM_FormWrapMarkerHookInner($this->InnerMarkerArray, $this->conf, $this); // Open function to manipulate datas
+				$_procObj->PM_FormWrapMarkerHookInner($this->InnerMarkerArray, $this->conf, $row, $this); // Open function to manipulate datas
 			}
 		}
 	}

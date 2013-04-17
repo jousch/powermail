@@ -54,20 +54,21 @@ class tx_powermail_markers extends tslib_pibase {
 				if($k == 'FILE' && count($v)>0) { // only if min one file
 				    $i = 1;
 					foreach($v as $key => $file) {
-						$this->markerArray['###'.strtoupper($k).'_'.$key.'###'] = stripslashes($this->div_functions->nl2br2($file));
-						$this->markerArray['###LABEL_'.strtolower($k).'_'.$key.'###'] = sprintf($this->pi_getLL('locallangmarker_confirmation_files','Attached file %s: '),$i);
-						if(!in_array(strtoupper($k),$this->notInMarkerAll) && !in_array('###'.strtoupper($k).'###',$this->notInMarkerAll)) {
+						$this->markerArray['###'.strtoupper($k).'_'.$key.'###'] = stripslashes($this->div_functions->nl2br2($file)); // Filename
+						$this->markerArray['###LABEL_'.strtolower($k).'_'.$key.'###'] = sprintf($this->pi_getLL('locallangmarker_confirmation_files','Attached file %s: '),$i); // Label to filename
+						if(!in_array(strtoupper($k), $this->notInMarkerAll) && !in_array('###'.strtoupper($k).'###', $this->notInMarkerAll)) {
 							$markerArray['###POWERMAIL_LABEL###'] = sprintf($this->pi_getLL('locallangmarker_confirmation_files','Attached file %s: '),$i);
 							$markerArray['###POWERMAIL_VALUE###'] = stripslashes($this->div_functions->nl2br2($file));
 						}
-						$content_item .= $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['all']['item'],$markerArray);
+						$this->hook_additional_marker($markerArray, $this->sessiondata, $k, $v); // add hook
+						$content_item .= $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['all']['item'], $markerArray);
 					$i++;
 					}
 				}
 				else {
-					if(is_numeric(str_replace('uid','',$k))) { // use only piVars like UID555
+					if(is_numeric(str_replace('uid', '', $k))) { // use only piVars like UID555
 						if(!is_array($v)) { // standard: value is not an array
-							if(is_numeric(str_replace('uid','',$k))) { // check if key is like uid55
+							if(is_numeric(str_replace('uid', '', $k))) { // check if key is like uid55
 								$this->markerArray['###'.strtoupper($k).'###'] = stripslashes($this->div_functions->nl2br2($v)); // fill ###UID55###
 								$this->markerArray['###'.strtolower($k).'###'] = stripslashes($this->div_functions->nl2br2($v)); // fill ###uid55###
 
@@ -76,8 +77,9 @@ class tx_powermail_markers extends tslib_pibase {
 									$markerArray['###POWERMAIL_LABEL###'] = $this->GetLabelfromBackend($k,$v);
 									$markerArray['###POWERMAIL_VALUE###'] = stripslashes($this->div_functions->nl2br2($v));
 									if ($this->conf['markerALL.']['hideLabel'] == 1 && $markerArray['###POWERMAIL_VALUE###'] || $this->conf['markerALL.']['hideLabel'] == 0) { // if hideLabel on in backend: add only if value exists
-										$content_item .= $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['all']['item'],$markerArray); // add line
+										$content_item .= $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['all']['item'], $markerArray); // add line
 									}
+									$this->hook_additional_marker($markerArray, $this->sessiondata, $k, $v); // add hook
 								}
 							}
 						} else { // value is still an array (needed for e.g. checkboxes tx_powermail_pi1[uid55][0])
@@ -93,6 +95,7 @@ class tx_powermail_markers extends tslib_pibase {
 										if(!in_array(strtoupper($k),$this->notInMarkerAll) && !in_array('###'.strtoupper($k).'###',$this->notInMarkerAll)) {
 											$markerArray['###POWERMAIL_LABEL###'] = $this->GetLabelfromBackend($k,$v);
 											$markerArray['###POWERMAIL_VALUE###'] = stripslashes($this->div_functions->nl2br2($vv));
+											$this->hook_additional_marker($markerArray, $this->sessiondata, $k, $v, $kv, $vv); // add hook
 											$content_item .= $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['all']['item'],$markerArray);
 										}
 										$i++; // increase counter
@@ -205,7 +208,7 @@ class tx_powermail_markers extends tslib_pibase {
 	}
 	
 
-	// Function hook_submit_changeEmail() to add a hook and change the email datas (changing subject, receiver, sender, sendername)
+	// Function hook_submit_changeEmail() to add a hook and change markers and html code
 	function hook_markerArray() {
 		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MarkerArrayHook'])) { // Adds hook for processing
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MarkerArrayHook'] as $_classRef) {
@@ -213,7 +216,19 @@ class tx_powermail_markers extends tslib_pibase {
 				$_procObj->PM_markerArrayHook($this->what, $this->geoArray, $this->markerArray, $this->sessiondata, $this->tmpl, $this); // Manipulate arrays and objects
 			}
 		}
+	}	 // Function for processing custom markers before substituting the HTML-Templates of the items
+
+
+	// Function hook_additional_marker allows to manipulate markers at the point of generating
+	function hook_additional_marker(&$markerArray, &$formValues, &$k, &$v, $kv = false, $vv = false) {
+		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FieldMarkerArrayHook'])) { // Adds hook for processing
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FieldMarkerArrayHook'] as $_classRef) {
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$_procObj->PM_FieldMarkerArrayHook($markerArray, $formValues, $k, $v, $kv, $vv, $this); // Get new marker Array from other extensions
+			}
+		}
 	}
+
 
 
     //function for initialisation.
