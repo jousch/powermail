@@ -1,106 +1,36 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-
-<HTML>
-<HEAD>
-	
-	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
-	<TITLE></TITLE>
-	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.3  (Win32)">
-	<META NAME="CREATED" CONTENT="20080223;18491000">
-	<META NAME="CHANGED" CONTENT="20080223;20533400">
-	
-	<STYLE>
-		<!-- 
-		BODY,DIV,TABLE,THEAD,TBODY,TFOOT,TR,TH,TD,P { font-family:"Arial"; }
-		 -->
-	</STYLE>
-	
-</HEAD>
-
-<BODY TEXT="#000000">
-<TABLE FRAME=VOID CELLSPACING=0 cellpadding="5" COLS=9 RULES=NONE BORDER=1>
-	<COLGROUP><COL WIDTH=31><COL WIDTH=184><COL WIDTH=235><COL WIDTH=60><COL WIDTH=193><COL WIDTH=427><COL WIDTH=139><COL WIDTH=267><COL WIDTH=582></COLGROUP>
-	<TBODY>
-		<TR>
-			<TD WIDTH=31 HEIGHT=30 ALIGN=CENTER><B><FONT SIZE=3>#</FONT></B></TD>
-			<TD WIDTH=184 ALIGN=LEFT><B><FONT SIZE=3>Information</FONT></B></TD>
-			<TD WIDTH=235 ALIGN=LEFT><B><FONT SIZE=3>File</FONT></B></TD>
-			<TD WIDTH=60 ALIGN=LEFT><B><FONT SIZE=3>Folder</FONT></B></TD>
-			<TD WIDTH=193 ALIGN=LEFT><B><FONT SIZE=3>Function name</FONT></B></TD>
-			<TD WIDTH=427 ALIGN=LEFT><B><FONT SIZE=3>Input</FONT></B></TD>
-			<TD WIDTH=139 ALIGN=LEFT><B><FONT SIZE=3>Return</FONT></B></TD>
-			<TD WIDTH=267 ALIGN=LEFT><B><FONT SIZE=3>Note</FONT></B></TD>
-			<TD WIDTH=582 ALIGN=LEFT><B><FONT SIZE=3>Use in own Extension in ext_localconf.php</FONT></B></TD>
-		</TR>
-		<TR>
-			<TD HEIGHT=55 ALIGN=CENTER SDVAL="1" SDNUM="1031;"><B>1</B></TD>
-			<TD ALIGN=LEFT>Hook for page with form</TD>
-			<TD ALIGN=LEFT>class.tx_powermail_form.php</TD>
-			<TD ALIGN=LEFT>pi1</TD>
-			<TD ALIGN=LEFT>PM_FormWrapMarkerHook</TD>
-			<TD ALIGN=LEFT>$this-&gt;OuterMarkerArray,$this-&gt;InnerMarkerArray,$this-&gt;conf,$this</TD>
-			<TD ALIGN=LEFT>none</TD>
-			<TD ALIGN=LEFT>This hook will be opened before the marker array is substituted with HTML template on the form page.</TD>
-			<TD ALIGN=LEFT>$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FormWrapMarkerHook'][]</TD>
-		</TR>
-		<TR>
-			<TD HEIGHT=55 ALIGN=CENTER SDVAL="2" SDNUM="1031;"><B>2</B></TD>
-			<TD ALIGN=LEFT>Hook for html fieldwrap of every field</TD>
-			<TD ALIGN=LEFT>class.tx_powermail_html.php</TD>
-			<TD ALIGN=LEFT>pi1</TD>
-			<TD ALIGN=LEFT>PM_FieldWrapMarkerHook</TD>
-			<TD ALIGN=LEFT>$this-&gt;uid,$this-&gt;xml,$this-&gt;type,$this-&gt;title,$this-&gt;markerArray,$content,$this</TD>
-			<TD ALIGN=LEFT>$this-&gt;markerArray</TD>
-			<TD ALIGN=LEFT>This hook will be opened before the html code of the current field is given back.</TD>
-			<TD ALIGN=LEFT>$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FieldWrapMarkerHook'][]</TD>
-		</TR>
-		<TR>
-			<TD HEIGHT=53 ALIGN=CENTER SDVAL="3" SDNUM="1031;"><B>3</B></TD>
-			<TD ALIGN=LEFT>Hook for confirmation page</TD>
-			<TD ALIGN=LEFT>class.tx_powermail_confirmation.php</TD>
-			<TD ALIGN=LEFT>pi1</TD>
-			<TD ALIGN=LEFT>PM_ConfirmationHook</TD>
-			<TD ALIGN=LEFT>$this-&gt;markerArray,$this</TD>
-			<TD ALIGN=LEFT>none</TD>
-			<TD ALIGN=LEFT>This hook will be opened before the marker array is substituted with HTML template on the confirmation page.</TD>
-			<TD ALIGN=LEFT>$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_ConfirmationHook'][]</TD>
-		</TR>
-		<TR>
-			<TD HEIGHT=48 ALIGN=CENTER SDVAL="4" SDNUM="1031;"><B>4</B></TD>
-			<TD ALIGN=LEFT>Mandatory and error check hook</TD>
-			<TD ALIGN=LEFT>class.tx_powermail_mandatory.php</TD>
-			<TD ALIGN=LEFT>pi1</TD>
-			<TD ALIGN=LEFT>PM_MandatoryHook</TD>
-			<TD ALIGN=LEFT>$this-&gt;error,$this-&gt;markerArray,$this-&gt;innerMarkerArray,$this-&gt;sessionfields,$this</TD>
-			<TD ALIGN=LEFT>none</TD>
-			<TD ALIGN=LEFT>If you set $this-&gt;error to 1, powermail will stop the submit process, with $this-&gt;sessionfields you can write your own error message</TD>
-			<TD ALIGN=LEFT>$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MandatoryHook'][]</TD>
-		</TR>
-		<TR>
-			<TD HEIGHT=48 ALIGN=CENTER SDVAL="5" SDNUM="1031;"><B>5</B></TD>
-			<TD ALIGN=LEFT>Submit hook before submit</TD>
-			<TD ALIGN=LEFT>class.tx_powermail_submit.php</TD>
-			<TD ALIGN=LEFT>pi1</TD>
-			<TD ALIGN=LEFT>PM_SubmitBeforeMarkerHook</TD>
-			<TD ALIGN=LEFT>$this,$this-&gt;markerArray,$this-&gt;sessiondata</TD>
-			<TD ALIGN=LEFT>Errorcode (0/1 bolean)</TD>
-			<TD ALIGN=LEFT>If you want to stop the submit (emails and db insert), you can return TRUE</TD>
-			<TD ALIGN=LEFT>$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitAfterMarkerHook'][]</TD>
-		</TR>
-		<TR>
-			<TD HEIGHT=55 ALIGN=CENTER SDVAL="6" SDNUM="1031;"><B>6</B></TD>
-			<TD ALIGN=LEFT>Submit hook after emails</TD>
-			<TD ALIGN=LEFT>class.tx_powermail_submit.php</TD>
-			<TD ALIGN=LEFT>pi1</TD>
-			<TD ALIGN=LEFT>PM_SubmitAfterMarkerHook</TD>
-			<TD ALIGN=LEFT>$this,$this-&gt;markerArray,$this-&gt;sessiondata</TD>
-			<TD ALIGN=LEFT>none</TD>
-			<TD ALIGN=LEFT>If you want to do something after a correct submit, you can use this hook (maybe an additional db entry)</TD>
-			<TD ALIGN=LEFT>$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitAfterMarkerHook'][]</TD>
-		</TR>
-	</TBODY>
-</TABLE>
-<!-- ************************************************************************** -->
-</BODY>
-
-</HTML>
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="content-type" content="text/html; charset=utf-8" /><title /><meta name="generator" content="StarOffice/OpenOffice.org XSLT (http://xml.openoffice.org/sx2ml)" /><meta name="created" content="2008-02-23T18:49:10" /><meta name="changed" content="2008-03-14T11:50:46" /><base href="." /><style type="text/css">
+	@page {  }
+	table { border-collapse:collapse; border-spacing:0; empty-cells:show }
+	td, th { vertical-align:top; }
+	h1, h2, h3, h4, h5, h6 { clear:both }
+	ol, ul { padding:0; }
+	* { margin:0; }
+	*.ta1 { }
+	*.ce1 { font-family:Arial; text-align:center ! important; margin-left:0cm; font-size:12pt; font-weight:bold; }
+	*.ce2 { font-family:Arial; text-align:center ! important; margin-left:0cm; font-weight:bold; }
+	*.ce3 { font-family:Arial; font-weight:bold; }
+	*.ce4 { font-family:Arial; text-align:left ! important; margin-left:0cm; }
+	*.ce5 { font-family:Arial; text-align:center ! important; margin-left:0cm; }
+	*.ce6 { font-family:Arial; font-size:12pt; font-weight:bold; }
+	*.ce7 { font-family:Arial; }
+	*.Default { font-family:Arial; }
+	*.Heading { font-family:Arial; text-align:center ! important; font-size:16pt; font-style:italic; font-weight:bold; }
+	*.Heading1 { font-family:Arial; text-align:center ! important; font-size:16pt; font-style:italic; font-weight:bold; }
+	*.Result { font-family:Arial; font-style:italic; font-weight:bold; text-decoration:underline; }
+	*.Result2 { font-family:Arial; font-style:italic; font-weight:bold; text-decoration:underline; }
+	*.co1 { width:0.831cm; }
+	*.co10 { width:2.267cm; }
+	*.co2 { width:5.41cm; }
+	*.co3 { width:6.216cm; }
+	*.co4 { width:1.58cm; }
+	*.co5 { width:5.105cm; }
+	*.co6 { width:12.347cm; }
+	*.co7 { width:3.69cm; }
+	*.co8 { width:11.709cm; }
+	*.co9 { width:15.734cm; }
+	*.ro1 { height:0.788cm; }
+	*.ro2 { height:1.632cm; }
+	*.ro3 { height:0.453cm; }
+	*.ro4 { height:0.473cm; }
+	</style></head><body dir="ltr"><table border="0" cellspacing="0" cellpadding="0" class="ta1"><colgroup><col width="36" /><col width="236" /><col width="272" /><col width="69" /><col width="223" /><col width="540" /><col width="161" /><col width="512" /><col width="688" /><col width="99" /></colgroup><tr class="ro1"><td style="text-align:left;width:0.831cm; " class="ce1"><p># </p></td><td style="text-align:left;width:5.41cm; " class="ce6"><p>Information </p></td><td style="text-align:left;width:6.216cm; " class="ce6"><p>File </p></td><td style="text-align:left;width:1.58cm; " class="ce6"><p>Folder </p></td><td style="text-align:left;width:5.105cm; " class="ce6"><p>Function name </p></td><td style="text-align:left;width:12.347cm; " class="ce6"><p>Input </p></td><td style="text-align:left;width:3.69cm; " class="ce6"><p>Return </p></td><td style="text-align:left;width:11.709cm; " class="ce6"><p>Note </p></td><td style="text-align:left;width:15.734cm; " class="ce6"><p>Use in own Extension in ext_localconf.php </p></td><td style="text-align:left;width:2.267cm; " class="ce6" /></tr><tr class="ro2"><td style="text-align:right; width:0.831cm; " class="ce2"><p>1 </p></td><td style="text-align:left;width:5.41cm; " class="Default"><p>Hook for page with form </p></td><td style="text-align:left;width:6.216cm; " class="Default"><p>class.tx_powermail_form.php </p></td><td style="text-align:left;width:1.58cm; " class="Default"><p>pi1 </p></td><td style="text-align:left;width:5.105cm; " class="Default"><p>PM_FormWrapMarkerHook </p></td><td style="text-align:left;width:12.347cm; " class="Default"><p>$this-&gt;OuterMarkerArray,$this-&gt;subpartArray,$this-&gt;conf,$this </p></td><td style="text-align:left;width:3.69cm; " class="Default"><p>none </p></td><td style="text-align:left;width:11.709cm; " class="ce7"><p>This hook will be opened before the marker array is substituted with HTML template on the form page. Maybe if you want to add some hiddenfields in the end of the form, you can use this marker </p></td><td style="text-align:left;width:15.734cm; " class="Default"><p>$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FormWrapMarkerHook'][] </p></td><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro2"><td style="text-align:right; width:0.831cm; " class="ce2"><p>2 </p></td><td style="text-align:left;width:5.41cm; " class="ce7"><p>Hook for html fieldwrap of every single field </p></td><td style="text-align:left;width:6.216cm; " class="Default"><p>class.tx_powermail_html.php </p></td><td style="text-align:left;width:1.58cm; " class="Default"><p>pi1 </p></td><td style="text-align:left;width:5.105cm; " class="Default"><p>PM_FieldWrapMarkerHook </p></td><td style="text-align:left;width:12.347cm; " class="ce7"><p>$this-&gt;uid,$this-&gt;xml,$this-&gt;type,$this-&gt;title,$this-&gt;markerArray,$content,$this </p></td><td style="text-align:left;width:3.69cm; " class="Default"><p>$this-&gt;markerArray </p></td><td style="text-align:left;width:11.709cm; " class="ce7"><p>This hook will be opened before the html code of the current field is given back. Maybe if you want to manipulate a special field </p></td><td style="text-align:left;width:15.734cm; " class="Default"><p>$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FieldWrapMarkerHook'][] </p></td><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro2"><td style="text-align:right; width:0.831cm; " class="ce2"><p>3 </p></td><td style="text-align:left;width:5.41cm; " class="Default"><p>Hook for confirmation page </p></td><td style="text-align:left;width:6.216cm; " class="Default"><p>class.tx_powermail_confirmation.php </p></td><td style="text-align:left;width:1.58cm; " class="Default"><p>pi1 </p></td><td style="text-align:left;width:5.105cm; " class="Default"><p>PM_ConfirmationHook </p></td><td style="text-align:left;width:12.347cm; " class="Default"><p>$this-&gt;markerArray,$this </p></td><td style="text-align:left;width:3.69cm; " class="Default"><p>none </p></td><td style="text-align:left;width:11.709cm; " class="ce7"><p>This hook will be opened before the marker array is substituted with HTML template on the confirmation page. </p></td><td style="text-align:left;width:15.734cm; " class="Default"><p>$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_ConfirmationHook'][] </p></td><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro2"><td style="text-align:right; width:0.831cm; " class="ce2"><p>4 </p></td><td style="text-align:left;width:5.41cm; " class="ce7"><p>Mandatory and error check hook </p></td><td style="text-align:left;width:6.216cm; " class="Default"><p>class.tx_powermail_mandatory.php </p></td><td style="text-align:left;width:1.58cm; " class="Default"><p>pi1 </p></td><td style="text-align:left;width:5.105cm; " class="Default"><p>PM_MandatoryHook </p></td><td style="text-align:left;width:12.347cm; " class="ce7"><p>$this-&gt;error,$this-&gt;markerArray,$this-&gt;innerMarkerArray,$this-&gt;sessionfields,$this </p></td><td style="text-align:left;width:3.69cm; " class="Default"><p>none </p></td><td style="text-align:left;width:11.709cm; " class="ce7"><p>If you set $this-&gt;error to 1, powermail will stop the submit process, with $this-&gt;sessionfields you can write your own error message </p></td><td style="text-align:left;width:15.734cm; " class="Default"><p>$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MandatoryHook'][] </p></td><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro2"><td style="text-align:right; width:0.831cm; " class="ce2"><p>5 </p></td><td style="text-align:left;width:5.41cm; " class="Default"><p>Hook for email change </p></td><td style="text-align:left;width:6.216cm; " class="Default"><p>class.tx_powermail_submit.php </p></td><td style="text-align:left;width:1.58cm; " class="Default"><p>pi1 </p></td><td style="text-align:left;width:5.105cm; " class="Default"><p>PM_SubmitEmailHook </p></td><td style="text-align:left;width:12.347cm; " class="Default"><p>$this-&gt;subpart,$this-&gt;maildata,$this-&gt;sessiondata,$this-&gt;markerArray,$this </p></td><td style="text-align:left;width:3.69cm; " class="Default"><p>none </p></td><td style="text-align:left;width:11.709cm; " class="Default"><p>This hook allows to change the emails (subject, receiver, sender, etc..) </p></td><td style="text-align:left;width:15.734cm; " class="Default"><p>$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitEmailHook'][] </p></td><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro2"><td style="text-align:right; width:0.831cm; " class="ce2"><p>6 </p></td><td style="text-align:left;width:5.41cm; " class="Default"><p>Submit hook before submit </p></td><td style="text-align:left;width:6.216cm; " class="Default"><p>class.tx_powermail_submit.php </p></td><td style="text-align:left;width:1.58cm; " class="Default"><p>pi1 </p></td><td style="text-align:left;width:5.105cm; " class="Default"><p>PM_SubmitBeforeMarkerHook </p></td><td style="text-align:left;width:12.347cm; " class="Default"><p>$this,$this-&gt;markerArray,$this-&gt;sessiondata </p></td><td style="text-align:left;width:3.69cm; " class="Default"><p>Errorcode (0/1 bolean) </p></td><td style="text-align:left;width:11.709cm; " class="ce7"><p>If you want to stop the submit (emails and db insert), you can return TRUE </p></td><td style="text-align:left;width:15.734cm; " class="Default"><p>$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitBeforeMarkerHook'][] </p></td><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro2"><td style="text-align:right; width:0.831cm; " class="ce2"><p>7 </p></td><td style="text-align:left;width:5.41cm; " class="Default"><p>Submit hook after emails </p></td><td style="text-align:left;width:6.216cm; " class="Default"><p>class.tx_powermail_submit.php </p></td><td style="text-align:left;width:1.58cm; " class="Default"><p>pi1 </p></td><td style="text-align:left;width:5.105cm; " class="Default"><p>PM_SubmitAfterMarkerHook </p></td><td style="text-align:left;width:12.347cm; " class="Default"><p>$this,$this-&gt;markerArray,$this-&gt;sessiondata </p></td><td style="text-align:left;width:3.69cm; " class="Default"><p>none </p></td><td style="text-align:left;width:11.709cm; " class="ce7"><p>If you want to do something after a correct submit, you can use this hook (maybe an additional db entry) </p></td><td style="text-align:left;width:15.734cm; " class="Default"><p>$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitAfterMarkerHook'][] </p></td><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro3"><td style="text-align:left;width:0.831cm; " class="Default" /><td style="text-align:left;width:5.41cm; " class="Default" /><td style="text-align:left;width:6.216cm; " class="Default" /><td style="text-align:left;width:1.58cm; " class="Default" /><td style="text-align:left;width:5.105cm; " class="Default" /><td style="text-align:left;width:12.347cm; " class="Default" /><td style="text-align:left;width:3.69cm; " class="Default" /><td style="text-align:left;width:11.709cm; " class="Default" /><td style="text-align:left;width:15.734cm; " class="Default" /><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro3"><td style="text-align:left;width:0.831cm; " class="Default" /><td style="text-align:left;width:5.41cm; " class="Default" /><td style="text-align:left;width:6.216cm; " class="Default" /><td style="text-align:left;width:1.58cm; " class="Default" /><td style="text-align:left;width:5.105cm; " class="Default" /><td style="text-align:left;width:12.347cm; " class="Default" /><td style="text-align:left;width:3.69cm; " class="Default" /><td style="text-align:left;width:11.709cm; " class="Default" /><td style="text-align:left;width:15.734cm; " class="Default" /><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro3"><td style="text-align:left;width:0.831cm; " class="Default" /><td style="text-align:left;width:5.41cm; " class="Default" /><td style="text-align:left;width:6.216cm; " class="Default" /><td style="text-align:left;width:1.58cm; " class="Default" /><td style="text-align:left;width:5.105cm; " class="Default" /><td style="text-align:left;width:12.347cm; " class="Default" /><td style="text-align:left;width:3.69cm; " class="Default" /><td style="text-align:left;width:11.709cm; " class="Default" /><td style="text-align:left;width:15.734cm; " class="Default" /><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro3"><td style="text-align:left;width:0.831cm; " class="Default" /><td style="text-align:left;width:5.41cm; " class="Default" /><td style="text-align:left;width:6.216cm; " class="Default" /><td style="text-align:left;width:1.58cm; " class="Default" /><td style="text-align:left;width:5.105cm; " class="Default" /><td style="text-align:left;width:12.347cm; " class="Default" /><td style="text-align:left;width:3.69cm; " class="Default" /><td style="text-align:left;width:11.709cm; " class="Default" /><td style="text-align:left;width:15.734cm; " class="Default" /><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro3"><td style="text-align:left;width:0.831cm; " class="Default" /><td style="text-align:left;width:5.41cm; " class="Default" /><td style="text-align:left;width:6.216cm; " class="Default" /><td style="text-align:left;width:1.58cm; " class="Default" /><td style="text-align:left;width:5.105cm; " class="Default" /><td style="text-align:left;width:12.347cm; " class="Default" /><td style="text-align:left;width:3.69cm; " class="Default" /><td style="text-align:left;width:11.709cm; " class="Default" /><td style="text-align:left;width:15.734cm; " class="Default" /><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro4"><td colspan="9" style="text-align:left;width:0.831cm; " class="ce3"><p>Example for using a powermail hook in your own extension in the ext_localconf.php: </p></td><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro4"><td colspan="9" style="text-align:left;width:0.831cm; " class="ce4"><p>$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FormWrapMarkerHook'][] = 'EXT:yourextension/targetphpfile:tx_yourphpclass'; </p></td><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro4"><td colspan="9" style="text-align:left;width:0.831cm; " class="Default"><p>This hook want to use the function PM_FormWrapMarkerHook() in your class </p></td><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro4"><td colspan="9" style="text-align:left;width:0.831cm; " class="ce4"><p>Note: The classname must start with a tx_ </p></td><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro3"><td style="text-align:left;width:0.831cm; " class="ce5" /><td style="text-align:left;width:5.41cm; " class="Default" /><td style="text-align:left;width:6.216cm; " class="Default" /><td style="text-align:left;width:1.58cm; " class="Default" /><td style="text-align:left;width:5.105cm; " class="Default" /><td style="text-align:left;width:12.347cm; " class="Default" /><td style="text-align:left;width:3.69cm; " class="Default" /><td style="text-align:left;width:11.709cm; " class="Default" /><td style="text-align:left;width:15.734cm; " class="Default" /><td style="text-align:left;width:2.267cm; " class="Default" /></tr><tr class="ro3"><td style="text-align:left;width:0.831cm; " class="ce5" /><td style="text-align:left;width:5.41cm; " class="Default" /><td style="text-align:left;width:6.216cm; " class="Default" /><td style="text-align:left;width:1.58cm; " class="Default" /><td style="text-align:left;width:5.105cm; " class="Default" /><td style="text-align:left;width:12.347cm; " class="Default" /><td style="text-align:left;width:3.69cm; " class="Default" /><td style="text-align:left;width:11.709cm; " class="Default" /><td style="text-align:left;width:15.734cm; " class="Default" /><td style="text-align:left;width:2.267cm; " class="Default" /></tr></table><table border="0" cellspacing="0" cellpadding="0" class="ta1"><colgroup><col width="99" /></colgroup><tr class="ro3"><td style="text-align:left;width:2.267cm; " class="Default" /></tr></table><table border="0" cellspacing="0" cellpadding="0" class="ta1"><colgroup><col width="99" /></colgroup><tr class="ro3"><td style="text-align:left;width:2.267cm; " class="Default" /></tr></table></body></html>

@@ -107,45 +107,50 @@ class tx_powermail_submit extends tslib_pibase {
 	function sendMail($subpart) {
 
 		// Configuration
-		$this->tmpl['emails'][$subpart] = $this->pibase->cObj->getSubpart($this->tmpl['emails']['all'],'###POWERMAIL_'.strtoupper($subpart).'###'); // Content for HTML Template
-		$this->mailcontent[$subpart] = $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['emails'][$subpart],$this->markerArray); // substitute markerArray for HTML content
-		$this->mailcontent[$subpart] = preg_replace_callback ( // Automaticly fill locallangmarkers with fitting value of locallang.xml
+		$this->subpart = $subpart;
+		$this->tmpl['emails'][$this->subpart] = $this->pibase->cObj->getSubpart($this->tmpl['emails']['all'],'###POWERMAIL_'.strtoupper($this->subpart).'###'); // Content for HTML Template
+		$this->mailcontent[$this->subpart] = $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['emails'][$this->subpart],$this->markerArray); // substitute markerArray for HTML content
+		$this->mailcontent[$this->subpart] = preg_replace_callback ( // Automaticly fill locallangmarkers with fitting value of locallang.xml
 			'#\#\#\#POWERMAIL_LOCALLANG_(.*)\#\#\##Uis', // regulare expression
 			array($this->markers,'DynamicLocalLangMarker'), // open function
-			$this->mailcontent[$subpart] // current content
+			$this->mailcontent[$this->subpart] // current content
 		);
-		$this->mailcontent[$subpart] = preg_replace("|###.*###|i","",$this->mailcontent[$subpart]); // Finally clear not filled markers
+		$this->mailcontent[$this->subpart] = preg_replace("|###.*###|i","",$this->mailcontent[$this->subpart]); // Finally clear not filled markers
+		$this->maildata = array();
 		
 		// Set emails and names
-		if ($subpart == 'recipient_mail') { // default settings: mail to receiver
-			$receiver = $this->MainReceiver; // set receiver
-			$sender = $this->sender; // set sender
-			$subject = $this->subject_r; // set subject
-			$sendername = $this->sender; // set sendername
-			$cc = (isset($this->CCReceiver)?$this->CCReceiver:''); // carbon copy (take email addresses or nothing if not available)
-		} elseif ($subpart == 'sender_mail') { // extended settings: mail to sender
-			$receiver = $this->sender; // set receiver
-			$sender = $this->MainReceiver; // set sender
-			$subject = $this->subject_s; // set subject
-			$sendername = (isset($this->sendername)?$this->sendername:$this->MainReceiver); // set sendername
-			$cc = ''; // no cc
+		if ($this->subpart == 'recipient_mail') { // default settings: mail to receiver
+			$this->maildata['receiver'] = $this->MainReceiver; // set receiver
+			$this->maildata['sender'] = $this->sender; // set sender
+			$this->maildata['subject'] = $this->subject_r; // set subject
+			$this->maildata['sendername'] = $this->sender; // set sendername
+			$this->maildata['cc'] = (isset($this->CCReceiver) ? $this->CCReceiver : ''); // carbon copy (take email addresses or nothing if not available)
+		} elseif ($this->subpart == 'sender_mail') { // extended settings: mail to sender
+			$this->maildata['receiver'] = $this->sender; // set receiver
+			$this->maildata['sender'] = $this->MainReceiver; // set sender
+			$this->maildata['subject'] = $this->subject_s; // set subject
+			$this->maildata['sendername'] = (isset($this->sendername)?$this->sendername:$this->MainReceiver); // set sendername
+			$this->maildata['cc'] = ''; // no cc
 		}
+		
+		// Last chance to manipulate the mail
+		$this->hook_submit_changeEmail();
 		
 		// start main mail function
 		$this->htmlMail = t3lib_div::makeInstance('t3lib_htmlmail'); // New object: TYPO3 mail class
 		$this->htmlMail->start(); // start htmlmail
-		$this->htmlMail->recipient = $receiver; // main receiver email address
-		$this->htmlMail->recipient_copy = $cc; // cc field (other email addresses)
-		$this->htmlMail->subject = $this->div_functions->marker2value($subject,$this->sessiondata); // mail subject
-		$this->htmlMail->from_email = $sender; // sender email address
-		$this->htmlMail->from_name = $sendername; // sender email name
-		$this->htmlMail->returnPath = $sender; // return path
+		$this->htmlMail->recipient = $this->maildata['receiver']; // main receiver email address
+		$this->htmlMail->recipient_copy = $this->maildata['cc']; // cc field (other email addresses)
+		$this->htmlMail->subject = $this->div_functions->marker2value($this->maildata['subject'],$this->sessiondata); // mail subject
+		$this->htmlMail->from_email = $this->maildata['sender']; // sender email address
+		$this->htmlMail->from_name = $this->maildata['sendername']; // sender email name
+		$this->htmlMail->returnPath = $this->maildata['sender']; // return path
 		$this->htmlMail->replyto_email = ''; // clear replyto email
 		$this->htmlMail->replyto_name = ''; // clear replyto name
 		
 		// add atachment if neeeded
 		if(isset($this->sessiondata['FILE']) && $this->conf['upload.']['attachment'] == 1) { // if there are uploaded files AND attachment to emails is activated via constants
-			if(is_array($this->sessiondata['FILE']) && $subpart == 'recipient_mail') { // only if array and mail to receiver
+			if(is_array($this->sessiondata['FILE']) && $this->subpart == 'recipient_mail') { // only if array and mail to receiver
 				foreach ($this->sessiondata['FILE'] as $file) { // one loop for every file
 					if (is_file(t3lib_div::getFileAbsFileName($this->div_functions->correctPath($this->conf['upload.']['folder']).$file))) { // If file exists
 						$this->htmlMail->addAttachment($this->div_functions->correctPath($this->conf['upload.']['folder']).$file); // add attachment
@@ -156,9 +161,9 @@ class tx_powermail_submit extends tslib_pibase {
 		
 		$this->htmlMail->charset = $GLOBALS['TSFE']->metaCharset; // set current charset
 		$this->htmlMail->defaultCharset = $GLOBALS['TSFE']->metaCharset; // set current charset
-		$this->htmlMail->addPlain($this->mailcontent[$subpart]);
-		$this->htmlMail->setHTML($this->htmlMail->encodeMsg($this->mailcontent[$subpart]));
-		$this->htmlMail->send($receiver);
+		$this->htmlMail->addPlain($this->mailcontent[$this->subpart]);
+		$this->htmlMail->setHTML($this->htmlMail->encodeMsg($this->mailcontent[$this->subpart]));
+		$this->htmlMail->send($this->maildata['receiver']);
 	}
 	
 	
@@ -196,6 +201,7 @@ class tx_powermail_submit extends tslib_pibase {
 		// 1. Field receiver
 		if ($this->pibase->cObj->data['tx_powermail_recipient']) { // If receivers are listed in field receiver
 			$emails = str_replace(array("\r\n","\n\r","\n","\r",";"),',',$this->pibase->cObj->data['tx_powermail_recipient']); // commaseparated list of emails
+			$emails = $this->div_functions->marker2value($emails,$this->sessiondata); // make markers available in email receiver field
 			$emailarray = t3lib_div::trimExplode(',',$emails,1); // write every part to an array
 			
 			for ($i=0,$emails='';$i<count($emailarray);$i++) { // one loop for every key
@@ -214,12 +220,7 @@ class tx_powermail_submit extends tslib_pibase {
 		// 3. Field receiver query
 		elseif ($this->pibase->cObj->data['tx_powermail_query']) { // If own select query is chosen
 			$query = $this->secQuery($this->pibase->cObj->data['tx_powermail_query']); // secure function of query
-			
-			$query = preg_replace_callback ( // Automaticly replace ###UID55### with value from session to use markers in query strings
-				'#\#\#\#UID(.*)\#\#\##Uis', // regulare expression
-				array($this,'uidReplace'), // open function
-				$query // current content
-			);
+			$query = $this->div_functions->marker2value($query,$this->sessiondata); // make markers available in email query
 			
 			$res = mysql_query($query); // mysql query
 			
@@ -273,6 +274,17 @@ class tx_powermail_submit extends tslib_pibase {
 			header("Location: $link"); 
 			header("Connection: close");
 	
+		}
+	}
+	
+
+	// Function hook_submit_changeEmail() to add a hook and change the email datas (changing subject, receiver, sender, sendername)
+	function hook_submit_changeEmail() {
+		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitEmailHook'])) { // Adds hook for processing
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitEmailHook'] as $_classRef) {
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$_procObj->PM_SubmitEmailHook($this->subpart,$this->maildata,$this->sessiondata,$this->markerArray,$this); // Get new marker Array from other extensions
+			}
 		}
 	}
 	
@@ -338,27 +350,6 @@ class tx_powermail_submit extends tslib_pibase {
 		else { // if error
 			echo 'Not allowed string ('.$failure.') in receiver sql query!'; // print error message
 			return false; // no return
-		}
-	}
-	
-	
-	// Function uidReplace is used for the callback function to replace ###UID55## with value
-	function uidReplace($uid) {
-		if (isset($this->sessiondata['uid'.$uid[1]])) {
-			if (!is_array($this->sessiondata['uid'.$uid[1]])) { // value is not an array
-				
-				return $this->sessiondata['uid'.$uid[1]]; // return 44 (e.g.)
-				
-			} else { // value is an array
-			
-				$return = ''; $i=0; // init counter
-				foreach ($this->sessiondata['uid'.$uid[1]] as $key => $value) { // one loop for every value
-					$return .= ($i!=0?',':'').$value; // add a value (commaseparated)
-					$i++; // increase counter
-				}
-				return $return; // return 44,45,46 (e.g.)
-				
-			}
 		}
 	}
 
