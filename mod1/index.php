@@ -29,6 +29,8 @@ require_once('conf.php');
 require_once($BACK_PATH.'init.php');
 require_once($BACK_PATH.'template.php');
 require_once('class.tx_powermail_belist.php'); // include Backend list function
+require_once('class.tx_powermail_export.php'); // include Backend export function
+require_once('class.tx_powermail_bedetails.php'); // include Backend detail function
 
 $LANG->includeLLFile('EXT:powermail/mod1/locallang.xml');
 require_once(PATH_t3lib.'class.t3lib_scbase.php');
@@ -92,11 +94,11 @@ class  tx_powermail_module1 extends t3lib_SCbase {
 	
 	
 			// ShortCut
-			if ($BE_USER->mayMakeShortcut())	{
+			if ($BE_USER->mayMakeShortcut() && !isset($_GET['export']))	{
 				$this->content.=$this->doc->spacer(20).$this->doc->section('',$this->doc->makeShortcutIcon('id',implode(',',array_keys($this->MOD_MENU)),$this->MCONF['name']));
 			}
 	
-			$this->content.=$this->doc->spacer(10);
+			if(!isset($_GET['export'])) $this->content.=$this->doc->spacer(10);
 		} else {
 				// If no access or if ID == zero
 	
@@ -125,22 +127,39 @@ class  tx_powermail_module1 extends t3lib_SCbase {
 	
 	// Final output
 	function printContent()	{
-		$this->content.=$this->doc->endPage();
+		if(!isset($_GET['export'])) $this->content.=$this->doc->endPage(); // not needed for export
 		echo $this->content;
 	}
 	
 	// What to show
 	function moduleContent()	{
-		global $BACK_PATH;
+		global $BACK_PATH,$LANG;
 		
 		switch((string)$this->MOD_SETTINGS['function'])	{
 			case 1:
 			default:
-				$this->belist = t3lib_div::makeInstance('tx_powermail_belist');
-				$this->content .= $this->belist->main($this->id,$BACK_PATH);
+				if(empty($_GET['mailID'])) { // no mailID set in GET params
+					if(empty($_GET['export'])) { // no export
+						$this->belist = t3lib_div::makeInstance('tx_powermail_belist');
+						$this->belist->init($LANG);
+						$this->content .= $this->belist->main($this->id, $BACK_PATH); // Show list
+					} else {
+						$this->export = t3lib_div::makeInstance('tx_powermail_export');
+						if($_GET['export'] != 'csv') $this->content = $this->export->main($_GET['export'], $this->id, $LANG); // Show export functions
+						else $this->content .= $this->export->main($_GET['export'], $this->id, $LANG); // Show export functions
+					}
+				} else { // show only one with details
+					$this->belist = t3lib_div::makeInstance('tx_powermail_belist');
+					$this->belist->init($LANG);
+					$this->content .= $this->belist->main($this->id, $BACK_PATH, $_GET['mailID']); // Show 1 intem of list
+					
+					$this->bedetails = t3lib_div::makeInstance('tx_powermail_bedetails');
+					$this->content .= $this->bedetails->main($_GET['mailID'],$LANG); // Show details
+				}
 			break;
 			case 2:
-				$this->content = 'xx';
+				$this->content .= 'xx';
+				print_r($_POST);
 			break;
 		}
 	}

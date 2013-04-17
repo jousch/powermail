@@ -8,9 +8,32 @@
 		<languageKey index="default" type="array">
 			<label index="title">Powermail</label>
 			<label index="function1">Powermail list and export</label>
+			<label index="nopowermails1">No powermails on current page!</label>
+			<label index="nopowermails2">Please choose a page with powermails inside from the pagetree.</label>
+			<label index="title_no">#</label>
+			<label index="title_date">Date</label>
+			<label index="title_sender">Sender</label>
+			<label index="title_IP">Sender IP</label>
+			<label index="title_receiver">Receiver</label>
+			<label index="title_details">Details</label>
+			<label index="export_download_success">Success!</label>
+			<label index="export_download_download">Download CSV File</label>
+			<label index="export_download_downloadZIP">Download compressed CSV File</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="title">Powermail</label>
+			<label index="function1">Powermail Liste und Export</label>
+			<label index="nopowermails1">Keine Powermails auf aktueller Seite!</label>
+			<label index="nopowermails2">Bitte wählen Sie eine Seite mit Powermails aus dem Seitenbaum aus.</label>
+			<label index="title_no">#</label>
+			<label index="title_date">Datum</label>
+			<label index="title_sender">Absender</label>
+			<label index="title_IP">Absender IP</label>
+			<label index="title_receiver">Empfänger</label>
+			<label index="title_details">Details</label>
+			<label index="export_download_success">Erfolg!</label>
+			<label index="export_download_download">CSV Datei Download</label>
+			<label index="export_download_downloadZIP">CSV Datei Download (komprimiert)</label>
 		</languageKey>
 	</data>
 </T3locallang>

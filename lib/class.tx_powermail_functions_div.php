@@ -63,19 +63,18 @@ class tx_powermail_functions_div {
 		if(isset($string)) return $string;
 	}
 	
-	
 	// Function linker() generates link from pure email or url string
-	function linker($link,$additinalParams = '') {
-		$link = str_replace("http://www.","www.",$link);
-		$link = str_replace("www.","http://www.",$link);
-		$link = preg_replace("/([\w]+:\/\/[\w-?&;#~=\.\/\@]+[\w\/])/i","<a href=\"$1\"$additinalParams>$1</a>", $link);
-		$link = preg_replace("/([\w-?&;#~=\.\/]+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,3}|[0-9]{1,3})(\]?))/i","<a href=\"mailto:$1\"$additinalParams>$1</a>",$link);
-	
-		return $link;
-	}
+    function linker($link,$additinalParams = '') {
+        $link = str_replace("http://www.","www.",$link);
+        $link = str_replace("www.","http://www.",$link);
+        $link = preg_replace("/([\w]+:\/\/[\w-?&;#~=\.\/\@]+[\w\/])/i","<a href=\"$1\"$additinalParams>$1</a>", $link);
+        $link = preg_replace("/([\w-?&;#~=\.\/]+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,3}|[0-9]{1,3})(\]?))/i","<a href=\"mailto:$1\"$additinalParams>$1</a>",$link);
+    
+        return $link;
+    }
 
 
-	// Function for initialisation.
+	//function for initialisation.
 	// to call cObj, make $this->pibase->pibase->cObj->function()
 	function init(&$conf,&$pibase) {
 		$this->conf = $conf;

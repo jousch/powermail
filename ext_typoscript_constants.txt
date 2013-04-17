@@ -51,13 +51,13 @@ plugin.powermail {
 	# cat=plugin.powermail//340; type=text; label= Date format: Frontend time format if time field is in use (see http://php.net/manual/function.strftime.php for strftime details)
 	format.time = %H:%M
 	
-	# cat=plugin.powermail//350; type=text; label= OnFocus JavaScript: (De)activate onfocus javascript in fields - removes standard value of (e.g. text-) fields onclick, so the user can click and begin to write
+	# cat=plugin.powermail//350; type=boolean; label= OnFocus JavaScript: (De)activate onfocus javascript in fields - removes standard value of (e.g. text-) fields onclick, so the user can click and begin to write
 	js.onfocus = 1
 	
-	# cat=plugin.powermail//360; type=text; label= Init JavaScript: (De)activate init javascript in fields - adds an onblur javascript to each field like init(tx_powermail_pi1[textfeld],textfeld,index.php?id=index,'')
+	# cat=plugin.powermail//360; type=boolean; label= Init JavaScript: (De)activate init javascript in fields - adds an onblur javascript to each field like init(tx_powermail_pi1[textfeld],textfeld,index.php?id=index,'')
 	js.init = 1
 	
-	# cat=plugin.powermail//370; type=text; label= Onchange JavaScript: (De)activate onchange javascript for select fields - adds an onchange javascript to all select fields - automatic submit onchange
+	# cat=plugin.powermail//370; type=boolean; label= Onchange JavaScript: (De)activate onchange javascript for select fields - adds an onchange javascript to all select fields - automatic submit onchange
 	js.onchange = 0
 	
 	# cat=plugin.powermail//380; type=text; label= Allowed tags in labels: Allow some tags for label fields
