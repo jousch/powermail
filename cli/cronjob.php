@@ -3,7 +3,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2010 Alex Kellner <alexander.kellner@in2code.de>
+*  (c) 2009 Alexander Kellner <alexander.kellner@einpraegsam.net>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -28,19 +28,16 @@
 define('TYPO3_cliMode', TRUE);
 define('PATH_thisScript', $_SERVER['SCRIPT_FILENAME']);
 if (!PATH_thisScript) define('PATH_thisScript', $_ENV['_'] ? $_ENV['_'] : $_SERVER['_']);
-require(dirname(PATH_thisScript) . '/conf.php');
-require(dirname(PATH_thisScript) . '/' . $BACK_PATH.'init.php');
-require_once(PATH_t3lib . 'class.t3lib_admin.php');
-require_once(PATH_t3lib . 'class.t3lib_cli.php');
-require_once(PATH_typo3 . 'template.php');
-require_once(PATH_t3lib . 'class.t3lib_htmlmail.php');
-if (t3lib_div::compat_version('4.5')){
-    require_once(PATH_t3lib . 'class.t3lib_mail_message.php');
-}
+require(dirname(PATH_thisScript).'/conf.php');
+require(dirname(PATH_thisScript).'/'.$BACK_PATH.'init.php');
+require_once(PATH_t3lib.'class.t3lib_admin.php');
+require_once(PATH_t3lib.'class.t3lib_cli.php');
+require_once(PATH_typo3.'template.php');
+require_once(PATH_t3lib.'class.t3lib_htmlmail.php');
 require_once('../mod1/class.tx_powermail_export.php'); // include div functions
 require_once(t3lib_extMgm::extPath('lang', 'lang.php')); // include lang class
 $LANG = t3lib_div::makeInstance('language');
-$LANG->init('en');
+#$LANG->includeLLFile(dirname(dirname(PATH_thisScript)).'/mod1/locallang.xml');
 $pid = intval($_GET['pid']);
 $content = $file = '';
 
@@ -49,83 +46,50 @@ if ($pid > 0) { // if Page id given from GET param
 	// tsconfig
 	$tmp_defaultconfig = array (
 		'time' => 86400, // default setting 1 day
-		'body' => 'See attached file', // default body
+		'body' => 'See XLS file in attachment', // default body
 		'subject' => 'New powermail export email', // default subject
 		'email_receiver' => '', // default: no receiver mail
 		'email_receiver_cc' => '', // default: no cc mail
 		'email_sender' => 'noreply@einpraegsam.net', // default sender address
-		'sender' => 'powermail', // default sender name
-		'format' => 'email_csv', // export in format email_csv or email_html or email_xls
-		'attachedFilename' => '' // overwrite filename
+		'sender' => 'powermail' // default sender name
 	);
 	$tmp_tsconfig = t3lib_BEfunc::getModTSconfig($pid, 'tx_powermail_cli'); // get whole tsconfig from backend
 	$tsconfig = array_merge((array) $tmp_defaultconfig, (array) $tmp_tsconfig['properties']['exportmail.']); // get tsconfig from powermail cli
 	
 	if (t3lib_div::validEmail($tsconfig['email_receiver'])) { // if receiver email is set
+
+		// Generate the xls file
+		$export = t3lib_div::makeInstance('tx_powermail_export');
+		$export->default_start = strftime('%Y-%m-%d %H:%M', (time()-$tsconfig['time'])); // current time minus delta
+		$export->default_end = strftime('%Y-%m-%d %H:%M', time()); // current time (like 2010-01-01 00:00)
+		$file = t3lib_div::getFileAbsFileName($export->main('email', $pid, $LANG));
 		
-		if (t3lib_extMgm::isLoaded('phpexcel_library') || $tsconfig['format'] != 'email_xls') {
-
-			// Generate the xls file
-			$export = t3lib_div::makeInstance('tx_powermail_export');
-			$export->pid = $pid; // set page id
-			$export->startDateTime = (time() - $tsconfig['time']); // set starttime
-			$export->endDateTime = time(); // set endtime
-			$export->export = (stristr($tsconfig['format'], 'email_') ? $tsconfig['format'] : $this->tmp_defaultconfig['format']); // set
-			$export->LANG = $LANG;
-			if (!empty($tsconfig['attachedFilename'])) {
-				$export->overwriteFilename = $tsconfig['attachedFilename']; // overwrite filename with this
-			}
-			$export->main(); // generate file
-
-			if ($export->resNumRows > 0) { // if file is not empty
-				
-                $file = t3lib_div::getFileAbsFileName('typo3temp/' . $export->filename); // read filename
-                if (t3lib_div::compat_version('4.5')){
-                    // new TYPO3 swiftmailer code
-                    $mail = t3lib_div::makeInstance('t3lib_mail_Message');
-                    $mail->setTo(array($tsconfig['email_receiver']))
-                        ->setFrom(array($tsconfig['email_sender'] => $tsconfig['sender']))
-                        ->setSubject($tsconfig['subject'])
-                        ->addPart($tsconfig['body'], 'text/plain')
-                        ->setBody($tsconfig['body'], 'text/html')
-                        ->attach(Swift_Attachment::fromPath($file))
-                        ->setCharset($GLOBALS['TSFE']->metaCharset);
-
-                    if ($tsconfig['email_receiver_cc'] !== ''){
-                        $mail->setCc(t3lib_div::trimExplode(',', $tsconfig['email_receiver_cc']));
-                    }
-                    $mail->send();
-                    $success = $mail->isSent();
-
-                } else {
-                    // Generate the mail
-                    $mail = t3lib_div::makeInstance('t3lib_htmlmail'); // New object: TYPO3 mail class
-                    $mail->start(); // start htmlmail
-                    $mail->recipient = $tsconfig['email_receiver']; // main receiver
-                    $mail->recipient_copy = $tsconfig['email_receiver_cc']; // cc
-                    $mail->subject = $tsconfig['subject']; // mail subject
-                    $mail->from_email = $tsconfig['email_sender']; // sender email
-                    $mail->from_name = $tsconfig['sender']; // sender name
-                    $mail->addAttachment($file); // add attachment
-                    $mail->addPlain($tsconfig['body']); // add plaintext
-                    $mail->setHTML($mail->encodeMsg($tsconfig['body'])); // html format if active via constants
-                    $success = $mail->send();
-                }
-				if ($success) {
-					$content .= 'Mail successfully sent';
-				} else {
-					$content .= 'Powermail Error in sending mail';
-				}
-                unlink($file);
-		
+		if (!empty($file)) { // if file is not empty
+			
+			// Generate the mail
+			$htmlMail = t3lib_div::makeInstance('t3lib_htmlmail'); // New object: TYPO3 mail class
+			$htmlMail->start(); // start htmlmail
+			$htmlMail->recipient = $tsconfig['email_receiver']; // main receiver
+			$htmlMail->recipient_copy = $tsconfig['email_receiver_cc']; // cc
+			$htmlMail->subject = $tsconfig['subject']; // mail subject
+			$htmlMail->from_email = $tsconfig['email_sender']; // sender email
+			$htmlMail->from_name = $tsconfig['sender']; // sender name
+			$htmlMail->addAttachment($file); // add attachment
+			$htmlMail->addPlain($tsconfig['body']); // add plaintext
+			$htmlMail->setHTML($htmlMail->encodeMsg($tsconfig['body'])); // html format if active via constants
+			$htmlMail->setHeaders();
+			$htmlMail->setContent();
+			if ($htmlMail->sendTheMail()) {
+				$content .= 'Mail successfully sent';
 			} else {
-				$content .= 'There are no mails to export in the last ' . intval($tsconfig['time']) . ' seconds in pid ' . $pid;
+				$content .= 'Powermail Error in sending mail';
 			}
+	
 		} else {
-			$content .= 'Please install the extension phpexcel_library or change your settings to a csv file';
+			$content .= 'There are no mails to export in the last '.$tsconfig['time'].' seconds in pid '.$pid;
 		}
 	} else {
-		$content .= 'Powermail Error: No or invalid receiver Email address (maybe you forget to set the receiver email in the tsconfig of page ' . $pid . ')';
+		$content .= 'Powermail Error: No or invalid receiver Email address (maybe you forget to set the receiver email in the tsconfig of page '.$pid.')';
 	}
 
 } else {

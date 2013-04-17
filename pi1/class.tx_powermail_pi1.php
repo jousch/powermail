@@ -74,7 +74,6 @@ class tx_powermail_pi1 extends tslib_pibase {
 		$this->hook_main_content_before(); // hook for content manipulation 1
 		
 		// IF multiple and correct mailID OR IF sendNow and correct mailID OR IF only correct mailID
-		#if (((isset($this->piVars['multiple']) || isset($this->piVars['sendNow'])) && $this->piVars['mailID'] == ($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid'])) || $this->piVars['mailID'] == ($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid'])) {
 		if ($this->piVars['mailID'] == ($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid'])) { // if mailID is correct
 			// What kind of function should be shown in frontend
 			if (!$this->piVars['multiple']) { // if multiple is not set
@@ -88,6 +87,7 @@ class tx_powermail_pi1 extends tslib_pibase {
 									$this->content = $this->confirmation->main($this->conf, $this->sessionfields, $this->cObj); // Call the confirmation function.
 								} else { // Mandatory check positive
 									$this->content = $this->mandatory->main($this->conf, $this->sessionfields, $this->cObj); // Call the mandatory function
+									if ($this->conf['mandatory.']['messages']) $this->content .= $this->form->main($this->conf, $this->sessionfields, $this->cObj); // Show form below mandatory message
 								}
 							}
 							else $this->content = $this->check(); // Error message
@@ -99,6 +99,7 @@ class tx_powermail_pi1 extends tslib_pibase {
 									$this->content = $this->submit->main($this->conf, $this->sessionfields, $this->cObj); // Call the submit function.
 								} else { // Mandatory check positive
 									$this->content = $this->mandatory->main($this->conf, $this->sessionfields, $this->cObj); // Call the mandatory function
+									if ($this->conf['mandatory.']['messages']) $this->content .= $this->form->main($this->conf, $this->sessionfields, $this->cObj); // Show form below mandatory message
 								}
 							}
 							else $this->content = $this->check(); // Error message
@@ -112,6 +113,7 @@ class tx_powermail_pi1 extends tslib_pibase {
 								$this->content = $this->submit->main($this->conf, $this->sessionfields, $this->cObj); // Call the submit function.
 							} else { // Mandatory check positive
 								$this->content = $this->mandatory->main($this->conf, $this->sessionfields, $this->cObj); // Call the mandatory function
+								if ($this->conf['mandatory.']['messages']) $this->content .= $this->form->main($this->conf, $this->sessionfields, $this->cObj); // Show form below mandatory message
 							}			
 						}
 						else $this->content = $this->check(); // Error message

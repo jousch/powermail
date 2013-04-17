@@ -49,6 +49,8 @@ class tx_powermail_mandatory extends tslib_pibase {
 		$content_item = ''; $this->error = 0; $this->innerMarkerArray = $this->tmpl = $fieldarray = array();
 		$this->tmpl['mandatory']['all'] = $this->cObj->getSubpart(tslib_cObj::fileResource($this->conf['template.']['mandatory']), '###POWERMAIL_MANDATORY_ALL###'); // Load HTML Template outer (work on subpart)
 		$this->tmpl['mandatory']['item'] = $this->cObj->getSubpart($this->tmpl['mandatory']['all'], '###ITEM###'); // Load HTML Template inner (work on subpart)
+		$this->tmpl['mandatory']['backbutton'] = $this->cObj->getSubpart($this->tmpl['mandatory']['all'], '###BACKBUTTON###'); // Load HTML Template inner (work on subpart)
+		if ($this->conf['mandatory.']['messages']) $this->tmpl['mandatory']['all'] = str_replace($this->tmpl['mandatory']['backbutton'], '', $this->tmpl['mandatory']['all']); // clear BACKBUTTON subpart if not needed
 		
 		// Fill Markers
 		$this->markerArray = $this->markers->GetMarkerArray($this->conf, $this->sessionfields, $this->cObj, 'mandatory'); // Fill markerArray

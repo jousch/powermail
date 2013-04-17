@@ -30,6 +30,7 @@ plugin.tx_powermail_pi1 {
 	html.removeXSS = {$plugin.powermail.html.removeXSS}
 	countryselect.charset = {$plugin.powermail.countryselect.charset}
 	description.wrap = {$plugin.powermail.description.wrap}
+	mandatory.messages = {$plugin.powermail.mandatory.messages}
 	mandatory.symbol = {$plugin.powermail.mandatory.symbol}
 	mandatory.wrap = {$plugin.powermail.mandatory.wrap}
 	captcha.use = {$plugin.powermail.captcha.use}
@@ -350,3 +351,8 @@ powermailJS {
 		subparts.VALIDATE_ONE_REQUIRED.data = LLL:EXT:powermail/pi1/locallang.xml:JSvalidation_label_validate_one_required
 	}
 }
+
+
+[globalVar = LIT:mootools = {$plugin.powermail.libraryToUse}]
+	#powermailJS.10.template.file = EXT:powermail/js/mootools/tx_powermail-packed.js
+[global]

@@ -212,7 +212,7 @@ class tx_powermail_html extends tslib_pibase {
 				
 				// ###SELECTED###
 				if (!is_array($this->piVarsFromSession['uid'.$this->uid])) { // no multiple
-					if ($options[$i][2] == '*') $markerArray['###SELECTED###'] = 'selected="selected" '; // selected from backend
+					if ($options[$i][2] == '*') $markerArray['###SELECTED###'] = ' selected="selected"'; // selected from backend
 					else $markerArray['###SELECTED###'] = ''; // clear
 					if (isset($this->piVarsFromSession['uid'.$this->uid])) { // if session was set
 						if ($this->piVarsFromSession['uid'.$this->uid] == ($options[$i][1] ? $options[$i][1] : $options[$i][0])) $markerArray['###SELECTED###'] = 'selected="selected" '; // mark as selected
@@ -221,7 +221,7 @@ class tx_powermail_html extends tslib_pibase {
 				} else { // multiple
 					for ($j=0; $j<count($this->piVarsFromSession['uid'.$this->uid]); $j++) {
 						if ($this->piVarsFromSession['uid'.$this->uid][$j] == ($options[$i][1] ? $options[$i][1] : $options[$i][0])) {
-							$markerArray['###SELECTED###'] = 'selected="selected" '; // mark as selected
+							$markerArray['###SELECTED###'] = ' selected="selected"'; // mark as selected
 							$set[$i] = 1;
 						}
 					}
@@ -274,9 +274,19 @@ class tx_powermail_html extends tslib_pibase {
 				
 				// ###CHECKED###
 				if ($options[$i][2] == '*')  {
-				    $markerArray['###CHECKED###'] = 'checked="checked" '; // checked from backend
+				    
+					$markerArray['###CHECKED###'] = 'checked="checked" '; // checked from backend
     				$markerArray['###HIDDENVALUE###'] = 'value="'.$this->dontAllow(isset($options[$i][1]) ? $options[$i][1] : $options[$i][0]).'" '; // add value for hidden field to markerArray
-    			}
+    			
+				} elseif (!empty($this->conf['prefill.']['uid'.$this->uid.'_'.$i])) { // prechecking with typoscript for current field enabled
+					
+					if ($this->cObj->cObjGetSingle($this->conf['prefill.']['uid'.$this->uid.'_'.$i], $this->conf['prefill.']['uid'.$this->uid.'_'.$i.'.']) == 1) {
+						$markerArray['###CHECKED###'] = 'checked="checked" '; // checked from backend
+						$markerArray['###HIDDENVALUE###'] = 'value="'.$this->dontAllow(isset($options[$i][1]) ? $options[$i][1] : $options[$i][0]).'" '; // add value for hidden field to markerArray
+					} else $markerArray['###CHECKED###'] = ''; // clear
+					
+				}
+				// AST end
 				else $markerArray['###CHECKED###'] = ''; // clear
 				if (isset($this->piVarsFromSession['uid'.$this->uid])) { // Preselection from session
 					if (isset($this->piVarsFromSession['uid'.$this->uid][$i]) && $this->piVarsFromSession['uid'.$this->uid][$i] != '') {
