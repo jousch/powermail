@@ -64,9 +64,13 @@ class tx_powermail_countryzones extends tslib_pibase {
 			// Return to HTML header
 			$this->xajax->processRequests();  
 			$GLOBALS['TSFE']->additionalHeaderData[$this->prefixId] = $this->xajax->getJavascript(t3lib_extMgm::siteRelPath('xajax'));
-
+			
+			// Insert code of zone selector via php (if preselected country or in session)
+			if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'preselect') > 0 && empty($this->piVars['uid' . ($this->uid + $this->add)])) { // if there is a country preselected and no other country chosen meanwhile
+				$this->tmpl['html_countryselect']['all'] = str_replace('<div id="powermail_countryzoneselect###POWERMAIL_FIELD_UID###" class="countryzone"></div>', '<div id="powermail_countryzoneselect###POWERMAIL_FIELD_UID###" class="countryzone">'.$this->codeForZoneSelector($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'preselect'), '').'</div>', $this->tmpl['html_countryselect']['all']); // add countryzoneselector code to html template
+			}
 			if (!empty($this->piVars['uid' . ($this->uid + $this->add)])) { // if there is already a value in the session for countryzoneselect
-				$this->tmpl['html_countryselect']['all'] = str_replace('<div id="powermail_countryzoneselect###POWERMAIL_FIELD_UID###" class="countryzone"></div>', '<div id="powermail_countryzoneselect###POWERMAIL_FIELD_UID###" class="countryzone">'.$this->codeForZoneSelector($this->piVars['uid' . $this->uid]).'</div>', $this->tmpl['html_countryselect']['all']); // add countryzoneselector code to html template
+				$this->tmpl['html_countryselect']['all'] = str_replace('<div id="powermail_countryzoneselect###POWERMAIL_FIELD_UID###" class="countryzone"></div>', '<div id="powermail_countryzoneselect###POWERMAIL_FIELD_UID###" class="countryzone">'.$this->codeForZoneSelector(0, $this->piVars['uid' . $this->uid]).'</div>', $this->tmpl['html_countryselect']['all']); // add countryzoneselector code to html template
 			}
 			
 			$this->markerArray['###JS###'] = 'onchange="tx_powermail_pi1addZoneSelector(this.value);"';
@@ -83,14 +87,14 @@ class tx_powermail_countryzones extends tslib_pibase {
 		
 		// return
 		$objResponse->addClear('powermail_countryzoneselect'.$this->uid, "innerHTML"); // clear div container vor selector box
-		if ($this->codeForZoneSelector($value)) $objResponse->addAppend('powermail_countryzoneselect'.$this->uid, "innerHTML", $this->codeForZoneSelector($value)); // add new content // if there are results 
+		if ($this->codeForZoneSelector(0, $value)) $objResponse->addAppend('powermail_countryzoneselect'.$this->uid, "innerHTML", $this->codeForZoneSelector(0, $value)); // add new content // if there are results 
 		
 		return $objResponse->getXML(); // return xml für javascript
 	}
 	
 	
 	// Function codeForZoneSelector() only generates code for zoneselctorbox
-	function codeForZoneSelector($value) {
+	function codeForZoneSelector($uid = 0, $value = '') {
 		// config
 		$this->tmpl['html_countryzoneselect']['all'] = tslib_cObj::getSubpart($this->tmpl['all'],'###POWERMAIL_FIELDWRAP_HTML_COUNTRYZONESELECT###'); // work on subpart 1
 		$this->tmpl['html_countryzoneselect']['item'] = tslib_cObj::getSubpart($this->tmpl['html_countryzoneselect']['all'],'###ITEM###'); // work on subpart 2
@@ -101,10 +105,15 @@ class tx_powermail_countryzones extends tslib_pibase {
 		$outerMarkerArray['###ID###'] = 'id="uid'.($this->add + $this->uid).'" '; // id in markerArray uid55_1
 		$outerMarkerArray['###CLASS###'] = str_replace($this->uid, ($this->add + $this->uid), $this->markerArray['###CLASS###']); // change class="... uid55" -> class="... uid100055"
 		
+		// where clause
+		if ($uid==0) $where_clause = 'static_countries.cn_iso_2 = "'.$value.'" OR static_countries.cn_iso_3 = "'.$value.'" OR static_countries.cn_short_en = "'.$value.'"'; // where clause if value of country given
+		else $where_clause = 'static_countries.uid = "'.$uid.'"'; // where clause if uid of country given
+		
+		// select
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 			'static_country_zones.zn_code, static_country_zones.zn_name_local',
 			'static_countries LEFT JOIN static_country_zones ON (static_countries.cn_iso_2 = static_country_zones.zn_country_iso_2)',
-			$where_clause = 'static_countries.cn_iso_2 = "'.$value.'" OR static_countries.cn_iso_3 = "'.$value.'" OR static_countries.cn_short_en = "'.$value.'"',
+			$where_clause,
 			$groupBy = '',
 			$orderBy = 'static_country_zones.zn_code',
 			$limit = ''

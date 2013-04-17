@@ -302,7 +302,7 @@ class tx_powermail_submit extends tslib_pibase {
 				$link = $this->pibase->cObj->typolink('x', $typolink_conf); // Create target url
 				
 				if (intval($this->pibase->cObj->data['tx_powermail_redirect']) > 0 || strpos($this->pibase->cObj->data['tx_powermail_redirect'], 'fileadmin/') !== false) { // PID (intern link) OR file
-					$link = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : 'http://'.$_SERVER['HTTP_HOST'].'/') . $link; // Add baseurl to link
+					$link = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')) . $link; // Add baseurl to link
 				} 
 				elseif (t3lib_div::validEmail($this->pibase->cObj->data['tx_powermail_redirect'])) { // if email recognized
 					$link = 'mailto:'.$link; // add mailto: 
