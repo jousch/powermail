@@ -106,7 +106,7 @@ class tx_powermail_sessions extends tslib_pibase {
 						if(filesize($_FILES['tx_powermail_pi1']['tmp_name']['uid'.$row['uid']]) < ($this->conf['upload.']['filesize'] * 1024)) { // filesize check
 							if(in_array($fileinfo['extension'],$this->allowedFileExtensions)) { // if current fileextension is allowed
 								// upload copy move uploaded files to destination
-								if(t3lib_div::upload_copy_move($_FILES['tx_powermail_pi1']['tmp_name']['uid'.$row['uid']], $_SERVER['DOCUMENT_ROOT'].'/'.$this->conf['upload.']['folder'].$newfilename)) {
+								if(t3lib_div::upload_copy_move($_FILES['tx_powermail_pi1']['tmp_name']['uid'.$row['uid']], t3lib_div::getFileAbsFileName($this->conf['upload.']['folder'].$newfilename))) {
 									$piVars['uid'.$row['uid']] = $newfilename; // write new filename to session
 								} else { // could not be copied (maybe write permission error or wrong path)
 									$piVars['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_error_file_main').' <b>'.$_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']].'</b>'; // write error to session
