@@ -28,30 +28,30 @@
 /**
  * Class/Function which manipulates the item-array for table/field tx_powermail_forms_recip_table.
  *
- * @author	Mischa Heissmann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@einpraegsam.net>
+ * @author	Mischa Hei√ümann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@einpraegsam.net>
  * @package	TYPO3
  * @subpackage	tx_powermail
  */
 class user_powermail_tx_powermail_forms_recip_table {
-	
-	function main(&$params,&$pObj)	{							
-		$tables = $GLOBALS['TYPO3_DB']->admin_get_tables();
-		
-		if(isset($tables) && is_array($tables)) {
-			if(t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.2.0')) {
-				foreach($tables as $v) {
-					$params['items'][] = array($pObj->sL($v),$v);
-				}
-			}
-			else {
-				foreach($tables as $k => $v) {
-					$params['items'][] = array($pObj->sL($k),$k);
-				}
-			}
-		}
-		
-	}
-}
+							function main(&$params,&$pObj)	{
+/*								
+								debug('Hello World!',1);
+								debug('$params:',1);
+								debug($params);
+								debug('$pObj:',1);
+								debug($pObj);
+*/						//		print_r($params);
+								$tables = $GLOBALS['TYPO3_DB']->admin_get_tables();
+
+								foreach($tables as $v) {
+									$params['items'][] = array($pObj->sL($v),$v);
+								}
+									// Adding an item!
+//								$params['items'][] = array($pObj->sL("Added label by PHP function|Tilf¯jet Dansk tekst med PHP funktion"), 999);
+
+								// No return - the $params and $pObj variables are passed by reference, so just change content in then and it is passed back automatically...
+							}
+						}
 
 
 

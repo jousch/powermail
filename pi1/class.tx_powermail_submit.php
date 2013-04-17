@@ -91,26 +91,45 @@ class tx_powermail_submit extends tslib_pibase {
 		$this->content = preg_replace("|###.*###|i","",$this->content); // Finally clear not filled markers
 		
 		// 4. Now clear the session if option is set in TS
-		if($this->conf['clear.']['session'] == 1) {
-			$this->clearSession();
-		}
+		$this->clearSession();
 		
 		// 5. Clear sessions of captcha
-		session_start(); // start session
-		if(isset($_SESSION['tx_captcha_string'])) $_SESSION['tx_captcha_string'] = ''; // clear session of captcha
-		if(isset($_SESSION['sr_freecap_attempts'])) $_SESSION['sr_freecap_attempts'] = 0; // clear session of sr_freecap
-		if(isset($_SESSION['sr_freecap_word_hash'])) $_SESSION['sr_freecap_word_hash'] = false; // clear session of sr_freecap
+		$this->clearCaptchaSession();
+		
+		// 6. Redirect if wanted
+		$this->redirect();
 		
 		return $this->content; // return HTML for THX Message
 	}
 
-
-	/**
-	 * function for sending the formcontent
-	 *
-	 * @param	string		$subpart: HTML-Code
-	 * @return			...
-	 */
+	
+	// Function redirect() forward the user to a new location after submit
+	function redirect() {
+		if($this->pibase->cObj->data['tx_powermail_redirect']) { // only if redirect target was set in backend
+				
+			$typolink_conf = array (
+			  "returnLast" => "url", // Give me only the string
+			  "parameter" => $this->pibase->cObj->data['tx_powermail_redirect'], // target pid
+			  "useCacheHash" => 0 // Don't use cache
+			);
+			$link = $this->pibase->cObj->typolink('x', $typolink_conf); // Create target url
+			
+			if (intval($this->pibase->cObj->data['tx_powermail_redirect']) > 0 || strpos($this->pibase->cObj->data['tx_powermail_redirect'],'fileadmin/') !== false) { // PID (intern link) OR file
+				$link = $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'].$link; // Add baseurl to link
+			} 
+			elseif (t3lib_div::validEmail($this->pibase->cObj->data['tx_powermail_redirect'])) { // if email recognized
+				$link = 'mailto:'.$link; // add mailto: 
+			}
+			
+			// Header for redirect
+			header("Location: $link"); 
+			header("Connection: close");
+	
+		}
+	}
+	
+	
+	// Function sendMail() generates mail for sender and receiver
 	function sendMail($subpart) {
 
 		// Configuration
@@ -208,7 +227,7 @@ class tx_powermail_submit extends tslib_pibase {
 		}
 	}
 	
-	
+
 	// Function hook_submit_afterEmails() to add a hook at the end of this file to manipulate markers and content after emails where sent
 	function hook_submit_afterEmails() {
 		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitAfterMarkerHook'])) { // Adds hook for processing of extra global markers
@@ -220,11 +239,20 @@ class tx_powermail_submit extends tslib_pibase {
 	}
 	
 	// Function to clear the Session after submitting the form. Will only be cleared when option is selected in Constant-Editor oder set by TS
-	function clearSession(){
-		$GLOBALS['TSFE']->fe_user->setKey("ses", $this->extKey.'_'.$this->pibase->cObj->data['uid'], array()); // Generate Session without ERRORS
-		$GLOBALS['TSFE']->storeSessionData(); // Save session*/
+	function clearSession() {
+		if($this->conf['clear.']['session'] == 1) {
+			$GLOBALS['TSFE']->fe_user->setKey("ses", $this->extKey.'_'.$this->pibase->cObj->data['uid'], array()); // Generate Session without ERRORS
+			$GLOBALS['TSFE']->storeSessionData(); // Save session*/
+		}
 	}
-
+	
+	// Function clearCaptchaSession() clears already filled captcha sessions from captcha or sr_freecap
+	function clearCaptchaSession() {
+		session_start(); // start session
+		if(isset($_SESSION['tx_captcha_string'])) $_SESSION['tx_captcha_string'] = ''; // clear session of captcha
+		if(isset($_SESSION['sr_freecap_attempts'])) $_SESSION['sr_freecap_attempts'] = 0; // clear session of sr_freecap
+		if(isset($_SESSION['sr_freecap_word_hash'])) $_SESSION['sr_freecap_word_hash'] = false; // clear session of sr_freecap
+	}
 
 	//function for initialisation.
 	// to call cObj, make $this->pibase->cObj->function()
@@ -233,7 +261,6 @@ class tx_powermail_submit extends tslib_pibase {
 		$this->pibase = $pibase;
 	}
 }
-
 
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/powermail/pi1/class.tx_powermail_submit.php'])	{

@@ -39,19 +39,19 @@ class tx_powermail_markers extends tslib_pibase {
         $this->sessiondata = $GLOBALS['TSFE']->fe_user->getKey('ses',$this->extKey.'_'.$this->pibase->pibase->cObj->data['uid']); // Get piVars from session
        	$this->div_functions = t3lib_div::makeInstance('tx_powermail_functions_div'); // New object: div functions
         $this->tmpl['all'] = $this->pibase->pibase->cObj->getSubpart(tslib_cObj::fileResource($this->conf['template.']['all']),"###POWERMAIL_ALL###"); // Load HTML Template: ALL (works on subpart ###POWERMAIL_ALL###)
-        $this->notInMarkerAll = t3lib_div::trimExplode(',','ERROR,'.$this->conf['markerALL.']['notIn'],1); // choose which fields should not be listed in marker ###ALL### (ERROR is never allowed to be shown)
+        $this->notInMarkerAll = t3lib_div::trimExplode(',',$this->conf['markerALL.']['notIn'],1); // choose which fields should not be listed in marker ###ALL### (ERROR is never allowed to be shown)
         
         if(isset($this->sessiondata)) {
             foreach($this->sessiondata as $k => $v) { // One loop for every piVar
-                if(is_array($v)) { // if value is still an array
-                    foreach($v as $kv => $vv) { // One loop for every piVar
-                        if(is_numeric(str_replace('uid','',$kv))) { // check if key is like uid55
-							$this->markerArray['###'.strtoupper($k).$kv.'###'] = $vv; // fill ###FIELD###
-							$this->markerArray['###'.strtolower($k).$kv.'###'] = $vv; // fill ###field###
-							$this->markerArray['###'.$k.$kv.'###'] = $vv; // fill ###FiEld###
+                if(is_numeric(str_replace('uid','',$k))) { // use only piVars like UID555
+					if(!is_array($v)) { // standard: value is not an array
+						if(is_numeric(str_replace('uid','',$k))) { // check if key is like uid55
+							$this->markerArray['###'.strtoupper($k).'###'] = $v; // fill ###UID55###
+							$this->markerArray['###'.strtolower($k).'###'] = $v; // fill ###uid55###
+							//$this->markerArray['###'.$k.'###'] = $v; // fill ###UiD55###
 							
 							// ###POWERMAIL_ALL###
-							if(!in_array($k,$this->notInMarkerAll) && !in_array($kv,$this->notInMarkerAll)) { // if key is allowed
+							if(!in_array(strtoupper($k),$this->notInMarkerAll) && !in_array('###'.strtoupper($k).'###',$this->notInMarkerAll)) {
 								$this->markerArray['###POWERMAIL_ALL###'] .= trim (
 									tslib_cObj::substituteMarkerArrayCached ( // fill this marker with all values
 										$this->tmpl['all'],
@@ -63,33 +63,37 @@ class tx_powermail_markers extends tslib_pibase {
 								);
 							}
 						}
-                    }
-                } else { // not still an array
-                   	if(is_numeric(str_replace('uid','',$k))) { // check if key is like uid55
-						$this->markerArray['###'.strtoupper($k).'###'] = $v; // fill ###FIELD###
-						$this->markerArray['###'.strtolower($k).'###'] = $v; // fill ###field###
-						$this->markerArray['###'.$k.'###'] = $v; // fill ###FiEld###
-						
-						// ###POWERMAIL_ALL###
-						if(!in_array($k,$this->notInMarkerAll)) { // if key is allowed
-							$this->markerArray['###POWERMAIL_ALL###'] .= trim (
-								tslib_cObj::substituteMarkerArrayCached ( // fill this marker with all values
-									$this->tmpl['all'],
-									array(
-										'###POWERMAIL_LABEL###' => $this->GetLabelfromBackend($k,$v),
-										'###POWERMAIL_VALUE###' => $v
-									)
-								)
-							);
+					} else { // value is still an array (needed for e.g. checkboxes tx_powermail_pi1[uid55][0])
+						foreach($v as $kv => $vv) { // One loop for every piVar
+							if(is_numeric(str_replace('uid','',$k))) { // check if key is like uid55
+								$this->markerArray['###'.strtoupper($k).'_'.$kv.'###'] = $vv; // fill ###UID55_0###
+								$this->markerArray['###'.strtolower($k).'_'.$kv.'###'] = $vv; // fill ###uid55_0###
+								$this->markerArray['###'.strtoupper($k).'###'] .= $vv.', '; // fill ###UID55###
+								
+								// ###POWERMAIL_ALL###
+								if(!in_array(strtoupper($k),$this->notInMarkerAll) && !in_array('###'.strtoupper($k).'###',$this->notInMarkerAll)) {
+									$this->markerArray['###POWERMAIL_ALL###'] .= trim (
+										tslib_cObj::substituteMarkerArrayCached ( // fill this marker with all values
+											$this->tmpl['all'],
+											array(
+												'###POWERMAIL_LABEL###' => $this->GetLabelfromBackend($k,$v),
+												'###POWERMAIL_VALUE###' => $vv
+											)
+										)
+									);
+								}
+							}
 						}
 					}
-               	}
+				}
             }
         }
         
         // add standard Markers
-        $this->markerArray['###POWERMAIL_THX_MESSAGE###'] = $this->pibase->pibase->pi_RTEcssText(tslib_cObj::substituteMarkerArrayCached($this->pibase->pibase->cObj->data['tx_powermail_thanks'],$this->markerArray)); // Thx message with ###fields###
-        $this->markerArray['###POWERMAIL_BASEURL###'] = $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL']; // absolute path to fileadmin folder
+        $this->markerArray['###POWERMAIL_THX_RTE###'] = $this->pibase->pibase->pi_RTEcssText(tslib_cObj::substituteMarkerArrayCached($this->pibase->pibase->cObj->data['tx_powermail_thanks'],$this->markerArray)); // Thx message with ###fields###
+        $this->markerArray['###POWERMAIL_EMAILRECIPIENT_RTE###'] = $this->pibase->pibase->pi_RTEcssText(tslib_cObj::substituteMarkerArrayCached($this->pibase->pibase->cObj->data['tx_powermail_mailreceiver'],$this->markerArray)); // Email to receiver message with ###fields###
+        $this->markerArray['###POWERMAIL_EMAILSENDER_RTE###'] = $this->pibase->pibase->pi_RTEcssText(tslib_cObj::substituteMarkerArrayCached($this->pibase->pibase->cObj->data['tx_powermail_mailsender'],$this->markerArray)); // Email to sender message with ###fields###
+		$this->markerArray['###POWERMAIL_BASEURL###'] = $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL']; // absolute path to fileadmin folder
 		
 		if(isset($this->markerArray)) return $this->markerArray;
     }

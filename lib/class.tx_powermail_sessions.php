@@ -58,10 +58,12 @@ class tx_powermail_sessions extends tslib_pibase {
 		//$piVars = array_map('html_entity_decode',$piVars);
 		
 		if($all == 0) { // delete not allowed values from piVars
-			$this->notInMarkerAll = t3lib_div::trimExplode(',',$this->conf['markerALL.']['notIn'],1); // choose which fields should not be listed
-			
-			for ($i=0;$i<count($this->notInMarkerAll);$i++) { // One loop for every not allowed value
-				if(isset($piVars[$this->notInMarkerAll[$i]])) unset($piVars[$this->notInMarkerAll[$i]]); // delete current value
+			if(isset($piVars)) {
+				foreach($piVars as $key => $value) { // one loop for every piVar
+					if(!is_numeric(str_replace('uid','',$key))) {
+						unset($piVars[$key]); // delete current value (like mailID or sendnow)
+					}
+				}
 			}
 		}
 		

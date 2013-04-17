@@ -32,12 +32,17 @@
  */
 class user_powermail_tx_powermail_example {
 	function main($PA, $fobj)	{
-	
-		$content = '<div style="border: 1px dashed #F19105; background-color: white; padding: 10px 0;">';
-		$content .= '<img src="'.t3lib_extMgm::extRelPath("powermail").'lib/example/examplefield_'.$PA['fieldConf']['config']['field'].'.gif" alt="Example picture could not be shown" title="examplepicture of field in frontend" />';
-		$content .= '</div>';
 		
-		if($PA['fieldConf']['config']['field']) return $content;
+		//$PA['fieldConf']['config']['field']; // example content: text or textarea
+		//if(file_exists(t3lib_extMgm::extRelPath("powermail").'lib/example/examplefield_'.$PA['fieldConf']['config']['field'].'.gif')) {
+			$content = '<div style="border: 1px dashed #F19105; background-color: white; padding: 10px 0;">';
+			$content .= '<img src="'.t3lib_extMgm::extRelPath("powermail").'lib/example/examplefield_'.$PA['fieldConf']['config']['field'].'.gif" alt="Example picture could not be shown" title="example of textfield" />';
+			$content .= '</div>';
+		//}
+		
+		//else $content = 'Powermail Error - example picture '.t3lib_extMgm::extRelPath("powermail").'lib/example/examplefield_'.$PA['fieldConf']['config']['field'].'.gif don\'t exists';
+		
+		return $content;
    
 	}
 }

@@ -33,14 +33,21 @@
  * @subpackage	tx_powermail
  */
 class user_powermail_tx_powermail_fields_type {
-	
-	function main(&$params,&$pObj)	{
-		
-		$params['items'][] = array($pObj->sL("Added label by PHP function|Tilføjet Dansk tekst med PHP funktion"), 'text');
-		
-	}
-	
-}
+							function main(&$params,&$pObj)	{
+/*								
+								debug('Hello World!',1);
+								debug('$params:',1);
+								debug($params);
+								debug('$pObj:',1);
+								debug($pObj);
+*/
+//print_r($params['row']['type']);
+									// Adding an item!
+								$params['items'][] = array($pObj->sL("Added label by PHP function|Tilføjet Dansk tekst med PHP funktion"), 'text');
+
+								// No return - the $params and $pObj variables are passed by reference, so just change content in then and it is passed back automatically...
+							}
+						}
 
 
 

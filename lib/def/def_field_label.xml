@@ -24,12 +24,22 @@
 					</config>
 				</TCEforms>
 			</send>
+			<name>
+				<TCEforms>
+					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.name</label>
+					<config>
+						<type>user</type>
+						<userFunc>user_powermail_tx_powermail_uid->main</userFunc>
+						<field>text</field>
+					</config>
+				</TCEforms>
+			</name>
 			<example>
 				<TCEforms>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.example</label>
 					<config>
 						<type>user</type>
-						<userFunc>tx_powermail_tx_powermail_example->main</userFunc>
+						<userFunc>user_powermail_tx_powermail_example->main</userFunc>
 						<field>label</field>
 					</config>
 				</TCEforms>

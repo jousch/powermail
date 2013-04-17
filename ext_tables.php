@@ -6,12 +6,13 @@ $GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode
 t3lib_extMgm::allowTableOnStandardPages('tx_powermail_fieldsets');
 
 if (TYPO3_MODE=="BE") {
-	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_forms_recip_table.php");
-	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_forms_recip_id.php");
-	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_forms_preview.php");
-	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_forms_sender_field.php");
-	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_fields_fe_field.php");
-	include_once(t3lib_extMgm::extPath("powermail")."lib/class.tx_powermail_tx_powermail_example.php");
+	include_once(t3lib_extMgm::extPath("powermail")."lib/class.user_powermail_tx_powermail_forms_recip_table.php");
+	include_once(t3lib_extMgm::extPath("powermail")."lib/class.user_powermail_tx_powermail_forms_recip_id.php");
+	include_once(t3lib_extMgm::extPath("powermail")."lib/class.user_powermail_tx_powermail_forms_preview.php");
+	include_once(t3lib_extMgm::extPath("powermail")."lib/class.user_powermail_tx_powermail_forms_sender_field.php");
+	include_once(t3lib_extMgm::extPath("powermail")."lib/class.user_powermail_tx_powermail_fields_fe_field.php");
+	include_once(t3lib_extMgm::extPath("powermail")."lib/class.user_powermail_tx_powermail_example.php");
+	include_once(t3lib_extMgm::extPath("powermail")."lib/class.user_powermail_tx_powermail_uid.php");
 }
 
 t3lib_extMgm::addToInsertRecords('tx_powermail_fieldsets');
@@ -131,7 +132,7 @@ $tempColumns = Array (
 			"items" => Array (
 				Array("LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.recip_table.I.0", "0"),
 			),
-			"itemsProcFunc" => "tx_powermail_tx_powermail_forms_sender_field->main",	
+			"itemsProcFunc" => "user_powermail_tx_powermail_forms_sender_field->main",
 			"size" => 1,	
 			"maxitems" => 1,
 		)
@@ -164,7 +165,7 @@ $tempColumns = Array (
 			"items" => Array (
 				Array("", "0"),
 			),
-			"itemsProcFunc" => "tx_powermail_tx_powermail_forms_recip_table->main",	
+			"itemsProcFunc" => "user_powermail_tx_powermail_forms_recip_table->main",
 			"size" => 1,	
 			"maxitems" => 1,
 		)
@@ -177,7 +178,7 @@ $tempColumns = Array (
 			"type" => "select",
 			"items" => Array (
 			),
-			"itemsProcFunc" => "tx_powermail_tx_powermail_forms_recip_id->main",	
+			"itemsProcFunc" => "user_powermail_tx_powermail_forms_recip_id->main",
 			"size" => 5,	
 			"maxitems" => 100,
 			"allowNonIdValues" => 1,
@@ -199,6 +200,44 @@ $tempColumns = Array (
 			"type" => "text",
 			"cols" => "60",
 			"rows" => "2",
+		)
+	),
+	"tx_powermail_mailsender" => Array (
+		"exclude" => 1,
+		"label" => "LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.mailsender",
+		"config" => Array (
+			"type" => "text",
+			"cols" => "60",
+			"rows" => "2",
+			"default" => "LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.mailsender.default",
+		)
+	),
+	"tx_powermail_mailreceiver" => Array (
+		"exclude" => 1,
+		"label" => "LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.mailreceiver",
+		"config" => Array (
+			"type" => "text",
+			"cols" => "60",
+			"rows" => "2",
+			"default" => "LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.mailreceiver.default",
+		)
+	),
+	"tx_powermail_redirect" => Array (
+		"exclude" => 1,
+		"label" => "LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.redirect",
+		"config" => Array (
+			"type" => "input",
+			"size" => "30",
+			"wizards" => Array(
+				"_PADDING" => 2,
+				"link" => Array(
+					"type" => "popup",
+					"title" => "Link",
+					"icon" => "link_popup.gif",
+					"script" => "browse_links.php?mode=wizard",
+					"JSopenParams" => "height=300,width=500,status=0,menubar=0,scrollbars=1"
+				),
+			),
 		)
 	),
 	"tx_powermail_fieldsets" => Array(
@@ -229,7 +268,7 @@ $tempColumns = Array (
 		"label" => "LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.preview",
 		"config" => Array (
 			"type" => "user",
-			'userFunc' => 'tx_powermail_tx_powermail_forms_preview->main',
+			'userFunc' => 'user_powermail_tx_powermail_forms_preview->main',
 		)
 	),
 );
@@ -241,10 +280,10 @@ $TCA['tt_content']['types'][$_EXTKEY.'_pi1']['showitem']='
 	CType;;4;button;1-1-1, sys_language_uid;;;;2-2-2, l18n_parent, l18n_diffsource, hidden;;1, header;;3;;3-3-3,
 	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div1, tx_powermail_title;;;;2-2-2, tx_powermail_confirm;;;;3-3-3, tx_powermail_multiple,
 	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div2, tx_powermail_fieldsets;;;;4-4-4, tx_powermail_preview,
-	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div3, tx_powermail_subject_r, tx_powermail_recipient, tx_powermail_users;;;;5-5-5,tx_powermail_recip_table, tx_powermail_recip_id, tx_powermail_query;;;;6-6-6,
-	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div4, tx_powermail_sender, tx_powermail_subject_s, 
-	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div5, tx_powermail_thanks;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts],
-	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div6';
+	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div3, tx_powermail_sender, tx_powermail_subject_s,, tx_powermail_mailsender;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts],
+	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div4, tx_powermail_subject_r, tx_powermail_recipient, tx_powermail_users;;;;5-5-5,tx_powermail_recip_table, tx_powermail_recip_id, tx_powermail_query;;;;6-6-6,, tx_powermail_mailreceiver;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts],
+	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div5, tx_powermail_thanks;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], tx_powermail_redirect,
+	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div8';
 
 
 

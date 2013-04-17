@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Alex Kellner, Mischa Heißmann, <alexander.kellner@wunschtacho.de, typo3.2008@heissmann.org>
+*  (c) 2007 Mischa Heißmann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@wunschtacho.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -23,53 +23,60 @@
 ***************************************************************/
 
 
+
+
 /**
  * Class/Function which manipulates the item-array for table/field tx_powermail_forms_recip_id.
  *
- * @author	Alex Kellner, Mischa Heißmann <alexander.kellner@einpraegsam.net, typo3.2009@heissmann.org>
+ * @author	Mischa Heißmann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@einpraegsam.net>
  * @package	TYPO3
  * @subpackage	tx_powermail
  */
 class user_powermail_tx_powermail_forms_recip_id {
-	
-	// function main() lists email addresses of chosen tables
-	function main(&$params, &$pObj)	{
-							
-		if (!empty($params['row']['tx_powermail_recip_table'])) { // if a table was selected in flexform
-		
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery( // db query - get all of selected table
-				$select = '*', // get all fields
-				$from = $params['row']['tx_powermail_recip_table'], // of selected table
-				$where = '1 AND deleted = 0', // where clause
-				$groupBy = '',
-				$orderBy = '',
-				$limit = '100000' // limit for performance reasons
+	function main(&$params,&$pObj)	{
+/*								
+		debug('Hello World!',1);
+		debug('$params:',1);
+		debug($params);
+		debug('$pObj:',1);
+		debug($pObj);
+*/								
+		$select_fields = '*';
+		$from_table = $params['row']['tx_powermail_recip_table'];
+		if($from_table != '0' && $from_table != '') {
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				$select_fields,
+				$from_table,
+				$where_clause,
+				$groupBy='',
+				$orderBy='',
+				$limit=''
 			);
-			if ($res) { // if there is a result
-			
-				/*
-				// TODO: Select a group and send mail to whole group
-				if (preg_match('/group/', $params['row']['tx_powermail_recip_table'])) { // if chosen table contents "group"
-					
-					while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // one loop for every record
+			if($res != '' || $res > 0) {
+				if(preg_match('/group/',$params['row']['tx_powermail_recip_table'])){
+					while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+						// Adding an item!
 						$params['items'][] = array($pObj->sL($row['title']), $row['uid']);
 					}
-				
-				} else { // chosen table don't contents "group" in its name
-				*/
-					
-				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // one loop for every record
-					$uid = $row['uid']; // get uid of current record
-					foreach ((array) $row as $k => $v) { // one loop for every field of current record
-						if (t3lib_div::validEmail($v)) { // if current fieldvalue is an email address
-							$params['items'][] = array($pObj->sL($v), $v); // add email to array for returning
+				}
+	
+			else {
+				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+					$uid = $row['uid'];
+		
+					foreach($row as $k => $v){
+						if(t3lib_div::validEmail($v)) {
+								// Adding an item!
+							$params['items'][] = array($pObj->sL($v), $v);
 						}
 					}
 				}
-				
+				}
 			}
 		}
 		
+
+		// No return - the $params and $pObj variables are passed by reference, so just change content in then and it is passed back automatically...
 	}
 }
 

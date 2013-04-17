@@ -20,7 +20,7 @@
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.example</label>
 					<config>
 						<type>user</type>
-						<userFunc>tx_powermail_tx_powermail_example->main</userFunc>
+						<userFunc>user_powermail_tx_powermail_example->main</userFunc>
 						<field>button</field>
 					</config>
 				</TCEforms>

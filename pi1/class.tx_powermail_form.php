@@ -184,9 +184,20 @@ class tx_powermail_form extends tslib_pibase {
 			}
 			else $content = ''; // clear it if it's not needed
 		
-		} elseif ($add == 0) {
-		
-			$content = 'Pagebrowser';
+		} elseif ($add == 0) { // show pagebrowser
+			
+			/*
+			// page1 page2 page3 page4
+			$content = '';			
+			for($i=0;$i<$this->multiple['numberoffieldsets'];$i++) {
+				if(($i+1) == $this->multiple['currentpage']) $classadd = ' powermail_bagebrowser_current'; else $classadd = '';
+				$content .= '<a href="'.$this->pibase->cObj->typolink('x',array('parameter'=>$GLOBALS['TSFE']->id,'returnLast'=>'url', 'additionalParams'=>'&tx_powermail_pi1[multiple]='.($i + 1).'&tx_powermail_pi1[mailID]='.$this->pibase->cObj->data['uid'],'useCacheHash' => 1)).'" class="powermail_pagebrowser'.$classadd.'">Seite '.($i+1).'</a>'."\n";
+			}
+			*/
+			
+			// 3 of 8
+			$content = $this->multiple['currentpage'].$this->pi_getLL('pagebrowser_inner').$this->multiple['numberoffieldsets']; // 1 of 4
+			$content = $this->pibase->cObj->wrap($content,$this->conf['pagebrowser.']['wrap'],'|'); // wrap this
 		
 		} else { // Error
 		

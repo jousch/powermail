@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Alexander Kellner <alexander.kellner@einpraegsam.net>
+*  (c) 2007 Mischa Heißmann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@wunschtacho.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -31,17 +31,41 @@
  * @subpackage	tx_powermail
  */
 class user_powermail_tx_powermail_uid {
-	function main($PA, $fobj) {
-		$content = '';
+	function main($PA, $fobj)	{
+
+		//$PA['fieldConf']['config']['field']; // example content: text or textarea
+//print_r($PA);
+/*		$content = '<script language="JavaScript" type="text/javascript">
+						<!--
+							var nn = !!document.layers;
+							var ie = !!document.all;
+
+							if (nn){
+								netscape.security.PrivilegeManager.enablePrivilege("UniversalSystemClipboardAccess");
+								var fr=new java.awt.Frame(); // der IE kanns so, aber für den NN muss man dessen Java-API bemühen
+								var zwischenablage = fr.getToolkit().getSystemClipboard();
+							}
+
+							function copy(textfeld){
+								if (nn) {
+									textfeld.select();
+									zwischenablage.setContents(new java.awt.datatransfer.StringSelection(textfeld.value), null);
+								}
+								else if (ie) {
+									textfeld.select();
+									cbBuffer=textfeld.createTextRange();
+									cbBuffer.execCommand(\'Copy\');
+								}
+							}
+						//-->
+					</script>';*/
+					
 		$content .= '<input type="text" readonly="readonly" name="uid'.$PA['row']['uid'].'" value="';
 		$content .= '###UID'.$PA['row']['uid'].'###';
 		$content .= '" />';
-		
-		if(!empty($PA['row']['uid'])) return $content;
-	}
-	
-	function noReturn($PA, $fobj) {
-		return FALSE;
+	//	$content .= '<input type="button" value="Kopieren" name="cmdCopy" onClick="copy(this.form.uid'.$PA['row']['uid'].')">';
+		return $content;
+
 	}
 }
 

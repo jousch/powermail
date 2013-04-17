@@ -1,5 +1,6 @@
 Powermail HTML Template for email: Mail to receiver
 
+Get values from RTE in backend:						###POWERMAIL_EMAILRECIPIENT_RTE###
 For displaying complete content: 					###POWERMAIL_ALL###
 Use special marker: 								###UID55###
 Displaying any value from pi1/locallang.xml:		###POWERMAIL_LOCALLANG_MYFIELD### (###POWERMAIL_LOCALLANG_$field###)
@@ -7,8 +8,7 @@ Absolute path (baseurl):							###POWERMAIL_BASEURL### (http://www.test.com/)
 
 <!--###POWERMAIL_RECIPIENT_MAIL### start-->
 	<p>
-		###POWERMAIL_LOCALLANG_EMAIL_RECEIVER###<br />
-		###POWERMAIL_ALL###
+		###POWERMAIL_EMAILRECIPIENT_RTE###
 	</p>
 <!--###POWERMAIL_RECIPIENT_MAIL### stop-->
 
@@ -16,8 +16,9 @@ Absolute path (baseurl):							###POWERMAIL_BASEURL### (http://www.test.com/)
 
 
 
-Powermail HTML Template for email: Mail to receiver
+Powermail HTML Template for email: Mail to sender
 
+Get values from RTE in backend:						###POWERMAIL_EMAILSENDER_RTE###
 For displaying complete content: 					###POWERMAIL_ALL###
 Use special marker: 								###UID55###
 Displaying any value from pi1/locallang.xml:		###POWERMAIL_LOCALLANG_MYFIELD### (###POWERMAIL_LOCALLANG_$field###)
@@ -25,7 +26,6 @@ Absolute path (baseurl):							###POWERMAIL_BASEURL### (http://www.test.com/)
 
 <!--###POWERMAIL_SENDER_MAIL### start-->
 	<p>
-		###POWERMAIL_LOCALLANG_EMAIL_SENDER###<br />
-		###POWERMAIL_ALL###
+		###POWERMAIL_EMAILSENDER_RTE###
 	</p>
 <!--###POWERMAIL_SENDER_MAIL### stop-->

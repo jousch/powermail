@@ -10,7 +10,7 @@
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.date.error</label>
 					<config>
 						<type>user</type>
-						<userFunc>user_powermail_tx_powermail_uid->noReturn</userFunc>
+						<userFunc></userFunc>
 					</config>
 				</TCEforms>
 			</error>

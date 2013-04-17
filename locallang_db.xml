@@ -18,7 +18,7 @@
 			<label index="tx_powermail_forms.preview">Preview</label>
 			<label index="tx_powermail_forms.recipient">Recipient</label>
 			<label index="tx_powermail_forms.subject_r">Subject for recipient's mail</label>
-			<label index="tx_powermail_forms.subject_s">Sunbject for sender's mail</label>
+			<label index="tx_powermail_forms.subject_s">Subject for sender's mail</label>
 			<label index="tx_powermail_forms.sender">Sender field</label>
 			<label index="tx_powermail_forms.confirm">Activate confirmation page</label>
 			<label index="tx_powermail_forms.multiple">Muliple steps</label>
@@ -30,6 +30,17 @@
 			<label index="tx_powermail_forms.recip_field">Fieldname where mail is stored</label>
 			<label index="tx_powermail_forms.query">Alternative SQL-Query</label>
 			<label index="tx_powermail_forms.thanks">ResponseText (shown on website)</label>
+			<label index="tx_powermail_forms.mailsender">Email-Text for sender</label>
+			<label index="tx_powermail_forms.mailsender.default">Thank you for your message.
+
+			Your text:
+			###POWERMAIL_ALL###</label>
+			<label index="tx_powermail_forms.mailreceiver">Email-Text for receiver</label>
+			<label index="tx_powermail_forms.mailreceiver.default">This is an email from your website.
+
+			The text:
+			###POWERMAIL_ALL###</label>
+			<label index="tx_powermail_forms.redirect">Auto-redirect after confirmation-page</label>
 			<label index="tx_powermail_fieldsets">Fieldsets</label>
 			<label index="tx_powermail_fieldsets.form">Form</label>
 			<label index="tx_powermail_fieldsets.title">Title</label>
@@ -58,10 +69,12 @@
 			<!--For BE-Labels-->
 			<label index="tx_powermail_forms.div1">Formdata</label>
 			<label index="tx_powermail_forms.div2">Fields</label>
-			<label index="tx_powermail_forms.div3">Recipients</label>
-			<label index="tx_powermail_forms.div4">Sender</label>
+			<label index="tx_powermail_forms.div4">Recipients</label>
+			<label index="tx_powermail_forms.div3">Sender</label>
 			<label index="tx_powermail_forms.div5">Answerpage</label>
-			<label index="tx_powermail_forms.div6">Access</label>
+			<label index="tx_powermail_forms.div6">Email-Text sender</label>
+			<label index="tx_powermail_forms.div7">Email-Text receiver</label>
+			<label index="tx_powermail_forms.div8">Access</label>
 			<label index="tx_powermail_forms.fieldtitle.text">Textfield</label>
 			<label index="tx_powermail_forms.fieldtitle.textarea">Textarea</label>
 			<label index="tx_powermail_forms.fieldtitle.select">Select box</label>
@@ -82,7 +95,10 @@
 			<label index="tx_powermail_forms.fieldtitle.submitgraphic">Graphic as submit</label>
 			<label index="tx_powermail_forms.fieldtitle.countryselect">Country selection</label>
 			<label index="tx_powermail_forms.fieldtitle.captcha">Captcha request</label>
-			<label index="tx_powermail_forms.xml.name">Name</label>
+			<label index="tx_powermail_forms.mailsender">Email-Text for sender</label>
+			<label index="tx_powermail_forms.mailreceiver">Email-Text for receiver</label>
+			<label index="tx_powermail_forms.redirect">Auto-redirect after confirmation-page</label>
+			<label index="tx_powermail_forms.xml.name">Name for Templates</label>
 			<label index="tx_powermail_forms.xml.label">Description</label>
 			<label index="tx_powermail_forms.xml.size">Size</label>
 			<label index="tx_powermail_forms.xml.maxlength">Max. Length</label>
@@ -112,6 +128,8 @@
 			<label index="tx_powermail_forms.xml.validate.6">letters and digits only</label>
 			<label index="tx_powermail_forms.xml.example">Field example</label>
 			<label index="tx_powermail_forms.xml.error">Please select a fieldtype to continue.</label>
+			<label index="tx_powermail_forms.xml.countryselect.error">Please install the extension static_info_tables to use this feature.</label>
+			<label index="tx_powermail_forms.xml.date.error">Please install the extension date2cal to use this feature.</label>
 
 		</languageKey>
 		<languageKey index="de" type="array">
@@ -139,6 +157,17 @@
 			<label index="tx_powermail_forms.recip_field">Feldname in dem die E-Mail-Adresse gespeichert ist</label>
 			<label index="tx_powermail_forms.query">Alternativer SQL-Query</label>
 			<label index="tx_powermail_forms.thanks">AntwortText (wird auf Website angezeigt)</label>
+			<label index="tx_powermail_forms.mailsender">Email-Text an Absender</label>
+			<label index="tx_powermail_forms.mailsender.default">Vielen Dank für Ihre Mitteilung.
+
+			Ihr Text:
+			###POWERMAIL_ALL###</label>
+			<label index="tx_powermail_forms.mailreceiver">Email-Text an Empfänger</label>
+			<label index="tx_powermail_forms.mailsender.default">Die ist eine Mitteilung aus Ihrer Website.
+
+			Der Text:
+			###POWERMAIL_ALL###</label>
+			<label index="tx_powermail_forms.redirect">Auto-Weiterleitung nach Bestätigungsseite</label>
 			<label index="tx_powermail_fieldsets">Formularseiten</label>
 			<label index="tx_powermail_fieldsets.form">Form</label>
 			<label index="tx_powermail_fieldsets.title">Titel</label>
@@ -167,10 +196,12 @@
 			<!--For BE-Labels-->
 			<label index="tx_powermail_forms.div1">Formulardaten</label>
 			<label index="tx_powermail_forms.div2">Felder</label>
-			<label index="tx_powermail_forms.div3">Empfänger</label>
-			<label index="tx_powermail_forms.div4">Absender</label>
+			<label index="tx_powermail_forms.div4">Empfänger</label>
+			<label index="tx_powermail_forms.div3">Absender</label>
 			<label index="tx_powermail_forms.div5">Antwortseite</label>
-			<label index="tx_powermail_forms.div6">Zugriff</label>
+			<label index="tx_powermail_forms.div6">Email-Text Absender</label>
+			<label index="tx_powermail_forms.div7">Email-Text Empfänger</label>
+			<label index="tx_powermail_forms.div8">Zugriff</label>
 			<label index="tx_powermail_forms.fieldtitle.text">Textfeld</label>
 			<label index="tx_powermail_forms.fieldtitle.textarea">Mehrzeiliges Textfeld</label>
 			<label index="tx_powermail_forms.fieldtitle.select">Auswahlbox</label>
@@ -191,7 +222,7 @@
 			<label index="tx_powermail_forms.fieldtitle.submitgraphic">Grafik als Absendebutton</label>
 			<label index="tx_powermail_forms.fieldtitle.countryselect">Länderauswahl</label>
 			<label index="tx_powermail_forms.fieldtitle.captcha">Captcha Abfrage</label>
-			<label index="tx_powermail_forms.xml.name">Name</label>
+			<label index="tx_powermail_forms.xml.name">Name für Templates</label>
 			<label index="tx_powermail_forms.xml.label">Beschreibung</label>
 			<label index="tx_powermail_forms.xml.size">Größe</label>
 			<label index="tx_powermail_forms.xml.maxlength">Max. Länge</label>
@@ -222,6 +253,8 @@
 			<label index="tx_powermail_forms.xml.validate.6">nur Buchstaben und Zahlen</label>
 			<label index="tx_powermail_forms.xml.example">Beispiel</label>
 			<label index="tx_powermail_forms.xml.error">Bitte wählen Sie einen Feldtypen um fortzufahren.</label>
+			<label index="tx_powermail_forms.xml.countryselect.error">Bitte installieren Sie static_info_tables um dieses Feature nutzen zu können.</label>
+			<label index="tx_powermail_forms.xml.date.error">Bitte installieren Sie date2cal um dieses Feature nutzen zu können.</label>
 
 		</languageKey>
 	</data>

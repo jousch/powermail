@@ -89,13 +89,15 @@ class tx_powermail_functions_div {
 					if(function_exists('mysql_real_escape_string')) $array[$key] = mysql_real_escape_string($value); // check against sql injection
 					
 				} else { // value is still an array (second level)
-				
-					foreach ($value as $key2 => $value2) { // one loop for every key in second level
 					
-						$array[$key][$key2] = strip_tags($value2); // strip_tags removes html and php code
-						if(function_exists('mysql_real_escape_string')) $array[$key][$key2] = mysql_real_escape_string($value2); // check against sql injection
+					if(!is_array($key2)) {	// if value is not an array
+						foreach ($value as $key2 => $value2) { // one loop for every key in second level
 						
-					}
+							$array[$key][$key2] = strip_tags($value2); // strip_tags removes html and php code
+							if(function_exists('mysql_real_escape_string')) $array[$key][$key2] = mysql_real_escape_string($value2); // check against sql injection
+							
+						}
+					} else unset($array[$key][$key2]); // if array with 3 dimensions - delete this value
 					
 				}
 			}

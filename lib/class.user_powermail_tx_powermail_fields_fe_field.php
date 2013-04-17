@@ -34,33 +34,33 @@
  */
 class user_powermail_tx_powermail_fields_fe_field {
 	function main(&$params,&$pObj)	{
+/*								
+		debug('Hello World!',1);
+		debug('$params:',1);
+		debug($params);
+		debug('$pObj:',1);
+		debug($pObj);
+*/
 
 		// Adding an item!
 		$tableName = 'fe_users';
 		$res = $GLOBALS['TYPO3_DB']->admin_get_fields($tableName);
-	
-		if(isset($res)) {
-			$confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['powermail']); // Get backandconfig
-			$AllowedFeuserFields = t3lib_div::trimExplode(',',$confArr['feusersPrefill'],1); // Allowed feuser fields in an array
-			
-			foreach($res as $k=>$v) { // Adding an item!
-				
-				$label = '';
-				$label = $pObj->sL('LLL:EXT:cms/locallang_tca.xml:fe_users.'.$k);
-				if($label == '') { // if label is still empty
-					$label = $pObj->sL('LLL:EXT:lang/locallang_general.php:LGL.'.$k); // get label
-				}
-				if($k == 'telephone') { // if key is telephone
-					$label = $pObj->sL('LLL:EXT:lang/locallang_general.php:LGL.phone'); // get this label
-				}
-				if($label == '') { // if label is still empty
-					$label = $k; // take key as label
-				}
-				if($label != '' && in_array($k, $AllowedFeuserFields)) { // only if $label is not empty and is allowed
-					$params['items'][] = array(preg_replace('/:$/','',$label), $k);
-				}
-			
+	//	print_r($res);
+		foreach($res as $k=>$v) {
+		// Adding an item!
+		
+			$label = '';
+			$label = $pObj->sL('LLL:EXT:cms/locallang_tca.xml:fe_users.'.$k);
+			if($label == '') {
+				$label = $pObj->sL('LLL:EXT:lang/locallang_general.php:LGL.'.$k);
 			}
+			if($k == 'telephone') {
+				$label = $pObj->sL('LLL:EXT:lang/locallang_general.php:LGL.phone');
+			}
+			if($label != '') {
+				$params['items'][] = array(preg_replace('/:$/','',$label), $k);
+			}
+		
 		}
 		// No return - the $params and $pObj variables are passed by reference, so just change content in then and it is passed back automatically...
 	}

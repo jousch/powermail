@@ -6,17 +6,6 @@
 	<ROOT>
 		<type>array</type>
 		<el>
-			<name>
-				<TCEforms>
-					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.name</label>
-					<config>
-						<type>input</type>
-						<size>35</size>
-						<max>20</max>
-						<eval>required,trim,lower,alphanum_x,nospace</eval>
-					</config>
-				</TCEforms>
-			</name>
 			<value>
 				<TCEforms>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.value</label>
@@ -52,12 +41,22 @@
 					</config>
 				</TCEforms>
 			</mandatory>
+			<name>
+				<TCEforms>
+					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.name</label>
+					<config>
+						<type>user</type>
+						<userFunc>user_powermail_tx_powermail_uid->main</userFunc>
+						<field>text</field>
+					</config>
+				</TCEforms>
+			</name>
 			<example>
 				<TCEforms>
 					<label>LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.xml.example</label>
 					<config>
 						<type>user</type>
-						<userFunc>tx_powermail_tx_powermail_example->main</userFunc>
+						<userFunc>user_powermail_tx_powermail_example->main</userFunc>
 						<field>time</field>
 					</config>
 				</TCEforms>
