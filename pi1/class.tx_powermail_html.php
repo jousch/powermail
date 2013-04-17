@@ -458,12 +458,12 @@ class tx_powermail_html extends tslib_pibase {
 			$this->tmpl['html_datetime'] = tslib_cObj::getSubpart($this->tmpl['all'],'###POWERMAIL_FIELDWRAP_HTML_DATETIME###'); // work on subpart
 	
 			$tag = '<input type="text" ';
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name')) $tag .= 'name="'.$this->prefixId.'['.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').']" '; // add name to field
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name')) $tag .= 'id="'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').'" '; // add name to field
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')) $tag .= 'value="'.strftime($this->conf['format.']['datetime'], $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')).'" '; // add value to field
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')) $tag .= 'size="'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size').'" '; // add size to field
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'readonly')) $tag .= 'readonly="readonly" '; // add readonly to field
-			$tag .= 'class="powermail_'.$this->formtitle.' powermail_datetime powermail_'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').'" '; // add class to field
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name')) $tag .= $this->markerArray['###NAME###']; // add name to field
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name')) $tag .= $this->markerArray['###ID###']; // add name to field
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')) $tag .= $this->markerArray['###VALUE###']; // add value to field
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')) $tag .= $this->markerArray['###SIZE###']; // add size to field
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'readonly')) $tag .= $this->markerArray['###READONLY###']; // add readonly to field
+			$tag .= $this->markerArray['###CLASS###'];
 			$tag .= '/>';
 	
 			$itemConfig = array (
@@ -506,12 +506,12 @@ class tx_powermail_html extends tslib_pibase {
 			$this->tmpl['html_date'] = tslib_cObj::getSubpart($this->tmpl['all'],'###POWERMAIL_FIELDWRAP_HTML_DATE###'); // work on subpart
 	
 			$tag = '<input type="text" ';
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name')) $tag .= 'name="'.$this->prefixId.'['.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').']" '; // add name to field
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name')) $tag .= 'id="'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').'" '; // add name to field
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')) $tag .= 'value="'.strftime($this->conf['format.']['date'], $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')).'" '; // add value to field
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')) $tag .= 'size="'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size').'" '; // add size to field
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'readonly')) $tag .= 'readonly="readonly" '; // add readonly to field
-			$tag .= 'class="powermail_'.$this->formtitle.' powermail_datetime powermail_'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').'" '; // add class to field
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name')) $tag .= $this->markerArray['###NAME###']; // add name to field
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name')) $tag .= $this->markerArray['###ID###']; // add name to field
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')) $tag .= $this->markerArray['###VALUE###']; // add value to field
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')) $tag .= $this->markerArray['###SIZE###']; // add size to field
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'readonly')) $tag .= $this->markerArray['###READONLY###']; // add readonly to field
+			$tag .= $this->markerArray['###CLASS###'];
 			$tag .= '/>';
 	
 			$itemConfig = array (
@@ -553,12 +553,12 @@ class tx_powermail_html extends tslib_pibase {
 			$this->tmpl['html_time'] = tslib_cObj::getSubpart($this->tmpl['all'],'###POWERMAIL_FIELDWRAP_HTML_TIME###'); // work on subpart
 	
 			$tag = '<input type="text" ';
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name')) $tag .= 'name="'.$this->prefixId.'['.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').']" '; // add name to field
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name')) $tag .= 'id="'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').'" '; // add name to field
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')) $tag .= 'value="'.strftime($this->conf['format.']['time'], $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')).'" '; // add value to field
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')) $tag .= 'size="'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size').'" '; // add size to field
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'readonly')) $tag .= 'readonly="readonly" '; // add readonly to field
-			$tag .= 'class="powermail_'.$this->formtitle.' powermail_datetime powermail_'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').'" '; // add class to field
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name')) $tag .= $this->markerArray['###NAME###']; // add name to field
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name')) $tag .= $this->markerArray['###ID###']; // add name to field
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')) $tag .= $this->markerArray['###VALUE###']; // add value to field
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')) $tag .= $this->markerArray['###SIZE###']; // add size to field
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'readonly')) $tag .= $this->markerArray['###READONLY###']; // add readonly to field
+			$tag .= $this->markerArray['###CLASS###'];
 			$tag .= '/>';
 	
 			$itemConfig = array (
@@ -707,12 +707,12 @@ class tx_powermail_html extends tslib_pibase {
 			$this->markerArray['###ID###'] = 'id="'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').'"'; // add label name to markerArray
 			
 			// ###CLASS###
-			$required = '';
+			$this->required = '';
 			if($this->conf['js.']['mandatorycheck'] == 1) { // only if javascript mandatory is activated in constants
-				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $required = 'required '; // add class="required" if javascript mandatory should be activated
-				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'validate') != '') $required .= $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'validate').' '; // add another key in class if javascript mandatory should be activated
+				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $this->required = 'required '; // add class="required" if javascript mandatory should be activated
+				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'validate') != '') $this->required .= $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'validate').' '; // add another key in class if javascript mandatory should be activated
 			}  
-			$this->markerArray['###CLASS###'] = 'class="'.$required.'powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').'" '; // add class name to markerArray
+			$this->markerArray['###CLASS###'] = 'class="'.$this->required.'powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_'.$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name').'" '; // add class name to markerArray
 		}
 		
 		// ###SIZE###

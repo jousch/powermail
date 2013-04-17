@@ -3,7 +3,7 @@
 /***************************************************************
  * Extension Manager/Repository config file for ext "powermail".
  *
- * Auto generated 17-04-2013 11:23
+ * Auto generated 17-04-2013 11:24
  *
  * Manual updates:
  * Only the data in the array - everything else is removed by next
@@ -15,7 +15,7 @@ $EM_CONF[$_EXTKEY] = array (
 	'description' => 'Powerful and easy mailform extension with many features like database storing (Excel and CSV export in own backend modul), different HTML templates for sender and receiver and for all different fields, morestep forms, works with date2cal and static_info_tables and many more...',
 	'category' => 'plugin',
 	'shy' => 0,
-	'version' => '0.3.3',
+	'version' => '0.3.4',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',

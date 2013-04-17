@@ -184,12 +184,15 @@ class jscalendar
 				$this->config['calendarCSS'] .'" />';
 
 		if($this->datetimeToolbocks) {
+			/*
 			$js .= '
-				<!-- inclusion of datetime_toolbocks.js -->
-				<script type="text/javascript" src="' . $backPath .
-					'typo3/contrib/prototype/prototype.js"></script>
-				<script type="text/javascript" src="' . $backPath .
-					t3lib_extMgm::siteRelPath('date2cal') . 'res/datetime_toolbocks.js"></script>';
+				<script type="text/javascript" src="' . $backPath .	'typo3/contrib/prototype/prototype.js"></script>
+				<script type="text/javascript" src="' . $backPath .	t3lib_extMgm::siteRelPath('date2cal') . 'res/datetime_toolbocks.js"></script>
+			';
+			*/
+			$js .= '
+				<script type="text/javascript" src="' . $backPath .	t3lib_extMgm::siteRelPath('date2cal') . 'res/datetime_toolbocks.js"></script>
+			';
 		}
 
 		return $js;

@@ -22,7 +22,7 @@
 			<label index="error_check_subject_r">Email receiver subject</label>
 			<label index="error_check_recipient">Email address of receiver</label>
 			<label index="multiple_forward">Next step</label>
-			<label index="multiple_back">Last step</label>
+			<label index="multiple_back">Previous step</label>
 			<label index="JSvalidation_label_required">This is a required field</label>
 			<label index="JSvalidation_label_validate_number">Please enter a valid number in this field</label>
 			<label index="JSvalidation_label_validate_digits">Please use numbers only in this field. please avoid spaces or other characters such as dots or commas</label>
@@ -40,7 +40,7 @@
 			<label index="locallangmarker_confirmation_question">Sind diese Angaben korrekt?</label>
 			<label index="locallangmarker_confirmation_back">Zurück</label>
 			<label index="locallangmarker_confirmation_submit">Angaben abschicken</label>
-			<label index="locallangmarker_email_receiver">Danke für deine E-Mail:</label>
+			<label index="locallangmarker_email_receiver">Danke fuer Ihre E-Mail:</label>
 			<label index="locallangmarker_email_sender">Sie haben eine neue E-Mail erhalten:</label>
 			<label index="locallangmarker_mandatory_message">Bitte beachten Sie folgende Fehlermeldungen:</label>
 			<label index="locallangmarker_mandatory_emptyfield">Bitte füllen Sie dieses Feld aus:</label>
@@ -53,7 +53,7 @@
 			<label index="error_check_subject_r">Betreff für Empfängermail</label>
 			<label index="error_check_recipient">Empfänger</label>
 			<label index="multiple_forward">Nächster Schritt</label>
-			<label index="multiple_back">Letzter Schritt</label>
+			<label index="multiple_back">Vorheriger Schritt</label>
 			<label index="JSvalidation_label_required">Das ist ein Pflichtfeld</label>
 			<label index="JSvalidation_label_validate_number">Bitte tragen Sie eine Nummer ein</label>
 			<label index="JSvalidation_label_validate_digits">Bitte tragen Sie eine Nummer ohne Komma oder Punkt ein</label>
