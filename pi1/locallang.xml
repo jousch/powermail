@@ -11,6 +11,8 @@
 			<label index="locallangmarker_confirmation_submit">Send values now</label>
 			<label index="locallangmarker_email_receiver">Thank you for your email:</label>
 			<label index="locallangmarker_email_sender">You've got a new email:</label>
+			<label index="locallangmarker_mandatory_message">Sorry, but you forgot to fill out some important fields:</label>
+			<label index="locallangmarker_mandatory_submit">Go back to the form</label>
 			<label index="multiple_forward">Next step</label>
 			<label index="multiple_back">Last step</label>
 		</languageKey>
@@ -20,6 +22,8 @@
 			<label index="locallangmarker_confirmation_submit">Angaben abschicken</label>
 			<label index="locallangmarker_email_receiver">Danke für deine E-Mail:</label>
 			<label index="locallangmarker_email_sender">Sie haben eine neue E-Mail erhalten:</label>
+			<label index="locallangmarker_mandatory_message">Diese Pflichtfelder müssen ausgefüllt werden:</label>
+			<label index="locallangmarker_mandatory_submit">Zurück zum Formular</label>
 			<label index="multiple_forward">Nächster Schritt</label>
 			<label index="multiple_back">Letzter Schritt</label>
 		</languageKey>
