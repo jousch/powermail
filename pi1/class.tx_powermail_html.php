@@ -23,8 +23,8 @@
 ***************************************************************/
 
 require_once(PATH_tslib.'class.tslib_pibase.php');
-require_once(str_replace('../','',t3lib_extMgm::extRelPath('powermail')).'lib/class.tx_powermail_functions_div.php'); // file for div functions
-require_once(str_replace('../','',t3lib_extMgm::extRelPath('powermail')).'lib/class.tx_powermail_sessions.php'); // load session class
+require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_functions_div.php'); // file for div functions
+require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_sessions.php'); // load session class
 if(t3lib_extMgm::isLoaded('date2cal',0)) { // if date2cal is loaded
 	if(file_exists(t3lib_extMgm::siteRelPath('date2cal').'src/class.jscalendar.php')) { // if file exists (date2cal 7.0.0 or newer)
 		include_once(t3lib_extMgm::siteRelPath('date2cal').'src/class.jscalendar.php'); // include calendar class
@@ -763,6 +763,7 @@ class tx_powermail_html extends tslib_pibase {
 		// ###ONFOCUS### Marker
 		if($this->conf['js.']['init'] || $this->conf['js.']['onfocus']) { // only allowed if jsinit or onfocus set
 			if($this->conf['js.']['init'] && 1==0) { // if jsinit allowed (currently deactivated!!!)
+
 				$init =  'init(\''.$this->prefixId.'[uid'.$this->uid.']'.'\',\'uid'.$this->uid.'\',\''.
 					$this->pibase->pibase->pi_linkTP_keepPIvars_url (
 						$overrulePIvars = array('basket' => '1'),

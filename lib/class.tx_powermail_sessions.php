@@ -23,7 +23,7 @@
 ***************************************************************/
 
 require_once(PATH_tslib.'class.tslib_pibase.php');
-require_once(str_replace('../','',t3lib_extMgm::extRelPath('powermail')).'lib/class.tx_powermail_functions_div.php'); // file for div functions
+require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_functions_div.php'); // file for div functions
 
 /**
  * Class with collection of different functions (like string and array functions)
@@ -36,6 +36,7 @@ class tx_powermail_sessions extends tslib_pibase {
 
 	var $extKey = 'powermail';
     var $scriptRelPath = 'pi1/class.tx_powermail_pi1.php';    // Path to pi1 to get locallang.xml from pi1 folder
+	
 	
 	// Function setSession() to save all piVars to a session
 	function setSession($piVars,$overwrite = 1) {
@@ -51,6 +52,7 @@ class tx_powermail_sessions extends tslib_pibase {
 			$GLOBALS['TSFE']->storeSessionData(); // Save session
 		}
 	}
+	
 	
 	// Function getSession() to get all saved session data in an array
 	function getSession($all = 1) {

@@ -34,13 +34,7 @@
  */
 class user_powermail_tx_powermail_forms_recip_id {
 	function main(&$params,&$pObj)	{
-/*								
-		debug('Hello World!',1);
-		debug('$params:',1);
-		debug($params);
-		debug('$pObj:',1);
-		debug($pObj);
-*/								
+							
 		$select_fields = '*';
 		$from_table = $params['row']['tx_powermail_recip_table'];
 		if($from_table != '0' && $from_table != '') {
@@ -53,30 +47,31 @@ class user_powermail_tx_powermail_forms_recip_id {
 				$limit=''
 			);
 			if($res != '' || $res > 0) {
-				if(preg_match('/group/',$params['row']['tx_powermail_recip_table'])){
+			
+				if(preg_match('/group/',$params['row']['tx_powermail_recip_table'])) {
+					
 					while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-						// Adding an item!
 						$params['items'][] = array($pObj->sL($row['title']), $row['uid']);
 					}
-				}
-	
-			else {
-				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-					$uid = $row['uid'];
-		
-					foreach($row as $k => $v){
-						if(t3lib_div::validEmail($v)) {
-								// Adding an item!
-							$params['items'][] = array($pObj->sL($v), $v);
+				
+				} else {
+					
+					while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+						$uid = $row['uid'];
+						if (isset($row) && is_array($row)) {
+							foreach($row as $k => $v){
+								if(t3lib_div::validEmail($v)) {
+									$params['items'][] = array($pObj->sL($v), $v);
+								}
+							}
 						}
 					}
+					
 				}
-				}
+				
 			}
 		}
 		
-
-		// No return - the $params and $pObj variables are passed by reference, so just change content in then and it is passed back automatically...
 	}
 }
 

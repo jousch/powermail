@@ -27,8 +27,8 @@ require_once('class.tx_powermail_form.php');
 require_once('class.tx_powermail_submit.php');
 require_once('class.tx_powermail_confirmation.php');
 require_once('class.tx_powermail_mandatory.php');
-require_once(str_replace('../','',t3lib_extMgm::extRelPath('powermail')).'lib/class.tx_powermail_sessions.php'); // load session class
-require_once(str_replace('../','',t3lib_extMgm::extRelPath('powermail')).'lib/class.tx_powermail_functions_div.php'); // load functions class
+require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_sessions.php'); // load session class
+require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_functions_div.php'); // file for div functions
 
 
 class tx_powermail_pi1 extends tslib_pibase {
