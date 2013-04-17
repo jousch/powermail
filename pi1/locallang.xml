@@ -23,6 +23,7 @@
 			<label index="error_check_recipient">Email address of receiver</label>
 			<label index="error_captcha_empty">Captcha Code empty</label>
 			<label index="error_captcha_wrong">Captcha Code wrong</label>
+			<label index="error_backend_noip">IP logging disabled</label>
 			<label index="multiple_forward">Next step</label>
 			<label index="multiple_back">Previous step</label>
 			<label index="pagebrowser_inner"> of </label>
@@ -57,6 +58,7 @@
 			<label index="error_check_recipient">Empfänger</label>
 			<label index="error_captcha_empty">Sie haben vergessen einen Code einzutragen</label>
 			<label index="error_captcha_wrong">Der eingetragene Code war leider falsch</label>
+			<label index="error_backend_noip">IP Speicherung deaktiviert</label>
 			<label index="multiple_forward">Nächster Schritt</label>
 			<label index="multiple_back">Vorheriger Schritt</label>
 			<label index="pagebrowser_inner"> von </label>
@@ -91,6 +93,7 @@
 			<label index="error_check_recipient">Email address of receiver</label>
 			<label index="error_captcha_empty">Captcha Code empty</label>
 			<label index="error_captcha_wrong">Captcha Code wrong</label>
+			<label index="error_backend_noip">IP logging disabled</label>
 			<label index="multiple_forward">Next step</label>
 			<label index="multiple_back">Previous step</label>
 			<label index="pagebrowser_inner"> of </label>

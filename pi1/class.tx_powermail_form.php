@@ -47,16 +47,21 @@ class tx_powermail_form extends tslib_pibase {
 		if ($this->conf['js.']['mandatorycheck'] == 1) {
 			$js .= $this->includeJavaScript("js/mandatoryjs/src/","effects.js"); // add file 2
 			$js .= $this->includeJavaScript("js/mandatoryjs/","fabtabulous.js"); // add file 3
-			$js .= "\t".'<script src="'.htmlentities(
-				$this->pibase->cObj->typolink ( // add dynamic file (current page with type=3131)
+			
+			// add dynamic file (current page with type=3131)
+			if ($GLOBALS['TSFE']->tmpl->setup['config.']['simulateStaticDocuments'] != '1') { // simulatestaticdocuments is not activated
+				$dynjslink = $this->pibase->cObj->typolink (
 					'x', 
 					array(
-						'returnLast'=>'url',
-						'parameter'=>$GLOBALS['TSFE']->id,
-						'additionalParams'=>'&type=3131'
+						'returnLast' => 'url',
+						'parameter' => $GLOBALS['TSFE']->id,
+						'additionalParams' => '&type=3131'
 					)
-				)
-			).'" type="text/javascript"></script>'."\n";
+				);
+			} else { // simulatestaticdocuments active
+				$dynjslink = 'index.php?id='.$GLOBALS['TSFE']->id.'&type=3131';
+			}
+			$js .= "\t".'<script src="'.htmlentities($dynjslink).'" type="text/javascript"></script>'."\n";
 		}
 		$GLOBALS['TSFE']->additionalHeaderData[$this->extKey] = $js; // write to html header
 		

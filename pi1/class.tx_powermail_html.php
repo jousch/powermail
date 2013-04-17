@@ -419,7 +419,7 @@ class tx_powermail_html extends tslib_pibase {
 			$tag = '<input type="text" ';
 			$tag .= $this->markerArray['###NAME###']; // add name to field
 			$tag .= $this->markerArray['###ID###']; // add id to field
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')) $tag .= $this->markerArray['###VALUE###']; // add value to field
+			if($this->markerArray['###VALUE###'] && $this->markerArray['###VALUE###'] != 'value="0" ') $tag .= $this->markerArray['###VALUE###']; // add value to field
 			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')) $tag .= $this->markerArray['###SIZE###']; // add size to field
 			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'readonly')) $tag .= $this->markerArray['###READONLY###']; // add readonly to field
 			$tag .= $this->markerArray['###CLASS###'];
@@ -467,7 +467,7 @@ class tx_powermail_html extends tslib_pibase {
 			$tag = '<input type="text" ';
 			$tag .= $this->markerArray['###NAME###']; // add name to field
 			$tag .= $this->markerArray['###ID###']; // add id to field
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')) $tag .= $this->markerArray['###VALUE###']; // add value to field
+			if($this->markerArray['###VALUE###'] && $this->markerArray['###VALUE###'] != 'value="0" ') $tag .= $this->markerArray['###VALUE###']; // add value to field
 			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')) $tag .= $this->markerArray['###SIZE###']; // add size to field
 			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'readonly')) $tag .= $this->markerArray['###READONLY###']; // add readonly to field
 			$tag .= $this->markerArray['###CLASS###'];
@@ -514,7 +514,7 @@ class tx_powermail_html extends tslib_pibase {
 			$tag = '<input type="text" ';
 			$tag .= $this->markerArray['###NAME###']; // add name to field
 			$tag .= $this->markerArray['###ID###']; // add id to field
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')) $tag .= $this->markerArray['###VALUE###']; // add value to field
+			if($this->markerArray['###VALUE###'] && $this->markerArray['###VALUE###'] != 'value="0" ') $tag .= $this->markerArray['###VALUE###']; // add value to field
 			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')) $tag .= $this->markerArray['###SIZE###']; // add size to field
 			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'readonly')) $tag .= $this->markerArray['###READONLY###']; // add readonly to field
 			$tag .= $this->markerArray['###CLASS###'];

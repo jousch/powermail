@@ -30,7 +30,7 @@ require_once(str_replace('../','',t3lib_extMgm::extRelPath('powermail')).'lib/cl
 
 class tx_powermail_submit extends tslib_pibase {
 	var $prefixId      = 'tx_powermail_submit';		// Same as class name
-	var $scriptRelPath = 'pi1/class.tx_powermail_pi1.submit.inc.php';	// Path to this script relative to the extension dir.
+	var $scriptRelPath = 'pi1/class.tx_powermail_submit.php';	// Path to this script relative to the extension dir.
 	var $extKey        = 'powermail';	// The extension key.
 	var $pi_checkCHash = true;
 	var $locallangmarker_prefix = 'locallangmarker_'; // prefix for automatic locallangmarker
@@ -49,6 +49,7 @@ class tx_powermail_submit extends tslib_pibase {
 		$this->div_functions = t3lib_div::makeInstance('tx_powermail_functions_div'); // New object: div functions
 		$this->markers = t3lib_div::makeInstance('tx_powermail_markers'); // New object: TYPO3 mail functions
 		$this->markers->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions.
+		$this->confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
 		
 		// Configuration
 		$this->sessiondata = $GLOBALS['TSFE']->fe_user->getKey('ses',$this->extKey.'_'.$this->pibase->cObj->data['uid']); // Get piVars from session
@@ -184,7 +185,7 @@ class tx_powermail_submit extends tslib_pibase {
 			'sender' => $this->sender,
 			'content' => trim($this->mailcontent['recipient_mail']),
 			'piVars' => t3lib_div::array2xml($this->sessiondata,'',0,'piVars'),
-			'senderIP' => $_SERVER['REMOTE_ADDR'],
+			'senderIP' => ($this->confArr['disableIPlog'] == 1 ? $this->pi_getLL('error_backend_noip') : $_SERVER['REMOTE_ADDR']),
 			'UserAgent' => $_SERVER['HTTP_USER_AGENT'],
 			'Referer' => $_SERVER['HTTP_REFERER'],
 			'SP_TZ' => $_SERVER['SP_TZ']

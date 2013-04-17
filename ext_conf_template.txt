@@ -9,3 +9,6 @@ TabDividers = 1
 
 # cat=basic/enable/040; type=text; label= Fill field with fe data: A dropdown is shown in the backend which enables to prefill any field with the value of a current logged in feuser. You can increase or decrease the fe_user field values in the dropdown menu. Just use the wanted fieldnames of the fe_user table in a comma-separated list.
 feusersPrefill = name, address, telephone, fax, email, zip, city, country, www, company
+
+# cat=basic/enable/050; type=boolean; label= Deactivate IP logging: If you don't want to save the sender IP address in the database, you can use this checkbox.
+disableIPlog = 0
