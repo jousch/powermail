@@ -229,14 +229,24 @@ class tx_powermail_functions_div {
 			'</legend>',
 			'</fieldset>'
 		);
+		$notallowed = array ( // This array contains not allowed signs which will be removed
+			'&nbsp;',
+			'&szlig;',
+			'&Uuml;',
+			'&uuml;',
+			'&Ouml;',
+			'&ouml;',
+			'&Auml;',
+			'&auml;',
+		);
 		
 		// let's go
 		$content = str_replace($htmltagarray, $htmltagarray[0].'<br />', $content); // 1. add linebreaks on some parts (</p> => </p><br />)
 		$content = strip_tags($content, '<br>'); // 2. remove all tags but not linebreak (<b>bla</b><br /> => bla<br />)
-		//$content = str_replace(array("\r\n","\n\r","\r","\n","\t"), '', $content); // 3. remove all old \n
 		$content = preg_replace('/\s+/', ' ', $content); // 3. removes tabs and whitespaces
 		$content = $this->br2nl($content); // 4. <br /> to \n
 		$content = implode("\n", t3lib_div::trimExplode("\n", $content)); // 5. explode and trim each line and implode again (" bla \n blabla " => "bla\nbla")
+		$content = str_replace($notallowed, '', $content); // 6. remove not allowed signs
 		
 		if (!empty($content)) return $content;
 	}

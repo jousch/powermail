@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007 Mischa Heiﬂmann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@wunschtacho.de>
+*  (c) 2007 Alexander Kellner, Mischa Heiﬂmann <alexander.kellner@einpraegsam.net, typo3.2008@heissmann.org>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -47,7 +47,7 @@ class tx_powermail_sessions extends tslib_pibase {
 				if(isset($oldPiVars) && is_array($oldPiVars)) $piVars = array_merge($oldPiVars, $piVars); // Add old piVars to new piVars
 			}
 			// Set Session (overwrite all values)
-			$GLOBALS['TSFE']->fe_user->setKey("ses", $this->extKey.'_'.$this->pibase->cObj->data['uid'], $piVars); // Generate Session with piVars array
+			$GLOBALS['TSFE']->fe_user->setKey("ses", $this->extKey.'_'.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']), $piVars); // Generate Session with piVars array
 			$GLOBALS['TSFE']->storeSessionData(); // Save session
 		}
 	}
@@ -55,7 +55,7 @@ class tx_powermail_sessions extends tslib_pibase {
 	
 	// Function getSession() to get all saved session data in an array
 	function getSession($all = 1) {
-		$piVars = $GLOBALS['TSFE']->fe_user->getKey("ses", $this->extKey.'_'.$this->pibase->cObj->data['uid']); // Get piVars from Session
+		$piVars = $GLOBALS['TSFE']->fe_user->getKey("ses", $this->extKey.'_'.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid'])); // Get piVars from Session
 		//$piVars = array_map('html_entity_decode',$piVars);
 		
 		if($all == 0) { // delete not allowed values from piVars

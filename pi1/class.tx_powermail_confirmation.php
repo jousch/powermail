@@ -51,7 +51,7 @@ class tx_powermail_confirmation extends tslib_pibase {
 		$this->markerArray['###POWERMAIL_NAME_SUBMIT###'] = $this->pibase->cObj->data['tx_powermail_title'].'_confirmation_submit'; // Fill Marker with formname
 		$this->markerArray['###POWERMAIL_METHOD###'] = $this->conf['form.']['method']; // Form method
 		$this->markerArray['###POWERMAIL_TARGET_BACK###'] = $this->pibase->cObj->typolink('x',array('returnLast'=>'url','parameter'=>$GLOBALS['TSFE']->id,'useCacheHash'=>1)); // Create target url
-		$this->markerArray['###POWERMAIL_TARGET_SUBMIT###'] = $this->pibase->cObj->typolink('x',array('returnLast'=>'url','parameter'=>$GLOBALS['TSFE']->id,'additionalParams'=>'&tx_powermail_pi1[mailID]='.$this->pibase->cObj->data['uid'].'&tx_powermail_pi1[sendNow]=1','useCacheHash'=>1)); // Create target url
+		$this->markerArray['###POWERMAIL_TARGET_SUBMIT###'] = $this->pibase->cObj->typolink('x',array('returnLast'=>'url','parameter'=>$GLOBALS['TSFE']->id,'additionalParams'=>'&tx_powermail_pi1[mailID]='.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']).'&tx_powermail_pi1[sendNow]=1','useCacheHash'=>1)); // Create target url
 			
 		// Return
 		$this->hook(); // adds hook

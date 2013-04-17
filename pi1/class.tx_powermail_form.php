@@ -38,6 +38,8 @@ class tx_powermail_form extends tslib_pibase {
 	// Function main chooses what to show
 	function main($content, $conf) {
 		// config
+		global $TSFE;
+		$this->cObj = $TSFE->cObj; // cObject
 		$this->conf = $conf;
 		$this->baseurl = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : 'http://'.$_SERVER['HTTP_HOST'].'/'); // set baseurl
 		$this->dynamicMarkers = t3lib_div::makeInstance('tx_powermail_dynamicmarkers'); // New object: TYPO3 marker function
@@ -105,24 +107,24 @@ class tx_powermail_form extends tslib_pibase {
 
 		// Form tag generation
 		$this->InnerMarkerArray = array(); $this->OuterMarkerArray = array(); $this->content_item = ''; // init
-		$this->OuterMarkerArray['###POWERMAIL_TARGET###'] = htmlentities($this->pibase->cObj->typolink('x',array("returnLast"=>"url","parameter"=>$GLOBALS['TSFE']->id,"additionalParams"=>'&tx_powermail_pi1[mailID]='.$this->pibase->cObj->data['uid'],"useCacheHash"=>1))); // Fill Marker with action parameter
+		$this->OuterMarkerArray['###POWERMAIL_TARGET###'] = htmlentities($this->pibase->cObj->typolink('x',array("returnLast"=>"url","parameter"=>$GLOBALS['TSFE']->id,"additionalParams"=>'&tx_powermail_pi1[mailID]='.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']),"useCacheHash"=>1))); // Fill Marker with action parameter
 		$this->OuterMarkerArray['###POWERMAIL_NAME###'] = $this->pibase->cObj->data['tx_powermail_title']; // Fill Marker with formname
 		$this->OuterMarkerArray['###POWERMAIL_METHOD###'] = $this->conf['form.']['method']; // Form method
-		$this->OuterMarkerArray['###POWERMAIL_FORM_UID###'] = $this->pibase->cObj->data['uid']; // Form method
+		$this->OuterMarkerArray['###POWERMAIL_FORM_UID###'] = ($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']); // Form method
 		$this->OuterMarkerArray['###POWERMAIL_MANDATORY_JS###'] = $this->AddMandatoryJS();
 		if($this->pibase->cObj->data['tx_powermail_multiple'] == 2) { // If multiple PHP is set
 			$this->OuterMarkerArray['###POWERMAIL_MULTIPLE_BACKLINK###'] = $this->multipleLink(-1); // Backward Link (-1)
 			$this->OuterMarkerArray['###POWERMAIL_MULTIPLE_FORWARDLINK###'] = $this->multipleLink(1); // Forward Link (+1)
 			$this->OuterMarkerArray['###POWERMAIL_MULTIPLE_PAGEBROWSER###'] = $this->multipleLink(0); // Pagebrowser
 			if($this->multiple['numberoffieldsets'] != $this->multiple['currentpage']) { // On last fieldset, don't overwrite Target
-				$this->OuterMarkerArray['###POWERMAIL_TARGET###'] = htmlentities($this->pibase->cObj->typolink('x',array("returnLast"=>"url","parameter"=>$GLOBALS['TSFE']->id,"additionalParams"=>'&tx_powermail_pi1[mailID]='.$this->pibase->cObj->data['uid'].'&tx_powermail_pi1[multiple]='.($this->multiple['currentpage'] + 1),"useCacheHash"=>1))); // Overwrite Target
+				$this->OuterMarkerArray['###POWERMAIL_TARGET###'] = htmlentities($this->pibase->cObj->typolink('x',array("returnLast"=>"url","parameter"=>$GLOBALS['TSFE']->id,"additionalParams"=>'&tx_powermail_pi1[mailID]='.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']).'&tx_powermail_pi1[multiple]='.($this->multiple['currentpage'] + 1),"useCacheHash"=>1))); // Overwrite Target
 			}
 		} elseif ($this->pibase->cObj->data['tx_powermail_multiple'] == 1) { // If multiple JS is set
 			$this->OuterMarkerArray['###POWERMAIL_MULTIPLE_PAGEBROWSER###'] = $this->multipleLink('js'); // JavaScript switch
 		}
 		
 		// UID of the last fieldset to current tt_content
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid','tx_powermail_fieldsets','tt_content = '.$this->pibase->cObj->data['uid'].tslib_cObj::enableFields('tx_powermail_fieldsets'),'','sorting DESC','1');
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid','tx_powermail_fieldsets','tt_content = '.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']).tslib_cObj::enableFields('tx_powermail_fieldsets'),'','sorting DESC','1');
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 		$this->lastfieldset = $row['uid']; // uid of last fieldset to current tt_content (needed to show only on the last fieldset the captcha code)
 		
@@ -130,7 +132,7 @@ class tx_powermail_form extends tslib_pibase {
 		$res1 = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 			'uid,title',
 			'tx_powermail_fieldsets',
-			$where_clause = 'tt_content = '.$this->pibase->cObj->data['uid'].tslib_cObj::enableFields('tx_powermail_fieldsets'),
+			$where_clause = 'tt_content = '.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']).tslib_cObj::enableFields('tx_powermail_fieldsets'),
 			$groupBy = '',
 			$orderBy = 'sorting ASC',
 			$limit
@@ -143,7 +145,7 @@ class tx_powermail_form extends tslib_pibase {
 				$res2 = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 					'fs.uid fs_uid,f.uid f_uid,fs.felder fs_fields,fs.title fs_title,f.title f_title,f.formtype f_type,f.flexform f_field,c.tx_powermail_title c_title,f.fe_field f_fefield',
 					'tx_powermail_fieldsets fs LEFT JOIN tx_powermail_fields f ON (fs.uid = f.fieldset) LEFT JOIN tt_content c ON (fs.tt_content = c.uid)',
-					$where_clause = 'fs.deleted = 0 AND fs.hidden = 0 AND fs.tt_content = '.$this->pibase->cObj->data['uid'].' AND f.hidden = 0 AND f.deleted = 0 AND f.fieldset = '.$row_fs['uid'].$whereadd,
+					$where_clause = 'fs.deleted = 0 AND fs.hidden = 0 AND fs.tt_content = '.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']).' AND f.hidden = 0 AND f.deleted = 0 AND f.fieldset = '.$row_fs['uid'].$whereadd,
 					$groupBy = '',
 					$orderBy = 'fs.sorting, f.sorting',
 					$limit1 = ''
@@ -184,7 +186,7 @@ class tx_powermail_form extends tslib_pibase {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 			'tx_powermail_fields.uid, tx_powermail_fields.formtype, tx_powermail_fields.flexform',
 			'tx_powermail_fields LEFT JOIN tx_powermail_fieldsets ON (tx_powermail_fields.fieldset = tx_powermail_fieldsets.uid) LEFT JOIN tt_content ON (tx_powermail_fieldsets.tt_content = tt_content.uid)',
-			$where_clause = 'tx_powermail_fieldsets.tt_content = '.$this->pibase->cObj->data['uid'].tslib_cObj::enableFields('tx_powermail_fieldsets').tslib_cObj::enableFields('tx_powermail_fields'),
+			$where_clause = 'tx_powermail_fieldsets.tt_content = '.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']).tslib_cObj::enableFields('tx_powermail_fieldsets').tslib_cObj::enableFields('tx_powermail_fields'),
 			$groupBy = '',
 			$orderBy = 'tx_powermail_fieldsets.sorting, tx_powermail_fields.sorting',
 			$limit = ''
@@ -214,7 +216,7 @@ class tx_powermail_form extends tslib_pibase {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 			'count(*) no',
 			'tx_powermail_fieldsets',
-			$where_clause = 'tt_content = '.$this->pibase->cObj->data['uid'].tslib_cObj::enableFields('tx_powermail_fieldsets'),
+			$where_clause = 'tt_content = '.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']).tslib_cObj::enableFields('tx_powermail_fieldsets'),
 			$groupBy = '',
 			$orderBy = '',
 			$limit
@@ -235,7 +237,7 @@ class tx_powermail_form extends tslib_pibase {
 		} elseif ($add === -1) { // Backward link
 		
 			if($this->multiple['currentpage'] > 1) { // If current fieldset is not the first
-				$link = $this->baseurl.$this->pibase->cObj->typolink('x',array('parameter'=>$GLOBALS['TSFE']->id,'returnLast'=>'url', 'additionalParams'=>'&tx_powermail_pi1[multiple]='.($this->multiple['currentpage'] + $add).'&tx_powermail_pi1[mailID]='.$this->pibase->cObj->data['uid'],'useCacheHash' => 1)); // Create target url
+				$link = $this->baseurl.$this->pibase->cObj->typolink('x',array('parameter'=>$GLOBALS['TSFE']->id,'returnLast'=>'url', 'additionalParams'=>'&tx_powermail_pi1[multiple]='.($this->multiple['currentpage'] + $add).'&tx_powermail_pi1[mailID]='.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']),'useCacheHash' => 1)); // Create target url
 				$content = '<input type="button" value="'.$this->pi_getLL('multiple_back').'" onclick="location=\''.$link.'\'" class="tx_powermail_pi1_submitmultiple_back" />';
 			}
 			else $content = ''; // clear it if it's not needed
@@ -263,7 +265,7 @@ class tx_powermail_form extends tslib_pibase {
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 				'uid,title',
 				'tx_powermail_fieldsets',
-				$where_clause = 'tt_content = '.$this->pibase->cObj->data['uid'].tslib_cObj::enableFields('tx_powermail_fieldsets'),
+				$where_clause = 'tt_content = '.($this->pibase->cObj->data['_LOCALIZED_UID'] > 0 ? $this->pibase->cObj->data['_LOCALIZED_UID'] : $this->pibase->cObj->data['uid']).tslib_cObj::enableFields('tx_powermail_fieldsets'),
 				$groupBy = '',
 				$orderBy = '',
 				''
