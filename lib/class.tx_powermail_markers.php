@@ -144,6 +144,8 @@ class tx_powermail_markers extends tslib_pibase {
     
     // Function GetLabelfromBackend() to get label to current field for emails and thx message
     function GetLabelfromBackend($name, $value = '') {
+		$this->div = t3lib_div::makeInstance('tx_powermail_functions_div'); // New object: div functions
+
 		if (strpos($name,'uid') !== FALSE) { // $name like uid55
 			$uid = str_replace('uid', '', $name); // remove uid from uid43 to get 43
 

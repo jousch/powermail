@@ -193,31 +193,31 @@ class tx_powermail_html extends tslib_pibase {
 	 * @return	[type]		...
 	 */
 	function html_select() {
-		$this->tmpl['html_select']['all'] = tslib_cObj::getSubpart($this->tmpl['all'],'###POWERMAIL_FIELDWRAP_HTML_SELECT###'); // work on subpart 1
-		$this->tmpl['html_select']['item'] = tslib_cObj::getSubpart($this->tmpl['html_select']['all'],'###ITEM###'); // work on subpart 2
+		$this->tmpl['html_select']['all'] = tslib_cObj::getSubpart($this->tmpl['all'], '###POWERMAIL_FIELDWRAP_HTML_SELECT###'); // work on subpart 1
+		$this->tmpl['html_select']['item'] = tslib_cObj::getSubpart($this->tmpl['html_select']['all'], '###ITEM###'); // work on subpart 2
 
-		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'options')) { // Only if options are set
-			$content_item = ''; $options = array(); $set = array(); // init
-			$optionlines = t3lib_div::trimExplode("\n",$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'options'),1); // Every row is a new option
-			for ($i=0;$i<count($optionlines);$i++) { // Every loop for every option
-				$options[$i] = t3lib_div::trimExplode("|",$optionlines[$i],0); // Every row is a new option
+		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'options')) { // Only if options are set
+			$content_item = ''; $options = $set = array(); // init
+			$optionlines = t3lib_div::trimExplode("\n", $this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'options'), 1); // Every row is a new option
+			for ($i=0; $i < count($optionlines); $i++) { // Every loop for every option
+				$options[$i] = t3lib_div::trimExplode("|", $optionlines[$i], 0); // Every row is a new option
 			}
 
-			for($i=0;$i<count($optionlines);$i++) { // One tag for every option
+			for ($i=0; $i < count($optionlines); $i++) { // One tag for every option
 				$markerArray['###LABEL###'] = $this->dontAllow($options[$i][0]); // fill label marker with label
-				$markerArray['###VALUE###'] = $this->dontAllow(isset($options[$i][1])?$options[$i][1]:$options[$i][0]); // fill value marker with value
+				$markerArray['###VALUE###'] = $this->dontAllow(isset($options[$i][1]) ? $options[$i][1] : $options[$i][0]); // fill value marker with value
 				
 				// ###SELECTED###
 				if (!is_array($this->piVarsFromSession['uid'.$this->uid])) { // no multiple
 					if ($options[$i][2] == '*') $markerArray['###SELECTED###'] = 'selected="selected" '; // selected from backend
 					else $markerArray['###SELECTED###'] = ''; // clear
 					if (isset($this->piVarsFromSession['uid'.$this->uid])) { // if session was set
-						if ($this->piVarsFromSession['uid'.$this->uid] == ($options[$i][1]?$options[$i][1]:$options[$i][0])) $markerArray['###SELECTED###'] = 'selected="selected" '; // mark as selected
+						if ($this->piVarsFromSession['uid'.$this->uid] == ($options[$i][1] ? $options[$i][1] : $options[$i][0])) $markerArray['###SELECTED###'] = 'selected="selected" '; // mark as selected
 						else $markerArray['###SELECTED###'] = ''; // clear
 					}
 				} else { // multiple
 					for ($j=0; $j<count($this->piVarsFromSession['uid'.$this->uid]); $j++) {
-						if ($this->piVarsFromSession['uid'.$this->uid][$j] == ($options[$i][1]?$options[$i][1]:$options[$i][0])) {
+						if ($this->piVarsFromSession['uid'.$this->uid][$j] == ($options[$i][1] ? $options[$i][1] : $options[$i][0])) {
 							$markerArray['###SELECTED###'] = 'selected="selected" '; // mark as selected
 							$set[$i] = 1;
 						}
@@ -233,9 +233,9 @@ class tx_powermail_html extends tslib_pibase {
 		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'multiple')) $this->markerArray['###NAME###'] = 'name="'.$this->prefixId.'[uid'.$this->uid.'][]" '; // overwrite name to markerArray like tx_powermail_pi1[55][]
 
 		$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
-		$content = $this->cObj->substituteMarkerArrayCached($this->tmpl['html_select']['all'],$this->markerArray,$subpartArray); // substitute Marker in Template
+		$content = $this->cObj->substituteMarkerArrayCached($this->tmpl['html_select']['all'], $this->markerArray, $subpartArray); // substitute Marker in Template
 		$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
-		$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+		$content = preg_replace("|###.*?###|i", "", $content); // Finally clear not filled markers
 		return $content; // return HTML
 	}
 
@@ -324,7 +324,7 @@ class tx_powermail_html extends tslib_pibase {
 				$markerArray['###LABEL###'] = $this->dontAllow($options[$i][0]); // add label
 				$markerArray['###LABEL_NAME###'] = 'uid'.$this->uid.'_'.$i; // add labelname
 				$markerArray['###ID###'] = 'id="uid'.$this->uid.'_'.$i.'" '; // add labelname
-				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow(isset($options[$i][1])?$options[$i][1]:$options[$i][0]).'" '; // add labelname
+				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow(isset($options[$i][1]) ? $options[$i][1] : $options[$i][0]).'" '; // add labelname
 				//$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
 				$markerArray['###CLASS###'] = 'class="'. ($i == count($optionlines)-1 && $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1 ? 'validate-one-required' : '') .' powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
 				$this->turnedtabindex[$this->uid.'_'.$i] !== '' ? $markerArray['###TABINDEX###'] = 'tabindex="'.($this->turnedtabindex[$this->uid.'_'.$i] + 1).'" ' : $markerArray['###TABINDEX###'] = ''; // tabindex for every radiobutton
@@ -335,7 +335,7 @@ class tx_powermail_html extends tslib_pibase {
 					$markerArray['###CHECKED###'] = 'checked="checked" '; // precheck radiobutton
 				} else $markerArray['###CHECKED###'] = ''; // clear
 				if(isset($this->piVarsFromSession['uid'.$this->uid])) { // Preselection from session
-					if($this->piVarsFromSession['uid'.$this->uid] == ($options[$i][1]?$options[$i][1]:$options[$i][0])) { // mark as selected
+					if($this->piVarsFromSession['uid'.$this->uid] == ($options[$i][1] ? $options[$i][1] : $options[$i][0])) { // mark as selected
 						$markerArray['###CHECKED###'] = 'checked="checked" '; // precheck radiobutton
 					} else $markerArray['###CHECKED###'] = ''; // clear
 				}
@@ -374,9 +374,9 @@ class tx_powermail_html extends tslib_pibase {
 		$this->markerArray['###VALUE###'] = 'value="'.$this->dontAllow($this->title).'" '; // add value (used from title) to markerArray
 
 		$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
-		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_submit'],$this->markerArray); // substitute Marker in Template
+		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_submit'], $this->markerArray); // substitute Marker in Template
 		$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
-		$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+		$content = preg_replace("|###.*?###|i", "", $content); // Finally clear not filled markers
 		return $content; // return HTML
 	}
 
@@ -398,9 +398,9 @@ class tx_powermail_html extends tslib_pibase {
 		$this->markerArray['###VALUE###'] = 'value="'.$this->dontAllow($this->title).'" '; // add value (used from title) to markerArray
 
 		$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
-		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_reset'],$this->markerArray); // substitute Marker in Template
+		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_reset'], $this->markerArray); // substitute Marker in Template
 		$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
-		$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+		$content = preg_replace("|###.*?###|i" ,"", $content); // Finally clear not filled markers
 		
 		return $content; // return HTML
 	}
@@ -422,7 +422,7 @@ class tx_powermail_html extends tslib_pibase {
 		$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_label'],$this->markerArray); // substitute Marker in Template
 		$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
-		$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+		$content = preg_replace("|###.*?###|i", "", $content); // Finally clear not filled markers
 		return $content; // return HTML
 	}
 
@@ -445,7 +445,7 @@ class tx_powermail_html extends tslib_pibase {
 		$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_html'],$this->markerArray); // substitute Marker in Template
 		$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
-		$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+		$content = preg_replace("|###.*?###|i", "", $content); // Finally clear not filled markers
 		return $content; // return HTML
 	}
 
@@ -473,7 +473,7 @@ class tx_powermail_html extends tslib_pibase {
 		$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_content'],$this->markerArray); // substitute Marker in Template
 		$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
-		$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+		$content = preg_replace("|###.*?###|i", "", $content); // Finally clear not filled markers
 		return $content; // return HTML
 	}
 
@@ -489,7 +489,7 @@ class tx_powermail_html extends tslib_pibase {
 		$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_password'],$this->markerArray); // substitute Marker in Template
 		$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
-		$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+		$content = preg_replace("|###.*?###|i", "", $content); // Finally clear not filled markers
 		return $content; // return HTML
 	}
 
@@ -515,7 +515,7 @@ class tx_powermail_html extends tslib_pibase {
 		$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_file'], $this->markerArray); // substitute Marker in Template
 		$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
-		$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+		$content = preg_replace("|###.*?###|i", "", $content); // Finally clear not filled markers
 		
 		if (!empty($content)) return $content; // return HTML
 	}
@@ -532,7 +532,7 @@ class tx_powermail_html extends tslib_pibase {
 		$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_hidden'],$this->markerArray); // substitute Marker in Template
 		$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
-		$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+		$content = preg_replace("|###.*?###|i", "", $content); // Finally clear not filled markers
 		return $content; // return HTML
 	}
 
@@ -575,7 +575,7 @@ class tx_powermail_html extends tslib_pibase {
 				$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 				$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_datetime'],$this->markerArray); // substitute Marker in Template
 				$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
-				$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+				$content = preg_replace("|###.*?###|i", "", $content); // Finally clear not filled markers
 			
 			} else { // date2cal version too old
 				$content = 'Installed <strong>date2cal</strong> extension is too old, please use min. version 7.0.0 of <a href="http://typo3.org/extensions/repository/view/date2cal/current/" title="date2cal in the TYPO3 repository" target="_blank">date2cal</a><br />';
@@ -628,7 +628,7 @@ class tx_powermail_html extends tslib_pibase {
 				$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 				$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_date'],$this->markerArray); // substitute Marker in Template
 				$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
-				$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+				$content = preg_replace("|###.*?###|i", "", $content); // Finally clear not filled markers
 			
 			} else { // date2cal version too old
 				$content = 'Installed <strong>date2cal</strong> extension is too old, please use min. version 7.0.0 of <a href="http://typo3.org/extensions/repository/view/date2cal/current/" title="date2cal in the TYPO3 repository" target="_blank">date2cal</a><br />';
@@ -653,7 +653,7 @@ class tx_powermail_html extends tslib_pibase {
 		$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_button'],$this->markerArray); // substitute Marker in Template
 		$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
-		$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+		$content = preg_replace("|###.*?###|i", "", $content); // Finally clear not filled markers
 		return $content; // return HTML
 	}
 	
@@ -720,7 +720,7 @@ class tx_powermail_html extends tslib_pibase {
 			$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 			$content = $this->cObj->substituteMarkerArrayCached($this->tmpl['html_countryselect']['all'],$this->markerArray,$subpartArray); // substitute Marker in Template
 			$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
-			$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+			$content = preg_replace("|###.*?###|i", "", $content); // Finally clear not filled markers
 			
 			
 			
@@ -742,7 +742,7 @@ class tx_powermail_html extends tslib_pibase {
 		if(t3lib_extMgm::isLoaded('captcha',0) || t3lib_extMgm::isLoaded('sr_freecap',0)) { // only if a captcha extension is loaded
 			$this->tmpl['html_captcha'] = tslib_cObj::getSubpart($this->tmpl['all'], '###POWERMAIL_FIELDWRAP_HTML_CAPTCHA###'); // work on subpart
 			
-			if (t3lib_extMgm::isLoaded('sr_freecap',0) && $this->conf['captcha.']['use'] == 'sr_freecap') { // use sr_freecap if available
+			if (t3lib_extMgm::isLoaded('sr_freecap', 0) && $this->conf['captcha.']['use'] == 'sr_freecap') { // use sr_freecap if available
 				
 				require_once(t3lib_extMgm::extPath('sr_freecap').'pi2/class.tx_srfreecap_pi2.php'); // include freecap class
 				$this->freeCap = t3lib_div::makeInstance('tx_srfreecap_pi2'); // new object
@@ -751,14 +751,14 @@ class tx_powermail_html extends tslib_pibase {
 				$this->markerArray['###POWERMAIL_CAPTCHA_PICTURE###'] = $freecaparray['###SR_FREECAP_IMAGE###']; // captcha image
 				$this->markerArray['###POWERMAIL_CAPTCHA_PICTURERELOAD###'] = $freecaparray['###SR_FREECAP_CANT_READ###']; // reload image button
 				$this->markerArray['###POWERMAIL_CAPTCHA_ACCESSIBLE###'] = $freecaparray['###SR_FREECAP_ACCESSIBLE###']; // audio output
-				$this->markerArray['###LABEL###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'label'); // captcha label
+				$this->markerArray['###LABEL###'] = $this->title; // captcha label
 			
-			} elseif (t3lib_extMgm::isLoaded('captcha',0) && $this->conf['captcha.']['use'] == 'captcha') { // use captcha if available
+			} elseif (t3lib_extMgm::isLoaded('captcha', 0) && $this->conf['captcha.']['use'] == 'captcha') { // use captcha if available
 			
 				$this->markerArray['###POWERMAIL_CAPTCHA_PICTURE###'] = '<img src="'.t3lib_extMgm::siteRelPath('captcha').'captcha/captcha.php" alt="" class="powermail_captcha powermail_captcha_captcha" />'; // captcha image
-				$this->markerArray['###LABEL###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'label'); // captcha label
+				$this->markerArray['###LABEL###'] = $this->title; // captcha label
 			
-			} elseif (t3lib_extMgm::isLoaded('jm_recaptcha',0) && $this->conf['captcha.']['use'] == 'recaptcha') { // use recaptcha if available
+			} elseif (t3lib_extMgm::isLoaded('jm_recaptcha', 0) && $this->conf['captcha.']['use'] == 'recaptcha') { // use recaptcha if available
 				
 				$this->tmpl['html_captcha'] = tslib_cObj::getSubpart($this->tmpl['all'], '###POWERMAIL_FIELDWRAP_HTML_RECAPTCHA###'); // work on subpart
 				
@@ -766,14 +766,14 @@ class tx_powermail_html extends tslib_pibase {
 				$recaptcha = t3lib_div::makeInstance('tx_jmrecaptcha'); // new object
 				
 				$this->markerArray['###POWERMAIL_CAPTCHA_PICTURE###'] = $recaptcha->getReCaptcha(); // get captcha
-				$this->markerArray['###LABEL###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'label'); // captcha label
+				$this->markerArray['###LABEL###'] = $this->title; // captcha label
 				
 			} else return 'Powermail ERROR: Please check if you have chosen the right captcha extension in the powermail constants!';
 			
 			$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 			$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_captcha'], $this->markerArray); // substitute Marker in Template
 			$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
-			$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+			$content = preg_replace("|###.*?###|i", "", $content); // Finally clear not filled markers
 			return $content; // return HTML
 		
 		} else { // Extension static_info_tables is missing
@@ -798,7 +798,7 @@ class tx_powermail_html extends tslib_pibase {
 		$this->html_hookwithinfields(); // adds hook to manipulate the markerArray for any field
 		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_submitgraphic'],$this->markerArray); // substitute Marker in Template
 		$content = $this->dynamicMarkers->main($this->conf, $this->cObj, $content); // Fill dynamic locallang or typoscript markers
-		$content = preg_replace("|###.*?###|i","",$content); // Finally clear not filled markers
+		$content = preg_replace("|###.*?###|i", "", $content); // Finally clear not filled markers
 		return $content; // return HTML
 	}
 	

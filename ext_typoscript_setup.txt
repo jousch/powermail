@@ -11,9 +11,10 @@ plugin.tx_powermail_pi1 {
 	template.all = {$plugin.powermail.template.all}
 	template.mandatory = {$plugin.powermail.template.mandatory}
 	template.MultipleJS = {$plugin.powermail.template.MultipleJS}
+	css.MultipleJS = {$plugin.powermail.css.MultipleJS}
 	emailformat.recipient_mail = {$plugin.powermail.emailformat.recipient_mail}
 	emailformat.sender_mail = {$plugin.powermail.emailformat.sender_mail}
-	---
+	# ---
 	enable.unique = {$plugin.powermail.enable.unique}
 	email.noreply = {$plugin.powermail.email.noreply}
 	email.checkMX = {$plugin.powermail.email.checkMX}
@@ -74,48 +75,48 @@ plugin.tx_powermail_pi1 {
 	
 		# Manipulation of values in dblog
 		dblog {
-			uid999 = TEXT
-			uid999.field = uid999
-			uid999.wrap = <b>|</b>
+#			uid999 = TEXT
+#			uid999.field = uid999
+#			uid999.wrap = <b>|</b>
 			
-			uid998_0 = TEXT
-			uid998_0.field = uid998_0
-			uid998_0.wrap = <b>|</b>
+#			uid998_0 = TEXT
+#			uid998_0.field = uid998_0
+#			uid998_0.wrap = <b>|</b>
 		}
 		
 		# Manipulation of values for email to receiver (main mail)
 		recipient_mail {
-			uid999 = TEXT
-			uid999.field = uid999
-			uid999.wrap = <b>|</b>
+#			uid999 = TEXT
+#			uid999.field = uid999
+#			uid999.wrap = <b>|</b>
 		}
 		
 		# Manipulation of values for email to sender (confirmation mail)
 		sender_mail {
-			uid999 = TEXT
-			uid999.field = uid999
-			uid999.wrap = <b>|</b>
+#			uid999 = TEXT
+#			uid999.field = uid999
+#			uid999.wrap = <b>|</b>
 		}
 		
 		# Manipulation of values for email to sender (confirmation mail)
 		thx {
-			uid999 = TEXT
-			uid999.field = uid999
-			uid999.wrap = <b>|</b>
+#			uid999 = TEXT
+#			uid999.field = uid999
+#			uid999.wrap = <b>|</b>
 		}
 		
 		# Manipulation of values for email to sender (confirmation mail)
 		confirmation {
-			uid999 = TEXT
-			uid999.field = uid999
-			uid999.wrap = <b>|</b>
+#			uid999 = TEXT
+#			uid999.field = uid999
+#			uid999.wrap = <b>|</b>
 		}
 		
 		# Manipulation of values for email to sender (confirmation mail)
 		mandatory {
-			uid999 = TEXT
-			uid999.field = uid999
-			uid999.wrap = <b>|</b>
+#			uid999 = TEXT
+#			uid999.field = uid999
+#			uid999.wrap = <b>|</b>
 		}
 		
 	}
@@ -124,21 +125,21 @@ plugin.tx_powermail_pi1 {
 	# prefilling form fields (example)
 	prefill {
 		# fill field uid997 with a static text
-		uid997 = TEXT
-		uid997.value = example value
+#		uid997 = TEXT
+#		uid997.value = example value
 		
 		# fill field uid998 with current timestamp
-		uid998 = TEXT
-		uid998.data = date:U
+#		uid998 = TEXT
+#		uid998.data = date:U
 		
 		# fill field uid998 with current date like "Date: 20.01.2009"
-		uid996 = TEXT
-		uid996.data = date:U
-		uid996.strftime = Date: %d.%m.%Y
+#		uid996 = TEXT
+#		uid996.data = date:U
+#		uid996.strftime = Date: %d.%m.%Y
 		
 		# fill field uid995 with IP address of the user
-		uid995 = TEXT
-		uid995.data = getIndpEnv:REMOTE_ADDR
+#		uid995 = TEXT
+#		uid995.data = getIndpEnv:REMOTE_ADDR
 	}
 	
 	
@@ -219,40 +220,13 @@ page.includeJS.file31312 = EXT:powermail/js/mandatoryjs/lib/prototype.js
 page.includeJS.file31313 = EXT:powermail/js/mandatoryjs/src/effects.js
 page.includeJS.file31314 = EXT:powermail/js/mandatoryjs/fabtabulous.js
 
-page.headerData.31310 = COA
-page.headerData.31310.wrap = <script src="|" type="text/javascript"></script>
+page.headerData.31310 = TEXT
 page.headerData.31310 {
-	10 = TEXT
-	10.data = getIndpEnv:TYPO3_SITE_URL
-	
-	20 = TEXT
-	20 {
-		value = x
-		stdWrap.wrap = |
-		stdWrap.typolinkno_cache = 1
-		stdWrap.typolink.returnLast = url
-		stdWrap.typolink.parameter.cObject = COA
-		stdWrap.typolink.parameter.cObject {
-			10 = TEXT
-			10.data = page:uid
-			10.wrap = index.php?id=|
-			10.required = 1
-       
-			20 = TEXT
-			20.data = GPvar : L
-			20.wrap = &L=|
-			20.required = 1
-		   
-			40 = TEXT
-			40.data = GPvar : cHash
-			40.wrap = &cHash=|
-			40.required = 1
-		   
-			50 = TEXT
-			50.value = &type=3131
-			50.required = 1
-		}
-	}
+    wrap = <script src="|" type="text/javascript"></script>
+    typolink.parameter.data = page : uid
+    typolink.additionalParams = &type=3131
+    typolink.addQueryString = 1
+    typolink.returnLast = url
 }
 seite.headerData.31310 < page.headerData.31310
 seite.includeJS.31311 < page.includeJS.file31311
