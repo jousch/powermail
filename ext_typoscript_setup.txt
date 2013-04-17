@@ -14,6 +14,7 @@ plugin.tx_powermail_pi1 {
 	allow.dblog = {$plugin.powermail.allow.dblog}
 	email.noreply = {$plugin.powermail.email.noreply}
 	email.checkMX = {$plugin.powermail.email.checkMX}
+	enable.unique = {$plugin.powermail.enable.unique}
 	markerALL.hideLabel = {$plugin.powermail.markerALL.hideLabel}
 	markerALL.notIn = {$plugin.powermail.markerALL.notIn}
 	PID.dblog = {$plugin.powermail.PID.dblog}

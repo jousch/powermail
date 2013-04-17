@@ -49,6 +49,9 @@ plugin.powermail {
 	# cat=plugin.powermail_additionalconfig//0410; type=text; label= Check MX record of sender mail: This is a small test, if senders email address exists (MX record check of domain)
 	email.checkMX = 1
 	
+	# cat=plugin.powermail_additionalconfig//0415; type=text; label= Onetime form: Checks if a field has already this entry (maybe email address), IP check is also possible if ip addresses will be logged) - (e.G. uid11,ip checks for unique IP and unique entry in field uid11)
+	enable.unique = 
+	
 	# cat=plugin.powermail_additionalconfig//0420; type=boolean; label= Hide label if empty value: This option hides labels if its value is empty in marker ###POWERMAIL_ALL###
 	markerALL.hideLabel = 0
 	

@@ -44,12 +44,13 @@ class tx_powermail_form extends tslib_pibase {
 		
 		// load mandatory javascript in header if needed
 		$js = '';
-		if ($this->conf['js.']['Prototype'] == 1) $js .= $this->includeJavaScript("js/mandatoryjs/lib/","prototype.js"); // add file 1 (always because prototype.js is used with date2cal)
+		if ($this->conf['field.']['checkboxJS'] == 1) $js .= $this->includeJavaScript("js/checkbox/", "checkbox.js"); // add file 1 (only if new checkbox variant with hidden fields was chosen via constants)
+		if ($this->conf['js.']['Prototype'] == 1) $js .= $this->includeJavaScript("js/mandatoryjs/lib/","prototype.js"); // add file 2 (always because prototype.js is used with date2cal)
 		if ($this->conf['js.']['mandatorycheck'] == 1) {
-			$js .= $this->includeJavaScript("js/mandatoryjs/src/","effects.js"); // add file 2
-			$js .= $this->includeJavaScript("js/mandatoryjs/","fabtabulous.js"); // add file 3
+			$js .= $this->includeJavaScript("js/mandatoryjs/src/","effects.js"); // add file 3
+			$js .= $this->includeJavaScript("js/mandatoryjs/","fabtabulous.js"); // add file 4
 			
-			// add dynamic file (current page with type=3131)
+			// add dynamic file (current page with type=3131) // file 5
 			if ($GLOBALS['TSFE']->tmpl->setup['config.']['simulateStaticDocuments'] != '1') { // simulatestaticdocuments is not activated
 				$dynjslink = $this->pibase->cObj->typolink (
 					'x', 
