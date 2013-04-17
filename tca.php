@@ -5,13 +5,13 @@ $confArr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['powermail'
 $TCA["tx_powermail_fieldsets"] = array (
 	"ctrl" => $TCA["tx_powermail_fieldsets"]["ctrl"],
 	"interface" => array (
-		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,starttime,endtime,fe_group,form,title"
+		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,starttime,endtime,fe_group,form,title"
 	),
 	"feInterface" => $TCA["tx_powermail_fieldsets"]["feInterface"],
 	"columns" => array (
 		'hidden' => array (		
 			'exclude' => 1,
-			'label'   => 'wech damit',
+			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
 			'config'  => array (
 				'type'    => 'check',
 				'default' => '0'
@@ -49,10 +49,16 @@ $TCA["tx_powermail_fieldsets"] = array (
 		)
 	),
 	"types" => array (
-		"0" => array("showitem" => "hidden;;1;;1-1-1, form, title;;;;2-2-2, felder")
-	),
+		"0" => array (
+			"showitem" => "--palette--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_fields.fieldset;1, felder",
+			'canNotCollapse' => '1'
+		)
+	),	
 	"palettes" => array (
-		"1" => array("showitem" => "")
+		"1" => array (
+			"showitem" => "form, title, hidden",
+			'canNotCollapse' => '1'
+		)
 	)
 );
 
@@ -122,12 +128,11 @@ $TCA["tx_powermail_fields"] = array (
 					array('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.fieldtitle.hidden', 'hidden'),
 					array('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.fieldtitle.datetime', 'datetime'),
 					array('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.fieldtitle.date', 'date'),
-					array('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.fieldtitle.time', 'time'),
+					//array('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.fieldtitle.time', 'time'),
 					array('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.fieldtitle.button', 'button'),
 					array('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.fieldtitle.submitgraphic', 'submitgraphic'),
 					array('LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.fieldtitle.countryselect', 'countryselect'),
 				),
-				//"itemsProcFunc" => "tx_powermail_xml_fieldreturn->main",	
 				"size" => 1,	
 				"maxitems" => 1,
 			)
@@ -159,7 +164,7 @@ $TCA["tx_powermail_fields"] = array (
 					"submitgraphic" => 'FILE:EXT:powermail/lib/def/def_field_submitgraphic.xml',
 					"text" => 'FILE:EXT:powermail/lib/def/def_field_text.xml',
 					"textarea" => 'FILE:EXT:powermail/lib/def/def_field_textarea.xml',
-					"time" => 'FILE:EXT:powermail/lib/def/def_field_time.xml',
+					//"time" => 'FILE:EXT:powermail/lib/def/def_field_time.xml',
 				),
 			)
 		),
@@ -178,10 +183,16 @@ $TCA["tx_powermail_fields"] = array (
 		),
 	),
 	"types" => array (
-		"0" => array("showitem" => "hidden;;1;;1-1-1, title;;;;1-1-1,formtype;;;;2-2-2,flexform;;;;3-3-3, fe_field;;;;4-4-4")
-	),
+		"0" => array (
+			"showitem" => "--palette--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_fieldsets.fields;1, formtype;;;;2-2-2,flexform;;;;3-3-3, fe_field;;;;4-4-4",
+			'canNotCollapse' => '1'
+		)
+	),	
 	"palettes" => array (
-		"1" => array("showitem" => ""),
+		"1" => array (
+			"showitem" => "title, hidden",
+			'canNotCollapse' => '1'
+		)
 	)
 );
 
@@ -194,7 +205,10 @@ if(!t3lib_extMgm::isLoaded('static_info_tables',0)) {
 if(!t3lib_extMgm::isLoaded('date2cal',0)) {
 	$TCA["tx_powermail_fields"]["columns"]["flexform"]["config"]["ds"]["date"] = 'FILE:EXT:powermail/lib/def/def_field_date_error.xml';
 	$TCA["tx_powermail_fields"]["columns"]["flexform"]["config"]["ds"]["datetime"] = 'FILE:EXT:powermail/lib/def/def_field_date_error.xml';
-	$TCA["tx_powermail_fields"]["columns"]["flexform"]["config"]["ds"]["time"] = 'FILE:EXT:powermail/lib/def/def_field_date_error.xml';
+	//$TCA["tx_powermail_fields"]["columns"]["flexform"]["config"]["ds"]["time"] = 'FILE:EXT:powermail/lib/def/def_field_date_error.xml';
+} elseif (!file_exists(t3lib_extMgm::extPath('date2cal').'src/class.jscalendar.php')) { // date2cal is loaded but too old
+	$TCA["tx_powermail_fields"]["columns"]["flexform"]["config"]["ds"]["date"] = 'FILE:EXT:powermail/lib/def/def_field_date2calversion_error.xml';
+	$TCA["tx_powermail_fields"]["columns"]["flexform"]["config"]["ds"]["datetime"] = 'FILE:EXT:powermail/lib/def/def_field_date2calversion_error.xml';
 }
 
 // Make powermail available in older TYPO3 version (fields)

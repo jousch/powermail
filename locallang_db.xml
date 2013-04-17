@@ -130,6 +130,7 @@
 			<label index="tx_powermail_forms.xml.error">Please select a fieldtype to continue.</label>
 			<label index="tx_powermail_forms.xml.countryselect.error">Please install the extension static_info_tables to use this feature.</label>
 			<label index="tx_powermail_forms.xml.date.error">Please install the extension date2cal to use this feature.</label>
+			<label index="tx_powermail_forms.xml.date2calversion.error">Your date2cal extension is too old, please install version 7.0.0 or higher.</label>
 
 		</languageKey>
 		<languageKey index="de" type="array">
@@ -255,6 +256,7 @@
 			<label index="tx_powermail_forms.xml.error">Bitte wählen Sie einen Feldtypen um fortzufahren.</label>
 			<label index="tx_powermail_forms.xml.countryselect.error">Bitte installieren Sie static_info_tables um dieses Feature nutzen zu können.</label>
 			<label index="tx_powermail_forms.xml.date.error">Bitte installieren Sie date2cal um dieses Feature nutzen zu können.</label>
+			<label index="tx_powermail_forms.xml.date2calversion.error">Die installierte date2cal Version ist veraltet, bitte nutzen Sie min. 7.0.0 oder höher.</label>
 
 		</languageKey>
 		<languageKey index="en" type="array">
@@ -383,6 +385,7 @@
 			<label index="tx_powermail_forms.xml.error">Please select a fieldtype to continue.</label>
 			<label index="tx_powermail_forms.xml.countryselect.error">Please install the extension static_info_tables to use this feature.</label>
 			<label index="tx_powermail_forms.xml.date.error">Please install the extension date2cal to use this feature.</label>
+			<label index="tx_powermail_forms.xml.date2calversion.error">Your date2cal extension is too old, please install version 7.0.0 or higher.</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="please_select">Veuillez séléctionner</label>

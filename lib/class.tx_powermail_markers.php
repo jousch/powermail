@@ -59,11 +59,12 @@ class tx_powermail_markers extends tslib_pibase {
 							}
 						}
 					} else { // value is still an array (needed for e.g. checkboxes tx_powermail_pi1[uid55][0])
+						$i=0; // init counter
 						foreach($v as $kv => $vv) { // One loop for every piVar
 							if(is_numeric(str_replace('uid','',$k))) { // check if key is like uid55
 								$this->markerArray['###'.strtoupper($k).'_'.$kv.'###'] = $this->div_functions->nl2br2(stripslashes($vv)); // fill ###UID55_0###
 								$this->markerArray['###'.strtolower($k).'_'.$kv.'###'] = $this->div_functions->nl2br2(stripslashes($vv)); // fill ###uid55_0###
-								$this->markerArray['###'.strtoupper($k).'###'] .= $this->div_functions->nl2br2(stripslashes($vv)).', '; // fill ###UID55###
+								$this->markerArray['###'.strtoupper($k).'###'] .= ($i!=0?', ':'').$this->div_functions->nl2br2(stripslashes($vv)); // fill ###UID55### (comma between every value)
 								
 								// ###POWERMAIL_ALL###
 								if(!in_array(strtoupper($k),$this->notInMarkerAll) && !in_array('###'.strtoupper($k).'###',$this->notInMarkerAll)) {
@@ -71,6 +72,7 @@ class tx_powermail_markers extends tslib_pibase {
 									$markerArray['###POWERMAIL_VALUE###'] = $this->div_functions->nl2br2(stripslashes($vv));
 									$content_item .= $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['all']['item'],$markerArray);
 								}
+								$i++; // increase counter
 							}
 						}
 					}

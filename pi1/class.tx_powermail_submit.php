@@ -211,14 +211,14 @@ class tx_powermail_submit extends tslib_pibase {
 			
 			if ($res && $query) { // If there is a result
 				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every result
-					$i = 0; // init
+					//$i = 0; // init
 					if (is_array($row)) { // if $row is an array
 						foreach ($row as $key => $value) { // give me the key
-							if ($i == 0) { // take only first result
+							//if ($i == 0) { // take only first result
 								if(t3lib_div::validEmail($row[$key])) { // only if result is a valid email address
 									$emails .= $row[$key].', '; // add email address with comma at the end
 								}
-							}
+							//}
 						}
 					}
 				}
@@ -337,7 +337,22 @@ class tx_powermail_submit extends tslib_pibase {
 	
 	// Function uidReplace is used for the callback function to replace ###UID55## with value
 	function uidReplace($uid) {
-		if(isset($this->sessiondata['uid'.$uid[1]])) return $this->sessiondata['uid'.$uid[1]];
+		if (isset($this->sessiondata['uid'.$uid[1]])) {
+			if (!is_array($this->sessiondata['uid'.$uid[1]])) { // value is not an array
+				
+				return $this->sessiondata['uid'.$uid[1]]; // return 44 (e.g.)
+				
+			} else { // value is an array
+			
+				$return = ''; $i=0; // init counter
+				foreach ($this->sessiondata['uid'.$uid[1]] as $key => $value) { // one loop for every value
+					$return .= ($i!=0?',':'').$value; // add a value (commaseparated)
+					$i++; // increase counter
+				}
+				return $return; // return 44,45,46 (e.g.)
+				
+			}
+		}
 	}
 
 

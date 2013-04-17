@@ -39,7 +39,7 @@ plugin.powermail {
 	# cat=plugin.powermail//200; type=text; label= PID where to save logfiles: Enter a Page ID where the form values should be saved to the db (empty: same PID as form PID)
 	PID.dblog = 
 	
-	# cat=plugin.powermail//400; type=text; label= Exclude fields from marker ALL: Exclude some fields from marker ###ALL### (e.g.: ###UID14###,###UID22### or UID14,UID22)
+	# cat=plugin.powermail//400; type=text; label= Exclude fields from marker ALL: Exclude some fields from marker ###POWERMAIL_ALL### (e.g.: ###UID14###,###UID22### or UID14,UID22)
 	markerALL.notIn = 
 	
 	# cat=plugin.powermail//410; type=text; label= Form method: use post or get as post format (details see on selfhtml.org)
