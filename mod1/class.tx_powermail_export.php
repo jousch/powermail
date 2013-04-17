@@ -7,7 +7,7 @@ class tx_powermail_export {
 	var $dateformat = 'Y-m-d'; // timeformat for displaying date
 	var $timeformat = 'H:i:s'; // timeformat for displaying date
 	var $seperator = ';'; // separator for csv
-	var $csvfilename = 'powermail_export.csv'; // filename of exported CSV file
+	var $csvfilename = 'powermail_export_'; // filename of exported CSV file
 	var $zip = 1; // activate CSV file compressing to .gz
 	var $rowconfig = array('number'=>'#', 'date'=>'Date', 'time'=>'Time', 'uid'=>'all', 'sender'=>'Sender email', 'senderIP'=>'Sender IP address', 'recipient'=>'Recipient email', 'subject_r'=>'Email subject', 'formid'=>'Page ID', 'UserAgent'=>'UserAgent', 'Referer'=>'Referer', 'SP_TZ'=>'Sender location'); // set order for export
 	var $LANG; // Local copy of lang object
@@ -145,20 +145,21 @@ class tx_powermail_export {
 		}
 		
 		// What to show
-		if($export == 'xls') {
+		if ($export == 'xls') {
 			$content .= header("Content-type: application/vnd-ms-excel");
 			$content .= header("Content-Disposition: attachment; filename=export.xls");
 			$content .= $table; // add table to content
 		
 		} elseif ($export == 'csv') {
-		
-			if(!t3lib_div::writeFileToTypo3tempDir(PATH_site.'typo3temp/'.$this->csvfilename,$table)) { // write to typo3temp and if success returns FALSE
+			$hash = $this->getHash(); // get random number
+			
+			if (!t3lib_div::writeFileToTypo3tempDir(PATH_site.'typo3temp/'.$this->csvfilename.$hash.'.csv', $table)) { // write to typo3temp and if success returns FALSE
 				$content .= '<strong>'.$this->LANG->getLL('export_download_success').'</strong><br />';
-				$this->gzcompressfile(PATH_site.'typo3temp/'.$this->csvfilename); // compress file
-				$content .= '<a href="'.t3lib_div::getIndpEnv('TYPO3_SITE_URL').'/typo3temp/'.$this->csvfilename.'" target="_blank"><u>'.$this->LANG->getLL('export_download_download').'</u></a><br />'; // link to xx.csv.gz
-				$content .= '<a href="'.t3lib_div::getIndpEnv('TYPO3_SITE_URL').'/typo3temp/'.$this->csvfilename.'.gz" target="_blank"><u>'.$this->LANG->getLL('export_download_downloadZIP').'</u></a><br />'; // link to xx.csv
+				$this->gzcompressfile(PATH_site.'typo3temp/'.$this->csvfilename.$hash.'.csv'); // compress file
+				$content .= '<a href="'.t3lib_div::getIndpEnv('TYPO3_SITE_URL').'/typo3temp/'.$this->csvfilename.$hash.'.csv'.'" target="_blank"><u>'.$this->LANG->getLL('export_download_download').'</u></a><br />'; // link to xx.csv.gz
+				$content .= '<a href="'.t3lib_div::getIndpEnv('TYPO3_SITE_URL').'/typo3temp/'.$this->csvfilename.$hash.'.csv'.'.gz" target="_blank"><u>'.$this->LANG->getLL('export_download_downloadZIP').'</u></a><br />'; // link to xx.csv
 			} else {
-				$content .= t3lib_div::writeFileToTypo3tempDir(PATH_site.'typo3temp/'.$this->csvfilename,$table);
+				$content .= t3lib_div::writeFileToTypo3tempDir(PATH_site.'typo3temp/'.$this->csvfilename.$hash.'.csv', $table);
 			}
 		
 		} elseif($export == 'table') {
@@ -284,6 +285,12 @@ class tx_powermail_export {
 		
     	return $string;
     }
+	
+	
+	// Function getHash() returns random hash code
+	function getHash() {
+		return md5(uniqid(rand(), true)); // return random string
+	}
 
 }
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/powermail/mod1/class.tx_powermail_export.php']) {

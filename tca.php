@@ -9,6 +9,45 @@ $TCA["tx_powermail_fieldsets"] = array (
 	),
 	"feInterface" => $TCA["tx_powermail_fieldsets"]["feInterface"],
 	"columns" => array (
+		't3ver_label' => array (		
+			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.versionLabel',
+			'config' => array (
+				'type' => 'input',
+				'size' => '30',
+				'max'  => '30',
+			)
+		),
+		'sys_language_uid' => array (		
+			'exclude' => 1,
+			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.language',
+			'config' => array (
+				'type'                => 'select',
+				'foreign_table'       => 'sys_language',
+				'foreign_table_where' => 'ORDER BY sys_language.title',
+				'items' => array(
+					array('LLL:EXT:lang/locallang_general.xml:LGL.allLanguages', -1),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.default_value', 0)
+				)
+			)
+		),
+		'l18n_parent' => array (		
+			'displayCond' => 'FIELD:sys_language_uid:>:0',
+			'exclude'     => 1,
+			'label'       => 'LLL:EXT:lang/locallang_general.xml:LGL.l18n_parent',
+			'config'      => array (
+				'type'  => 'select',
+				'items' => array (
+					array('', 0),
+				),
+				'foreign_table'       => 'tx_dgp_inlinelinks',
+				'foreign_table_where' => 'AND tx_dgp_inlinelinks.pid=###CURRENT_PID### AND tx_dgp_inlinelinks.sys_language_uid IN (-1,0)',
+			)
+		),
+		'l18n_diffsource' => array (		
+			'config' => array (
+				'type' => 'passthrough'
+			)
+		),
 		'starttime' => array (
 			'exclude' => 1,
 			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.starttime',
@@ -71,6 +110,14 @@ $TCA["tx_powermail_fieldsets"] = array (
 					'useSortable' => 1,
 					'newRecordLinkAddTitle' => 1,
 					'newRecordLinkPosition' => 'both',
+				    'showSynchronizationLink' => 0,
+				    'showAllLocalizationLink' => 1,
+				    'showPossibleLocalizationRecords' => 1,
+				    'showRemovedLocalizationRecords' => 1,
+				),
+				'behaviour' => array(
+					'localizeChildrenAtParentLocalization' => 1,						    			
+					'localizationMode' => 'select',
 				),
 			)
 		)
@@ -107,10 +154,49 @@ if(t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.1.0') || 
 $TCA["tx_powermail_fields"] = array (
 	"ctrl" => $TCA["tx_powermail_fields"]["ctrl"],
 	"interface" => array (
-		"showRecordFieldList" => "hidden,starttime,endtime,fe_group,fieldset,title,name,type,value,size,maxsize,mandantory,more,fe_field"
+		"showRecordFieldList" => "hidden,starttime,endtime,fe_group,fieldset,title,name,type,value,size,maxsize,mandantory,more,fe_field,description"
 	),
 	"feInterface" => $TCA["tx_powermail_fields"]["feInterface"],
 	"columns" => array (
+		't3ver_label' => array (		
+			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.versionLabel',
+			'config' => array (
+				'type' => 'input',
+				'size' => '30',
+				'max'  => '30',
+			)
+		),
+		'sys_language_uid' => array (		
+			'exclude' => 1,
+			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.language',
+			'config' => array (
+				'type'                => 'select',
+				'foreign_table'       => 'sys_language',
+				'foreign_table_where' => 'ORDER BY sys_language.title',
+				'items' => array(
+					array('LLL:EXT:lang/locallang_general.xml:LGL.allLanguages', -1),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.default_value', 0)
+				)
+			)
+		),
+		'l18n_parent' => array (		
+			'displayCond' => 'FIELD:sys_language_uid:>:0',
+			'exclude'     => 1,
+			'label'       => 'LLL:EXT:lang/locallang_general.xml:LGL.l18n_parent',
+			'config'      => array (
+				'type'  => 'select',
+				'items' => array (
+					array('', 0),
+				),
+				'foreign_table'       => 'tx_dgp_inlinelinks',
+				'foreign_table_where' => 'AND tx_dgp_inlinelinks.pid=###CURRENT_PID### AND tx_dgp_inlinelinks.sys_language_uid IN (-1,0)',
+			)
+		),
+		'l18n_diffsource' => array (		
+			'config' => array (
+				'type' => 'passthrough'
+			)
+		),
 		'starttime' => array (
 			'exclude' => 1,
 			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.starttime',
@@ -195,6 +281,15 @@ $TCA["tx_powermail_fields"] = array (
 				"maxitems" => 1,
 			)
 		),
+		"description" => array (        
+            "exclude" => 1,        
+            "label" => "LLL:EXT:powermail/locallang_db.xml:tx_powermail_fields.description",        
+            "config" => array (
+                "type" => "text",
+                "cols" => "30",
+                "rows" => "2",
+            )
+        ),
 		"flexform" => array (
 			"exclude" => 1,		
 			"label" => "LLL:EXT:powermail/locallang_db.xml:tx_powermail_fields.field",		
@@ -242,13 +337,17 @@ $TCA["tx_powermail_fields"] = array (
 	),
 	"types" => array (
 		"0" => array (
-			"showitem" => "--palette--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_fieldsets.fields;1, formtype;;;;2-2-2,flexform;;;;3-3-3, fe_field;;;;4-4-4",
+			"showitem" => "--palette--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_fieldsets.fields;1, formtype;;;;3-3-3, flexform;;;;3-3-3, --palette--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_fieldsets.addition;2",
 			'canNotCollapse' => '1'
 		)
 	),	
 	"palettes" => array (
-		"1" => array (
-			"showitem" => "title, hidden, starttime, endtime",
+		'1' => array (
+			'showitem' => 'title, hidden, starttime, endtime',
+			'canNotCollapse' => '1'
+		),
+		'2' => array (
+			'showitem' => 'description, fe_field',
 			'canNotCollapse' => '1'
 		)
 	)
@@ -278,7 +377,7 @@ if(t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.1.0') || 
 		'itemsProcFunc' => 'user_powermail_tx_powermail_fieldsetchoose->main',
 	);
 	$TCA["tx_powermail_fields"]["columns"]["fieldset"]['label'] = "LLL:EXT:powermail/locallang_db.xml:tx_powermail_fields.fieldset";
-	$TCA["tx_powermail_fields"]["types"]["0"]['showitem'] = "title;;;;1-1-1,fieldset,formtype;;;;2-2-2,flexform;;;;3-3-3, fe_field;;;;4-4-4";
+	$TCA["tx_powermail_fields"]["types"]["0"]['showitem'] = "title;;;;1-1-1, fieldset, formtype;;;;2-2-2, flexform;;;;3-3-3, description;;;;3-3-3, fe_field;;;;4-4-4";
 }
 
 

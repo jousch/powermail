@@ -24,16 +24,16 @@ class tx_powermail_belist {
 		(!empty($this->tsconfig['properties']['config.']['list.']['dateformat']) ? $this->timeformat = $this->tsconfig['properties']['config.']['list.']['dateformat'] : '' ); // Get dateformat from tsconfig
 		(isset($_GET['startdate']) ? $this->startdate = $_GET['startdate'] : $this->startdate = $this->timeformat_start ); // Get current start date
 		(isset($_GET['enddate']) ? $this->enddate = $_GET['enddate'] : '' ); // Get current stop date
-		(isset($_GET['pointer']) ? $this->pointer = $_GET['pointer'] : '' ); // Get current pointer
-		($this->tsconfig['properties']['config.']['list.']['perPage'] > 0 ? $this->perpage = $this->tsconfig['properties']['config.']['list.']['perPage'] : '' ); // Get hits per page if set per tsconfig		
+		(isset($_GET['pointer']) ? $this->pointer = intval($_GET['pointer']) : '' ); // Get current pointer
+		($this->tsconfig['properties']['config.']['list.']['perPage'] > 0 ? $this->perpage = intval($this->tsconfig['properties']['config.']['list.']['perPage']) : '' ); // Get hits per page if set per tsconfig		
 		
 		// DB query
 		// 1. get numbers of all entries
-		if($this->mailID > 0) $where_add = ' AND uid = '.$this->mailID; else $where_add = '';
+		if($this->mailID > 0) $where_add = ' AND uid = '.intval($this->mailID); else $where_add = '';
 		$res1 = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 			'*',
 			'tx_powermail_mails',
-			$where_clause = 'pid = '.$this->pid.' AND crdate > '.strtotime($this->startdate).' AND crdate < '.strtotime($this->enddate).' AND hidden = 0 AND deleted = 0'.$where_add,
+			$where_clause = 'pid = '.intval($this->pid).' AND crdate > '.strtotime($this->startdate).' AND crdate < '.strtotime($this->enddate).' AND hidden = 0 AND deleted = 0'.$where_add,
 			$groupBy = '',
 			$orderBy = 'crdate DESC',
 			$limit = ''
@@ -44,7 +44,7 @@ class tx_powermail_belist {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
 			'*',
 			'tx_powermail_mails',
-			$where_clause = 'pid = '.$this->pid.' AND crdate > '.strtotime($this->startdate).' AND crdate < '.strtotime($this->enddate).' AND hidden = 0 AND deleted = 0'.$where_add,
+			$where_clause = 'pid = '.intval($this->pid).' AND crdate > '.strtotime($this->startdate).' AND crdate < '.strtotime($this->enddate).' AND hidden = 0 AND deleted = 0'.$where_add,
 			$groupBy = '',
 			$orderBy = 'crdate DESC',
 			$limit = $this->pointer.','.$this->perpage
@@ -78,7 +78,7 @@ class tx_powermail_belist {
 				$this->content .= '<td style="color: white; padding: 0 5px;">'.$this->divfunctions->linker($row['sender'],' style="color: white; text-decoration: underline;"').'</td>'; // sender email
 				$this->content .= '<td style="color: white; padding: 0 5px;">'.$this->divfunctions->linker($row['recipient'],' style="color: white; text-decoration: underline;"').'</td>'; // receiver email
 				$this->content .= '<td style="color: white; padding: 0 5px;">'.$row['senderIP'].'</td>'; // sender IP
-				$this->content .= '<td style="color: white; padding: 0 5px; text-align: center;">'.($_GET['mailID'] > 0 ? '<img src="'.(is_file($this->backpath.'sysext/t3skin/icons/gfx/i/pages.gif') ? $this->backpath.'sysext/t3skin/icons/gfx/i/pages.gif' : $this->backpath.'gfx/i/pages.gif').'" title="Not available in detail view" alt="detail" />' : '<a href="index.php?id='.$pid.'&mailID='.$row['uid'].'" onclick="vHWin=window.open(\'index.php?id='.$pid.'&mailID='.$row['uid'].'\',\'FEopenLink\',\'width=510,height=600,scrollbars=yes,resize=yes\');vHWin.focus();return false;"><img src="'.(is_file($this->backpath.'sysext/t3skin/icons/gfx/zoom.gif') ? $this->backpath.'sysext/t3skin/icons/gfx/zoom.gif' : $this->backpath.'gfx/zoom.gif').'" title="Open mail details" alt="detail" /></a>').'</td>';
+				$this->content .= '<td style="color: white; padding: 0 5px; text-align: center;">'.($_GET['mailID'] > 0 ? '<img src="'.(is_file($this->backpath.'sysext/t3skin/icons/gfx/i/pages.gif') ? $this->backpath.'sysext/t3skin/icons/gfx/i/pages.gif' : $this->backpath.'gfx/i/pages.gif').'" title="Not available in detail view" alt="detail" />' : '<a href="index.php?id='.$pid.'&mailID='.$row['uid'].'" onclick="vHWin=window.open(\'index.php?id='.$pid.'&mailID='.$row['uid'].'\',\'FEopenLink\',\'width=600,height=600,scrollbars=yes,resize=yes\');vHWin.focus();return false;"><img src="'.(is_file($this->backpath.'sysext/t3skin/icons/gfx/zoom.gif') ? $this->backpath.'sysext/t3skin/icons/gfx/zoom.gif' : $this->backpath.'gfx/zoom.gif').'" title="Open mail details" alt="detail" /></a>').'</td>';
 				$this->content .= '<td style="color: white; padding: 0 5px; text-align: center;"><a href="index.php?id='.$pid.'&deleteID='.$row['uid'] . ($_GET['startdate'] ? '&startdate='.$_GET['startdate'] : '') . ($_GET['enddate'] ? '&enddate='.$_GET['enddate'] : '') . '" onclick="return confirmSubmit(this)"><img src="'.$this->backpath.'sysext/t3skin/icons/gfx/garbage.gif" title="Delete this entry" alt="delete" /></a>'.'</td>';
 				
 				$this->content .= '</tr>'."\n";
@@ -125,7 +125,7 @@ class tx_powermail_belist {
 		$content = '<div style="float: left;">'."\n";
 		$content .= '<label for="startdate" style="font-weight: bold; display: block; float: left; width: 50px;">'.$this->LANG->getLL('filter_start').':</label><input type="text" name="startdate" id="startdate" value="'.$this->startdate.'" /><br />'."\n";
 		$content .= '<label for="enddate" style="font-weight: bold; display: block; float: left; width: 50px; clear: both;">'.$this->LANG->getLL('filter_end').':</label><input type="text" name="enddate" id="enddate" value="'.$this->enddate.'" />'."\n";
-		if(isset($_GET['id'])) $content .= '<input type="hidden" name="id" value="'.$_GET['id'].'" />'."\n";
+		if(isset($_GET['id'])) $content .= '<input type="hidden" name="id" value="'.intval($_GET['id']).'" />'."\n";
 		$content .= '<input type="submit" value="Filter" />'."\n";
 		$content .= '</div>'."\n";
 		

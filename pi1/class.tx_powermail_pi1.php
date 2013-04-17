@@ -73,16 +73,18 @@ class tx_powermail_pi1 extends tslib_pibase {
 		// Start main choose
 		$this->hook_main_content_before(); // hook for content manipulation 1
 		
-		if(isset($this->piVars['multiple']) || isset($this->piVars['mailID']) || isset($this->piVars['sendNow'])) {
+		// IF multiple and correct mailID OR IF sendNow and correct mailID OR IF only correct mailID
+		#if (((isset($this->piVars['multiple']) || isset($this->piVars['sendNow'])) && $this->piVars['mailID'] == ($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid'])) || $this->piVars['mailID'] == ($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid'])) {
+		if ($this->piVars['mailID'] == ($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid'])) { // if mailID is correct
 			// What kind of function should be shown in frontend
-			if(!$this->piVars['multiple']) { // if multiple is not set
-				if($this->piVars['mailID']) { // submitted
-					if($this->cObj->data['tx_powermail_confirm']) { // Confirm page activated
+			if (!$this->piVars['multiple']) { // if multiple is not set
+				if ($this->piVars['mailID']) { // submitted
+					if ($this->cObj->data['tx_powermail_confirm']) { // Confirm page activated
 					
-						if(!$this->piVars['sendNow']) { // If sendNow is not set
+						if (!$this->piVars['sendNow']) { // If sendNow is not set
 						
-							if(!$this->check()) { // if all needed fields in backend where filled
-								if(!$this->mandatory->main($this->conf, $this->sessionfields, $this->cObj)) { // Mandatory check negative
+							if (!$this->check()) { // if all needed fields in backend where filled
+								if (!$this->mandatory->main($this->conf, $this->sessionfields, $this->cObj)) { // Mandatory check negative
 									$this->content = $this->confirmation->main($this->conf, $this->sessionfields, $this->cObj); // Call the confirmation function.
 								} else { // Mandatory check positive
 									$this->content = $this->mandatory->main($this->conf, $this->sessionfields, $this->cObj); // Call the mandatory function
@@ -92,8 +94,8 @@ class tx_powermail_pi1 extends tslib_pibase {
 							
 						} else { // sendNow is set - so call submit function
 						
-							if(!$this->check()) { // if all needed fields in backend where filled
-								if(!$this->mandatory->main($this->conf, $this->sessionfields, $this->cObj)) { // Mandatory check negative
+							if (!$this->check()) { // if all needed fields in backend where filled
+								if (!$this->mandatory->main($this->conf, $this->sessionfields, $this->cObj)) { // Mandatory check negative
 									$this->content = $this->submit->main($this->conf, $this->sessionfields, $this->cObj); // Call the submit function.
 								} else { // Mandatory check positive
 									$this->content = $this->mandatory->main($this->conf, $this->sessionfields, $this->cObj); // Call the mandatory function
@@ -105,8 +107,8 @@ class tx_powermail_pi1 extends tslib_pibase {
 						
 					} else { // No confirm page active, so start submit
 						
-						if(!$this->check()) {
-							if(!$this->mandatory->main($this->conf, $this->sessionfields, $this->cObj)) { // Mandatory check negative
+						if (!$this->check()) {
+							if (!$this->mandatory->main($this->conf, $this->sessionfields, $this->cObj)) { // Mandatory check negative
 								$this->content = $this->submit->main($this->conf, $this->sessionfields, $this->cObj); // Call the submit function.
 							} else { // Mandatory check positive
 								$this->content = $this->mandatory->main($this->conf, $this->sessionfields, $this->cObj); // Call the mandatory function
@@ -118,12 +120,12 @@ class tx_powermail_pi1 extends tslib_pibase {
 				}
 				
 			} else { // multiple link is set, so show form again
-				if(!$this->check()) $this->content = $this->form->main($this->conf, $this->sessionfields, $this->cObj); // Show form
+				if (!$this->check()) $this->content = $this->form->main($this->conf, $this->sessionfields, $this->cObj); // Show form
 				else $this->content = $this->check(); // Error message
 			}
 			
 		} else { // No piVars so show form
-			if(!$this->check()) $this->content = $this->form->main($this->conf, $this->sessionfields, $this->cObj); // Show form
+			if (!$this->check()) $this->content = $this->form->main($this->conf, $this->sessionfields, $this->cObj); // Show form
 			else $this->content = $this->check(); // Error message
 		}
 		
@@ -153,7 +155,7 @@ class tx_powermail_pi1 extends tslib_pibase {
 
 	// Function hook_main_content_before() to change the main content 1
 	function hook_main_content_before() {
-		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MainContentHookBefore'])) { // Adds hook for processing
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MainContentHookBefore'])) { // Adds hook for processing
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MainContentHookBefore'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
 				$_procObj->PM_MainContentBeforeHook($this->sessionfields, $this->piVars, $this); // Get new marker Array from other extensions
@@ -164,7 +166,7 @@ class tx_powermail_pi1 extends tslib_pibase {
 
 	// Function hook_main_content_after() to change the main content 2
 	function hook_main_content_after() {
-		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MainContentHookAfter'])) { // Adds hook for processing
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MainContentHookAfter'])) { // Adds hook for processing
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MainContentHookAfter'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
 				$_procObj->PM_MainContentAfterHook($this->content, $this->piVars, $this); // Get new marker Array from other extensions

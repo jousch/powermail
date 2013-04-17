@@ -104,6 +104,7 @@ class tx_powermail_countryzones extends tslib_pibase {
 	// Function codeForZoneSelector() only generates code for zoneselctorbox
 	function codeForZoneSelector($uid = 0, $value = '') {
 		// config
+		$value = preg_replace('/[^\sa-zA-Z0-9]/', '', $value); // allow only letters, numbers and space
 		$this->tmpl['html_countryzoneselect']['all'] = tslib_cObj::getSubpart($this->tmpl['all'],'###POWERMAIL_FIELDWRAP_HTML_COUNTRYZONESELECT###'); // work on subpart 1
 		$this->tmpl['html_countryzoneselect']['item'] = tslib_cObj::getSubpart($this->tmpl['html_countryzoneselect']['all'],'###ITEM###'); // work on subpart 2
 		$content_item = ''; $markerArray = array(); $outerMarkerArray = array(); $i=0;
@@ -127,7 +128,7 @@ class tx_powermail_countryzones extends tslib_pibase {
 			$limit = ''
 		);
 		if ($res) { // If there is a result
-			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every country_zone
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every country_zone
 				// markers
 				$markerArray['###LONGVALUE###'] = $row['zn_name_local']; // Name of state
 				$markerArray['###VALUE###'] = $row['zn_code']; // Shortage of state

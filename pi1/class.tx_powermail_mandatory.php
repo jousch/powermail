@@ -47,12 +47,12 @@ class tx_powermail_mandatory extends tslib_pibase {
 		
 		// Template
 		$content_item = ''; $this->error = 0; $this->innerMarkerArray = $this->tmpl = $fieldarray = array();
-		$this->tmpl['mandatory']['all'] = $this->cObj->getSubpart(tslib_cObj::fileResource($this->conf['template.']['mandatory']),'###POWERMAIL_MANDATORY_ALL###'); // Load HTML Template outer (work on subpart)
-		$this->tmpl['mandatory']['item'] = $this->cObj->getSubpart($this->tmpl['mandatory']['all'],'###ITEM###'); // Load HTML Template inner (work on subpart)
+		$this->tmpl['mandatory']['all'] = $this->cObj->getSubpart(tslib_cObj::fileResource($this->conf['template.']['mandatory']), '###POWERMAIL_MANDATORY_ALL###'); // Load HTML Template outer (work on subpart)
+		$this->tmpl['mandatory']['item'] = $this->cObj->getSubpart($this->tmpl['mandatory']['all'], '###ITEM###'); // Load HTML Template inner (work on subpart)
 		
 		// Fill Markers
 		$this->markerArray = $this->markers->GetMarkerArray($this->conf, $this->sessionfields, $this->cObj, 'mandatory'); // Fill markerArray
-		$this->markerArray['###POWERMAIL_TARGET###'] = $this->cObj->typolink('x',array("returnLast"=>"url","parameter"=>$GLOBALS['TSFE']->id,"useCacheHash"=>1)); // Fill Marker with action parameter
+		$this->markerArray['###POWERMAIL_TARGET###'] = $this->cObj->typolink('x', array('returnLast' => 'url', 'parameter' => $GLOBALS['TSFE']->id, 'useCacheHash' => 1)); // Fill Marker with action parameter
 		$this->markerArray['###POWERMAIL_NAME###'] = $this->cObj->data['tx_powermail_title'].'_mandatory'; // Fill Marker with formname
 		$this->markerArray['###POWERMAIL_METHOD###'] = $this->conf['form.']['method']; // Form method
 		
@@ -81,7 +81,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 		$this->hook(); // adds hook
 		$this->content = $this->cObj->substituteMarkerArrayCached($this->tmpl['mandatory']['all'], $this->markerArray,$subpartArray); // substitute Marker in Template
 		$this->content = $this->dynamicMarkers->main($this->conf, $this->cObj, $this->content); // Fill dynamic locallang or typoscript markers
-		$this->content = preg_replace("|###.*?###|i", "", $this->content); // Finally clear not filled markers
+		$this->content = preg_replace('|###.*?###|i', '', $this->content); // Finally clear not filled markers
 		$this->overwriteSession(); // write $this->sessionfields to session if there is an ok for an error
         
         if ($this->error == 1) { // if there is an error
@@ -205,21 +205,21 @@ class tx_powermail_mandatory extends tslib_pibase {
 				// autocheck
 				if ($this->conf['validate.'][$key]['auto']) { // If autocheck of current value is active
 					if (isset($autoarray[$this->conf['validate.'][$key]['auto']])) { // if regulare expression in $autoarray
-						if ($this->sessionfields[str_replace('.','',$key)]) { // if there is a value in the field, which to check
+						if ($this->sessionfields[str_replace('.', '', $key)]) { // if there is a value in the field, which to check
 							
 							// Check
-							if (!preg_match($autoarray[$this->conf['validate.'][$key]['auto']], $this->sessionfields[str_replace('.','',$key)])) { // If check failed
-								$this->sessionfields['ERROR'][str_replace('.','',$key)][] = ($this->conf['validate.'][$key]['errormsg']?$this->conf['validate.'][$key]['errormsg']:$this->pi_getLL('error_expression_validation')); // write errormessage
+							if (!preg_match($autoarray[$this->conf['validate.'][$key]['auto']], $this->sessionfields[str_replace('.', '', $key)])) { // If check failed
+								$this->sessionfields['ERROR'][str_replace(array('.', 'uid'), '', $key)][] = ($this->conf['validate.'][$key]['errormsg'] ? $this->conf['validate.'][$key]['errormsg'] : $this->pi_getLL('error_expression_validation')); // write errormessage
 							}
 							
 						}
 					}
 				} elseif ($this->conf['validate.'][$key]['expression']) { // regulare expression
-					if ($this->sessionfields[str_replace('.','',$key)]) { // if there is a value in the field, which to check
+					if ($this->sessionfields[str_replace('.', '', $key)]) { // if there is a value in the field, which to check
 						
 						// Check
-						if (!preg_match($this->div->marker2value($this->conf['validate.'][$key]['expression'],$this->sessionfields), $this->sessionfields[str_replace('.','',$key)])) { // If check failed
-							$this->sessionfields['ERROR'][str_replace('.','',$key)][] = ($this->conf['validate.'][$key]['errormsg']?$this->conf['validate.'][$key]['errormsg']:$this->pi_getLL('error_expression_validation')); // write errormessage
+						if (!preg_match($this->div->marker2value($this->conf['validate.'][$key]['expression'],$this->sessionfields), $this->sessionfields[str_replace('.', '', $key)])) { // If check failed
+							$this->sessionfields['ERROR'][str_replace(array('.', 'uid'), '', $key)][] = ($this->conf['validate.'][$key]['errormsg'] ? $this->conf['validate.'][$key]['errormsg'] : $this->pi_getLL('error_expression_validation')); // write errormessage
 						}
 						
 					}
@@ -247,7 +247,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 	
 	// Function captchaCheck check if captcha fields are within current content and set errof if value is wrong
 	function captchaCheck() {
-		if(t3lib_extMgm::isLoaded('captcha',0) || t3lib_extMgm::isLoaded('sr_freecap',0) || t3lib_extMgm::isLoaded('jm_recaptcha',0)) { // only if a captcha extension is loaded
+		if(t3lib_extMgm::isLoaded('captcha',0) || t3lib_extMgm::isLoaded('sr_freecap',0) || t3lib_extMgm::isLoaded('jm_recaptcha',0) || t3lib_extMgm::isLoaded('wt_calculating_captcha',0)) { // only if a captcha extension is loaded
 		
 			// Give me all captcha fields of current tt_content
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
@@ -259,7 +259,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 				$limit = 1
 			);
 			if ($res) { // If there is a result
-				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every captcha field
+				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every captcha field
 					
 					// sr_freecap
 					if (t3lib_extMgm::isLoaded('sr_freecap', 0) && $this->conf['captcha.']['use'] == 'sr_freecap') { // use sr_freecap if available
@@ -304,7 +304,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 					elseif (t3lib_extMgm::isLoaded('jm_recaptcha', 0) && $this->conf['captcha.']['use'] == 'recaptcha') { // use recaptcha if available
 						
                         if (!$this->sessionfields['OK'][$row['uid']]) { // do this check only if recaptcha gave not ok before // if ok, you don't have to check again if captcha is right
-    						require_once(t3lib_extMgm::extPath('jm_recaptcha')."class.tx_jmrecaptcha.php"); // include recaptcha class
+    						require_once(t3lib_extMgm::extPath('jm_recaptcha').'class.tx_jmrecaptcha.php'); // include recaptcha class
     						$recaptcha = t3lib_div::makeInstance('tx_jmrecaptcha'); // new object
     						
     						$status = $recaptcha->validateReCaptcha(); // get status
@@ -314,6 +314,22 @@ class tx_powermail_mandatory extends tslib_pibase {
     							$this->sessionfields['OK'][$row['uid']] = 'recaptcha'; // recaptcha code is ok - set an ok to the session for further checks
     						}
     					}
+						
+					}
+					
+					// wt_calculating_captcha
+					elseif (t3lib_extMgm::isLoaded('wt_calculating_captcha', 0) && $this->conf['captcha.']['use'] == 'wt_calculating_captcha') { // use wt_calculating_captcha if available
+					
+						require_once(t3lib_extMgm::extPath('wt_calculating_captcha').'class.tx_wtcalculatingcaptcha.php'); // include captcha class
+						$captcha = t3lib_div::makeInstance('tx_wtcalculatingcaptcha'); // generate object
+						
+						if ($this->sessionfields['uid'.$row['uid']] == '') { // if captcha value is empty
+							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('error_captcha_empty'); // write error message to session
+						}
+						
+						elseif (!$captcha->correctCode($this->sessionfields['uid'.$row['uid']])) { // if captcha value is wrong
+							$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('error_captcha_wrong'); // write error message to session
+						}
 						
 					}
 				}
@@ -326,7 +342,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 	// Function overwriteSession() saves $this->sessionfields to session to overwrite errors (recaptcha can set an OK for errors in future) 
 	function overwriteSession() {
         if (count($this->sessionfields['OK']) > 0) { // only if min 1 OK value
-            $GLOBALS['TSFE']->fe_user->setKey("ses", $this->extKey.'_'.($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']), $this->sessionfields); // Generate Session without ERRORS
+            $GLOBALS['TSFE']->fe_user->setKey('ses', $this->extKey.'_'.($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']), $this->sessionfields); // Generate Session without ERRORS
     		$GLOBALS['TSFE']->storeSessionData(); // Save session
     	}
     }
@@ -336,7 +352,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 	function clearErrorsInSession() {
 		// Set Session (overwrite all values)
 		unset($this->sessionfields['ERROR']); // remove all error messages
-		$GLOBALS['TSFE']->fe_user->setKey("ses", $this->extKey.'_'.($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']), $this->sessionfields); // Generate Session without ERRORS
+		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->extKey.'_'.($this->cObj->data['_LOCALIZED_UID'] > 0 ? $this->cObj->data['_LOCALIZED_UID'] : $this->cObj->data['uid']), $this->sessionfields); // Generate Session without ERRORS
 		$GLOBALS['TSFE']->storeSessionData(); // Save session
 	}
 	
@@ -345,8 +361,8 @@ class tx_powermail_mandatory extends tslib_pibase {
 	function hook() {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MandatoryHook'])) { // Adds hook for processing of extra global markers
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MandatoryHook'] as $_classRef) {
-				$_procObj = & t3lib_div::getUserObj($_classRef);
-				$_procObj->PM_ConfirmationHook($this->error,$this->markerArray,$this->innerMarkerArray,$this->sessionfields,$this); // Open function to manipulate data
+				$_procObj = &t3lib_div::getUserObj($_classRef);
+				$_procObj->PM_MandatoryHook($this->error, $this->markerArray, $this->innerMarkerArray, $this->sessionfields, $this); // Open function to manipulate data
 			}
 		}
 	}

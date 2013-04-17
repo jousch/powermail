@@ -1,8 +1,36 @@
 <?php
+/***************************************************************
+*  Copyright notice
+*
+*  (c) 2008 Alexander Kellner, Mischa Heissmann <alexander.kellner@einpraegsam.net, typo3.2008@heissmann.org>
+*  All rights reserved
+*
+*  This script is part of the TYPO3 project. The TYPO3 project is
+*  free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation; either version 2 of the License, or
+*  (at your option) any later version.
+*
+*  The GNU General Public License can be found at
+*  http://www.gnu.org/copyleft/gpl.html.
+*
+*  This script is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  This copyright notice MUST APPEAR in all copies of the script!
+***************************************************************/
+
+/**
+ * [CLASS/FUNCTION INDEX of SCRIPT]
+ *
+ * Hint: use extdeveval to insert/update function index above.
+ */
 
 class tx_powermail_action {
 
-	// Function Main
+	// Function main() to set powermailmail entries as deleted in the database
 	function main($deleteID, $LANG) {
 		// config
 		$this->mailID = $mailID;
@@ -18,6 +46,18 @@ class tx_powermail_action {
 		);
 		
 		return $this->content; // return message
+	}
+	
+	
+	// Function deleteFiles() delete old temp files
+	function deleteFiles() {
+		$fileArray = t3lib_div::getFilesInDir(t3lib_div::getIndpEnv('TYPO3_DOCUMENT_ROOT').'/typo3temp/', 'csv,gz', 1, 1); // file array of all csv and gz files in the typo3temp directory
+		
+		foreach ((array) $fileArray as $key => $value) { // one loop for every file
+			if (strpos($value, 'powermail_export') !== false) { // string powermail_export found in current name
+				unlink($value); // delte current file
+			}
+		}
 	}
 
 }

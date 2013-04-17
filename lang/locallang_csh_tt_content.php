@@ -60,6 +60,38 @@ $LOCAL_LANG = Array(
 		<b>Example</b>
 		You have a field named "phone". So type the marker ###phone### into this field and the submitted content will be placed here.',
 	),
+	'dk' => Array(
+		'tx_powermail_title.description' => 'Indsæt en titel til din formular. Vil ikke blive vist i Frontend.',
+		'tx_powermail_html.description' => 'Skal email sendes i HTML-format?',
+		'tx_powermail_multiple.description' => 'Opret en flersides mail formular.',
+		'tx_powermail_multiple.details' => 'Du kan vælge mellem følgende:
+		<b>Enkelt side formular</b>
+		Alle felter vises på samme side. Ingen sideskift, ingen flere-trins mulighed.
+		<b>Flersiders JS</b>
+		Formularen deles op i flere trin. Hvert felt sæt vil oprette et trin. Afsendelsen sker med JavaScript. Dette giver bedre performance.
+		<b>Flersiders PHP</b>
+		Formularen deles op i flere trin. Hvert felt sæt vil oprette et trin. Afsendelsen sker med PHP-script. Dette giver bedre tilgængelighed.',
+		'tx_powermail_fieldsets.description' => 'Opret et nyt felt sæt',
+		'tx_powermail_fieldsets.details' => 'Formular felter holdes sammen i individuelle felt sæt. Det sker af to grunde: 
+		1. Tilgængelighed for handicappede 
+		2. Af tekniske grunde. Med felt sæt er Powermail i stand til at oprette en flersides formular.',
+		'tx_powermail_subject_r.description' => 'Email overskift modtagerens mail',
+		'tx_powermail_recipient.description' => 'Modtagere til denne formular. For at sende til flere modtagere, adskil modtageres adresser med semikolon.',
+		'tx_powermail_recip_table.description' => 'Vælg en tabel til at gemme felter i.',
+		'tx_powermail_recip_table.details' => 'Med dette felt er det muligt at sende en masse mail til en gruppe af modtagere. (Eks. fe_users). Vælg en tabel.
+		Et nyt felt åbner med yderligere egenskaber.',
+		'tx_powermail_recip_id.description' => 'Vælg enten modtager grupper eller forskellige adresser.',
+		'tx_powermail_recip_id.details' => 'Hvis tabellen i det forrige indeholder ordet "group", så finder du kun grupper i det følgende.
+		Ellers vil kun enkelte email adresser blive vist.',
+		'tx_powermail_query.description' => 'For administratorer: Opret en SQL-forespørgsel for at hente en særligt oprettet liste af modtagere.',
+		'tx_powermail_query.details' => 'Du kan sætte enhver type SQL heri. Den eneste begrænsning er: Resultatet af forspørgslen skal være en liste af email adresser.',
+		'tx_powermail_sender.description' => 'Vælg et felt i din formular, som ineholder afsenders email adresse. Svar-mailen vil blive sendt til denne adresse.',
+		'tx_powermail_subject_s.description' => 'Overskrift i afsenders email.',
+		'tx_powermail_thanks.description' => 'Tekst, som vises efter afsendelse af formularen. For at bruge markers i teksten, se teksten DETAILS',
+		'tx_powermail_thanks.details' => 'Du kan sætte markers i denne tekst. Markers sættes netm - brug blot feltets navn inde i ###
+		<b>Eksempel</b>
+		Du har feltet "telefon". Indtast ###telefon### i feltet her og i det fremsendte vil indholdet bliver erstattet af dette felt.',
+	),
 	'en' => Array(
 		'tx_powermail_title.description' => 'Insert a title for your form. Won\'t be displayed in Frontend.',
 		'tx_powermail_html.description' => 'Should the emails be sent in HTML-Format?',

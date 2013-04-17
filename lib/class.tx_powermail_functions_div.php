@@ -78,9 +78,10 @@ class tx_powermail_functions_div {
 	
 	// Add debug view for any array
 	function debug($array, $msg = 'Debug output') {
-		echo '<b>'.$msg.':</b>'; // title output
-		t3lib_div::print_array($array); // debug output of sessiondata
-		echo '<hr /><br />'; // separator after debug output
+		#echo '<b>'.$msg.':</b>'; // title output
+		#t3lib_div::print_array($array); // debug output of sessiondata
+		#echo '<hr /><br />'; // separator after debug output
+		t3lib_div::debug($array, $this->extKey.': '.$msg); // debug output
 	}
 	
 	
@@ -220,7 +221,9 @@ class tx_powermail_functions_div {
 			'</h6>',
 			'</div>',
 			'</legend>',
-			'</fieldset>'
+			'</fieldset>', 
+			'</dd>',
+			'</dt>'
 		);
 		$notallowed = array ( // This array contains not allowed signs which will be removed
 			'&nbsp;',
@@ -321,6 +324,16 @@ class tx_powermail_functions_div {
 
 		if ($act == 1) return $this->cObj->parseFunc($str, $parseFunc); // return string
 		else return $str; // return string
+	}
+	
+	
+	// Function alternate() checks if a number is odd or not
+	function alternate($int = 0) {
+		if ($int % 2 != 0) { // odd or even
+			return false; // return false
+		} else { 
+			return true; // return true
+		}
 	}
 	
 }

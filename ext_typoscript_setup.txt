@@ -29,6 +29,7 @@ plugin.tx_powermail_pi1 {
 	label.allowTags = {$plugin.powermail.label.allowTags}
 	html.removeXSS = {$plugin.powermail.html.removeXSS}
 	countryselect.charset = {$plugin.powermail.countryselect.charset}
+	description.wrap = {$plugin.powermail.description.wrap}
 	mandatory.symbol = {$plugin.powermail.mandatory.symbol}
 	mandatory.wrap = {$plugin.powermail.mandatory.wrap}
 	captcha.use = {$plugin.powermail.captcha.use}
@@ -43,12 +44,56 @@ plugin.tx_powermail_pi1 {
 	field.checkboxJS = {$plugin.powermail.field.checkboxJS}
 	rte.parse = {$plugin.powermail.rte.parse}
 	label.parse = {$plugin.powermail.label.parse}
+	input.style = {$plugin.powermail.input.style}
 	powermail.charset = {$plugin.powermail.powermail.charset}
 	barrier-free.tabindex = {$plugin.powermail.barrier-free.tabindex}
 	barrier-free.accesskey = {$plugin.powermail.barrier-free.accesskey}
 	geoip.file = {$plugin.powermail.geoip.file}
 	geoip.addValuesToMarkerALL = {$plugin.powermail.geoip.addValuesToMarkerALL}
 	debug.output = {$plugin.powermail.debug.output}
+	
+	
+	# Some settings for Emails
+	email {
+	
+		# Settings for mail to the default receiver(s)
+		recipient_mail {
+			# Reply name
+			reply.name = TEXT
+			reply.name.value = 
+			
+			# Reply email
+			reply.email = TEXT
+			reply.email.value = 
+			
+			# Add some attachments to the email (wrap every attachment with , if you want to add more than only one)
+			addAttachment = COA
+			addAttachment {
+				10 = TEXT
+				#10.value = fileadmin/pic.jpg
+				10.wrap = |,
+			}
+		}
+		
+		# Settings for mail to the user
+		sender_mail {
+			# Reply name
+			reply.name = TEXT
+			reply.name.value = 
+			
+			# Reply email
+			reply.email = TEXT
+			reply.email.value = 
+			
+			# Add some attachments to the email (split every attachment with , if you want to add more than only one)
+			addAttachment = COA
+			addAttachment {
+				10 = TEXT
+				#10.value = fileadmin/pic.jpg
+				10.wrap = |,
+			}
+		}
+	}
 	
 	
 	# Enable, Disable email to sender or receiver or db saving
@@ -161,6 +206,12 @@ plugin.tx_powermail_pi1 {
 		# enable or disable db entry for tt_address
 #		tt_address._enable = TEXT
 #		tt_address._enable.value = 1
+
+		# write only if field email is not yet filled with current value
+			# (update - update values of existing entry) 
+			# (none - no entry if field is filled)
+			# (disable – always add values – don't care about existing values)
+#		tt_address._ifUnique.email = update
 		
 		# add mm relation to uid 2 of tt_address_group (via mm table)
 #		tt_address._mm = COA
@@ -209,25 +260,32 @@ plugin.tx_powermail_pi1 {
 
 
 
+
 # ---------------------- Additional Typoscript ---------------------
 
 
 
 
-# Add Javascript files to page header
-page.includeJS.file31311 = EXT:powermail/js/checkbox/checkbox.js
-page.includeJS.file31312 = EXT:powermail/js/mandatoryjs/lib/prototype.js
-page.includeJS.file31313 = EXT:powermail/js/mandatoryjs/src/effects.js
-page.includeJS.file31314 = EXT:powermail/js/mandatoryjs/fabtabulous.js
-
-page.headerData.31310 = TEXT
-page.headerData.31310 {
+	# Add Javascript files to page header if a powermail plugin is on current page
+lib.powermail_dynJavascript = TEXT
+lib.powermail_dynJavascript {
     wrap = <script src="|" type="text/javascript"></script>
-    typolink.parameter.data = page : uid
-    typolink.additionalParams = &type=3131
-    typolink.addQueryString = 1
+	typolink.parameter.dataWrap = {TSFE:id},3131
     typolink.returnLast = url
 }
+	# userFunc to check if powermail is on current page
+		# powermail is on current page and prototype should be used
+[userFunc = user_powermailOnCurrentPage()] && [globalVar = LIT:prototype = {$plugin.powermail.libraryToUse}]
+	page.includeJS.file31312 = EXT:powermail/js/mandatoryjs/lib/prototype.js
+	page.includeJS.file31313 = EXT:powermail/js/mandatoryjs/src/effects.js
+	page.includeJS.file31314 = EXT:powermail/js/mandatoryjs/fabtabulous.js
+[end]
+		# powermail is on current page and mootools should be used
+[userFunc = user_powermailOnCurrentPage] && [globalVar = LIT:mootools = {$plugin.powermail.libraryToUse}]
+	page.includeJS.file31312 = EXT:powermail/js/mootools/mootools-1.2.1-packed.js
+[end]
+page.includeJS.file31311 = EXT:powermail/js/checkbox/checkbox.js
+page.headerData.31310 < lib.powermail_dynJavascript
 seite.headerData.31310 < page.headerData.31310
 seite.includeJS.31311 < page.includeJS.file31311
 seite.includeJS.31312 < page.includeJS.file31312

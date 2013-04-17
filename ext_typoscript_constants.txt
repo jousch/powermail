@@ -96,13 +96,16 @@ plugin.powermail {
 	# cat=plugin.powermail_additionalconfig//0490; type=options[,utf8_encode,utf8_decode]; label= Charset for countryselector: You can use the php functions utf8_encode or utf8_decode to change the countryselector output
 	countryselect.charset = 
 	
-	# cat=plugin.powermail_additionalconfig//0500; type=text; label= Add symbol for mandatory fields: If any field is a mandatory field, add this at the end of the label
+	# cat=plugin.powermail_additionalconfig//0500; type=text; label= Description wrap: Define the wrap for the field description
+	description.wrap = <a href="#"><img src="/typo3conf/ext/powermail/img/icon_info.gif" alt="Description" class="icon icon_info" style="border: none;" /><dfn>|</dfn></a>
+	
+	# cat=plugin.powermail_additionalconfig//0505; type=text; label= Add symbol for mandatory fields: If any field is a mandatory field, add this at the end of the label
 	mandatory.symbol = *
 	
 	# cat=plugin.powermail_additionalconfig//0510; type=wrap; label= Wrap mandatory symbol: You can wrap the mandatory symbol with any html code
 	mandatory.wrap = <span class="powermail_mandatory">|</span>
 	
-	# cat=plugin.powermail_additionalconfig//0520; type=options[sr_freecap,captcha,recaptcha]; label= Use captcha extension: If you have installed sr_freecap and captcha, you can select which extension should be used
+	# cat=plugin.powermail_additionalconfig//0520; type=options[sr_freecap,captcha,recaptcha,wt_calculating_captcha]; label= Use captcha extension: If you have installed sr_freecap and captcha, you can select which extension should be used
 	captcha.use = sr_freecap
 	
 	# cat=plugin.powermail_additionalconfig//0530; type=wrap; label= Wrap pagebrowser: If you use multiple pages (PHP), you can show the current page like 1 of 3
@@ -123,6 +126,9 @@ plugin.powermail {
 	# cat=plugin.powermail_additionalconfig//0620; type=boolean; label= Clear Session: Check if session should be cleared after submit (emails sent)
 	clear.session = 0
 	
+	# cat=plugin.powermail_additionalconfig//0900; type=options[mootools,prototype]; label= Javascript Library: Set to either "mootools" or "prototype" to choose a javascript library for frontend validation	
+	libraryToUse = prototype
+	
 	# cat=plugin.powermail_additionalconfig//0910; type=text; label= Mandatory JS DIV class: Enter your own css class for the mandatory javascript div layer (div layer which is shown, if a field was not filled, etc...)
 	js.mandatorydivclass = powermail_mandatory_js
 	
@@ -137,6 +143,9 @@ plugin.powermail {
 	
 	# cat=plugin.powermail_additionalconfig//1110; type=boolean; label= Use labelparse function: Labels could be used with TYPO3 LINK syntax (e.g. 1)
 	label.parse = 1
+	
+	# cat=plugin.powermail_additionalconfig//1120; type=boolean; label= Style instead of size: Using a local stylesheet in the input fields and in all textareas instead of size or rows and cols - the value in the flexform should be in pixel (e.g. 1)
+	input.style = 0
 	
 	# cat=plugin.powermail_additionalconfig//1200; type=options[,utf8_encode,utf8_decode]; label= Charset for powermail: You can use the php functions utf8_encode or utf8_decode to change the whole powermail output
 	powermail.charset = 

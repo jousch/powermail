@@ -140,7 +140,10 @@ Object.extend(Validation, {
 					switch (elm.type.toLowerCase()) {
 						case 'checkbox':
 						case 'radio':
-							var p = elm.parentNode;
+							/*var p = elm.parentNode; // 20090224 #2694 Powermail update */
+							var p = elm.parentNode.parentNode;
+							advice = '<div class="powermail_mandatory_js" id="advice-' + name + '-' + Validation.getElmID(p) +'" style="display:none">' + errorMsg + '</div>'
+
 							if(p) {
 								new Insertion.Bottom(p, advice);
 							} else {
@@ -148,6 +151,7 @@ Object.extend(Validation, {
 							}
 							break;
 						default:
+							advice = '<div class="powermail_mandatory_js" id="advice-' + name + '-' + Validation.getElmID(elm) +'" style="display:none">' + errorMsg + '</div>'
 							new Insertion.After(elm, advice);
 				    }
 					advice = Validation.getAdvice(name, elm);
@@ -182,7 +186,18 @@ Object.extend(Validation, {
 		return true;
 	},
 	getAdvice : function(name, elm) {
-		return $('advice-' + name + '-' + Validation.getElmID(elm)) || $('advice-' + Validation.getElmID(elm));
+		/* return $('advice-' + name + '-' + Validation.getElmID(elm)) || $('advice-' + Validation.getElmID(elm)); // 20090224 #2694 Powermail update */
+		switch (elm.type.toLowerCase()) {
+			case 'checkbox':
+			case 'radio':
+				var p = elm.parentNode.parentNode;
+				advice = $('advice-' + name + '-' + Validation.getElmID(p)) || $('advice-' + Validation.getElmID(p));
+				break;
+
+			default:
+				advice = $('advice-' + name + '-' + Validation.getElmID(elm)) || $('advice-' + Validation.getElmID(elm));
+		}
+		return advice;
 	},
 	getElmID : function(elm) {
 		return elm.id ? elm.id : elm.name;
@@ -236,20 +251,22 @@ Validation.addAllThese([
 				return Validation.get('IsEmpty').test(v) ||  !/[^\d]/.test(v);
 			}],
 	['validate-alpha', '<!-- ###VALIDATE_ALPHA### -->Please use letters only (a-z) in this field.<!-- ###VALIDATE_ALPHA### -->', function (v) {
-				return Validation.get('IsEmpty').test(v) ||  /^[a-zA-Z]+$/.test(v)
+				//return Validation.get('IsEmpty').test(v) ||  /^[a-zA-Z]+$/.test(v);
+				return Validation.get('IsEmpty').test(v) || /^[\sa-z\u00C0-\u00FF-]+$/i.test(v);
 			}],
 	['validate-alphanum', '<!-- ###VALIDATE_ALPHANUM### -->Please use only letters (a-z) or numbers (0-9) only in this field. No spaces or other characters are allowed.<!-- ###VALIDATE_ALPHANUM### -->', function(v) {
-				return Validation.get('IsEmpty').test(v) ||  !/\W/.test(v)
+				//return Validation.get('IsEmpty').test(v) ||  !/\W/.test(v);
+				return Validation.get('IsEmpty').test(v) || /^[\sa-z0-9\u00C0-\u00FF-]+$/i.test(v);
 			}],
 	['validate-date', '<!-- ###VALIDATE_DATE### -->Please enter a valid date.<!-- ###VALIDATE_DATE### -->', function(v) {
 				var test = new Date(v);
 				return Validation.get('IsEmpty').test(v) || !isNaN(test);
 			}],
 	['validate-email', '<!-- ###VALIDATE_EMAIL### -->Please enter a valid email address. For example fred@domain.com .<!-- ###VALIDATE_EMAIL### -->', function (v) {
-				return Validation.get('IsEmpty').test(v) || /\w{1,}[@][\w\-]{1,}([.]([\w\-]{1,})){1,3}$/.test(v)
+				return Validation.get('IsEmpty').test(v) || /\w{1,}[@][\w\-]{1,}([.]([\w\-]{1,})){1,3}$/.test(v);
 			}],
 	['validate-url', '<!-- ###VALIDATE_URL### -->Please enter a valid URL.<!-- ###VALIDATE_URL### -->', function (v) {
-				return Validation.get('IsEmpty').test(v) || /^(http|https|ftp):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i.test(v)
+				return Validation.get('IsEmpty').test(v) || /^(http|https|ftp):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i.test(v);
 			}],
 	['validate-date-au', '<!-- ###VALIDATE_DATE_AU### -->Please use this date format: dd/mm/yyyy. For example 17/03/2006 for the 17th of March, 2006.<!-- ###VALIDATE_DATE_AU### -->', function(v) {
 				if(Validation.get('IsEmpty').test(v)) return true;
@@ -271,10 +288,14 @@ Validation.addAllThese([
 				return elm.options ? elm.selectedIndex > 0 : !Validation.get('IsEmpty').test(v);
 			}],
 	['validate-one-required', '<!-- ###VALIDATE_ONE_REQUIRED### -->Please select one of the above options.<!-- ###VALIDATE_ONE_REQUIRED### -->', function (v,elm) {
-				var p = elm.parentNode;
+				var p = elm.parentNode;    
+				p = p.parentNode; // enable parent DIV with parent DIV - Powermail Fix #2263
+
 				var options = p.getElementsByTagName('INPUT');
 				return $A(options).any(function(elm) {
-					return $F(elm);
+					if(elm.type.toLowerCase() == 'radio' || elm.type.toLowerCase() == 'checkbox') {  /* // 20090224 #2695 Powermail update */
+						return $F(elm);
+					}
 				});
 			}]
 ]);
