@@ -138,6 +138,9 @@ class tx_powermail_submit extends tslib_pibase {
 		$this->hook_submit_changeEmail(); // Last chance to manipulate the mail via hook
 		$this->debug($this->subpart); // Debug output
 		
+		
+		
+		
 		// start main mail function
 		$this->htmlMail = t3lib_div::makeInstance('t3lib_htmlmail'); // New object: TYPO3 mail class
 		$this->htmlMail->start(); // start htmlmail
@@ -163,8 +166,12 @@ class tx_powermail_submit extends tslib_pibase {
 		
 		$this->htmlMail->charset = $GLOBALS['TSFE']->metaCharset; // set current charset
 		$this->htmlMail->defaultCharset = $GLOBALS['TSFE']->metaCharset; // set current charset
-		$this->htmlMail->addPlain($this->mailcontent[$this->subpart]); // add plaintext
-		if ($this->conf['enable.']['html'] == 1) $this->htmlMail->setHTML($this->htmlMail->encodeMsg($this->mailcontent[$this->subpart])); // html format if active via constants
+		if ($this->conf['emailformat.'][$this->subpart] != 'html') { // add plaintext only if emailformat "both" or "plain"
+			$this->htmlMail->addPlain($this->div_functions->makePlain($this->mailcontent[$this->subpart])); // add plaintext
+		}
+		if ($this->conf['emailformat.'][$this->subpart] != 'plain') { // add html only if emailformat "both" or "html"
+			$this->htmlMail->setHTML($this->htmlMail->encodeMsg($this->mailcontent[$this->subpart])); // html format if active via constants
+		}
 		if ($this->email_send) $this->htmlMail->send($this->maildata['receiver']);
 	}
 	
@@ -210,8 +217,8 @@ class tx_powermail_submit extends tslib_pibase {
 				if (t3lib_div::validEmail($emailarray[$i])) $emails .= $emailarray[$i].', '; // if current value is an email write to $emails
 				else $this->sendername .= $emailarray[$i].' '; // if current value is no email, take it for sender name and write to $this->sendername
 			}
-			if($emails) $emails = substr(trim($emails), 0, -1); // delete last ,
-			if(isset($this->sendername)) $this->sendername = trim($this->sendername); // trim name
+			if ($emails) $emails = substr(trim($emails), 0, -1); // delete last ,
+			if (!empty($this->sendername)) $this->sendername = trim($this->sendername); // trim name
 		}
 		
 		// 2. Field receiver from table
@@ -250,6 +257,9 @@ class tx_powermail_submit extends tslib_pibase {
 			}
 		}
 		
+		// 5. If Sendername is not set, take sender email address instead of name
+		if (empty($this->sendername)) $this->sendername = $this->MainReceiver;
+		
 		return false;
 	}
 
@@ -287,14 +297,15 @@ class tx_powermail_submit extends tslib_pibase {
 		// If debug output for email
 		if ($this->conf['debug.']['output'] == 'all' || $this->conf['debug.']['output'] == 'email') { // only if debug output activated via constants
 			$debugarray = array (
-				'receiver' => $this->maildata['receiver'], 
-				'cc receiver' => $this->maildata['cc'],
-				'sender' => $this->maildata['sender'], 
-				'sendername' => $this->maildata['sendername'],
-				'charset' => $GLOBALS['TSFE']->metaCharset,
-				'attachment' => $this->sessiondata['FILE'],
-				'subject' => $this->maildata['subject'],
-				'mailcontent' => $this->mailcontent[$this->subpart]
+				'receiver' => $this->maildata['receiver'] ? $this->maildata['receiver'] : 'SYSTEM NOTE: No receiver email address',
+				'cc receiver' => $this->maildata['cc'] ? $this->maildata['cc'] : 'SYSTEM NOTE: No cc addresses',
+				'sender' => $this->maildata['sender'] ? $this->maildata['sender'] : 'SYSTEM NOTE: No sender email address',
+				'sendername' => $this->maildata['sendername'] ? $this->maildata['sendername'] : 'SYSTEM NOTE: No sender name',
+				'charset' => $GLOBALS['TSFE']->metaCharset ? $GLOBALS['TSFE']->metaCharset : 'SYSTEM NOTE: No charset set',
+				'attachment' => $this->sessiondata['FILE'] ? $this->sessiondata['FILE'] : 'SYSTEM NOTE: No attachments',
+				'subject' => $this->maildata['subject'] ? $this->maildata['subject'] : 'SYSTEM NOTE: No subject',
+				'mailcontent (html)' => ($this->conf['emailformat.'][$this->subpart] != 'plain' ? $this->mailcontent[$subpart] : 'SYSTEM NOTE: Disabled via typoscript'),
+				'mailcontent (plaintext)' => ($this->conf['emailformat.'][$this->subpart] != 'html' ? $this->div_functions->makePlain($this->mailcontent[$subpart]) : 'SYSTEM NOTE: Disabled via typoscript')
 			);
 			$this->div_functions->debug($debugarray, 'Email values ('.$subpart.')'); // Debug function (Array from Session)
 		}

@@ -135,6 +135,14 @@ class tx_powermail_functions_div {
 	}
 	
 	
+	// Function br2nl is the opposite of nl2br
+	function br2nl($content) {
+		$content = str_replace(array("<br >","<br>","<br/>","<br />"), "\n", $content);
+		
+		if (!empty($content)) return $content;
+	}
+	
+	
 	// Function correctPath() checks if the link is like "fileadmin/test/ and not "/fileadmin/test"
 	function correctPath($value) {
 		// If there is no Slash at the end of the picture folder, add a slash and if there is a slash at the beginning, remove this slash
@@ -198,6 +206,37 @@ class tx_powermail_functions_div {
 	function charset($content, $function = '') {
 		if ($function == 'utf8_encode') $content = utf8_encode($content);
 		elseif ($function == 'utf8_decode') $content = utf8_decode($content);
+		
+		if (!empty($content)) return $content;
+	}
+	
+	
+	// Function makePlain() removes html tags and add linebreaks
+	function makePlain($content) {
+		
+		// config
+		$htmltagarray = array ( // This tags will be added with linebreaks
+			'</p>',
+			'</tr>',
+			'</li>',
+			'</h1>',
+			'</h2>',
+			'</h3>',
+			'</h4>',
+			'</h5>',
+			'</h6>',
+			'</div>',
+			'</legend>',
+			'</fieldset>'
+		);
+		
+		// let's go
+		$content = str_replace($htmltagarray, $htmltagarray[0].'<br />', $content); // 1. add linebreaks on some parts (</p> => </p><br />)
+		$content = strip_tags($content, '<br>'); // 2. remove all tags but not linebreak (<b>bla</b><br /> => bla<br />)
+		//$content = str_replace(array("\r\n","\n\r","\r","\n","\t"), '', $content); // 3. remove all old \n
+		$content = preg_replace('/\s+/', ' ', $content); // 3. removes tabs and whitespaces
+		$content = $this->br2nl($content); // 4. <br /> to \n
+		$content = implode("\n", t3lib_div::trimExplode("\n", $content)); // 5. explode and trim each line and implode again (" bla \n blabla " => "bla\nbla")
 		
 		if (!empty($content)) return $content;
 	}

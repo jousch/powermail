@@ -12,7 +12,9 @@ plugin.tx_powermail_pi1 {
 	allow.email2receiver = {$plugin.powermail.allow.email2receiver}
 	allow.email2sender = {$plugin.powermail.allow.email2sender}
 	allow.dblog = {$plugin.powermail.allow.dblog}
-	enable.html = {$plugin.powermail.enable.html}
+	emailformat.recipient_mail = {$plugin.powermail.emailformat.recipient_mail}
+	emailformat.sender_mail = {$plugin.powermail.emailformat.sender_mail}
+	
 	enable.unique = {$plugin.powermail.enable.unique}
 	email.noreply = {$plugin.powermail.email.noreply}
 	email.checkMX = {$plugin.powermail.email.checkMX}
