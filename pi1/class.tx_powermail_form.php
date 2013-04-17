@@ -38,8 +38,7 @@ class tx_powermail_form extends tslib_pibase {
 	// Function main chooses what to show
 	function main($content, $conf) {
 		// config
-		if (!$GLOBALS['TSFE']->tmpl->setup['config.']['baseURL']) $this->baseurl = 'http://'.$_SERVER['HTTP_HOST'].'/'; // if no baseurl take http_host
-		else $this->baseurl = $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL']; // set baseurl
+		$this->baseurl = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : 'http://'.$_SERVER['HTTP_HOST'].'/'); // set baseurl
 		
 		// load mandatory javascript in header if needed
 		$js = '';
@@ -61,7 +60,7 @@ class tx_powermail_form extends tslib_pibase {
 			} else { // simulatestaticdocuments active
 				$dynjslink = 'index.php?id='.$GLOBALS['TSFE']->id.'&type=3131';
 			}
-			$js .= "\t".'<script src="'.($this->conf['js.']['HTMLentities']==1?htmlentities($dynjslink):$dynjslink).'" type="text/javascript"></script>'."\n";
+			$js .= "\t".'<script src="'.($this->conf['js.']['HTMLentities']==1 ? htmlentities($dynjslink) : $dynjslink).'" type="text/javascript"></script>'."\n";
 		}
 		$GLOBALS['TSFE']->additionalHeaderData[$this->extKey] = $js; // write to html header
 		
@@ -76,7 +75,7 @@ class tx_powermail_form extends tslib_pibase {
 		} elseif ($this->pibase->cObj->data['tx_powermail_multiple'] == 1) { // If multiple (JS) active
 			
 			// add css for multiple javascript
-			$GLOBALS['TSFE']->additionalHeaderData[$this->extKey] .= "\t".'<link rel="stylesheet" type="text/css" href="typo3conf/ext/powermail/css/multipleJS.css" />';
+			$GLOBALS['TSFE']->additionalHeaderData[$this->extKey] .= "\t".'<link rel="stylesheet" type="text/css" href="'.str_replace('../','',t3lib_extMgm::extRelPath($this->extKey)).'css/multipleJS.css" />';
 			$limit = ''; // no limit for SQL select
 			
 		} elseif ($this->pibase->cObj->data['tx_powermail_multiple'] == 0) { // Standardmode
@@ -278,7 +277,12 @@ class tx_powermail_form extends tslib_pibase {
 				var valid = new Validation(\''.$this->OuterMarkerArray['###POWERMAIL_NAME###'].'\', {immediate : true, onFormValidate : formCallback});
 			</script>
 		';
-		return $js;
+		
+		if ($this->conf['js.']['Prototype'] == 1 && $this->conf['js.']['mandatorycheck'] == 1) {
+			return $js; // return JavaScript
+		} else {
+			return ''; // return an empty string
+		}
 	}
 
 	function init(&$conf,&$pibase) {

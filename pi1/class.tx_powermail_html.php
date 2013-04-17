@@ -729,7 +729,7 @@ class tx_powermail_html extends tslib_pibase {
 		// ###VALUE###
 		$this->markerArray['###VALUE###'] = 'value="'.$this->dontAllow(strip_tags($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value'))).'" '; // add value to markerArray (don't allow html/php tags)
 		if($this->fe_field && $GLOBALS['TSFE']->fe_user->user[$this->fe_field]) $this->markerArray['###VALUE###'] = 'value="'.$this->dontAllow(strip_tags($GLOBALS['TSFE']->fe_user->user[$this->fe_field])).'" '; // add value to markerArray if should filled from feuser data
-		if(isset($this->piVarsFromSession['uid'.$this->uid])) $this->markerArray['###VALUE###'] = 'value="'.$this->dontAllow($this->div_functions->nl2nl2(stripslashes($this->piVarsFromSession['uid'.$this->uid]))).'" '; // Overwrite value from session value
+		if(isset($this->piVarsFromSession['uid'.$this->uid])) $this->markerArray['###VALUE###'] = 'value="'.$this->dontAllow(stripslashes($this->div_functions->nl2nl2($this->piVarsFromSession['uid'.$this->uid]))).'" '; // Overwrite value from session value
 		
 		// ###LABEL###
 		$this->markerArray['###LABEL###'] = $this->dontAllow($this->title); // add label to markerArray

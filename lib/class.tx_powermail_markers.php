@@ -48,13 +48,13 @@ class tx_powermail_markers extends tslib_pibase {
                 if(is_numeric(str_replace('uid','',$k))) { // use only piVars like UID555
 					if(!is_array($v)) { // standard: value is not an array
 						if(is_numeric(str_replace('uid','',$k))) { // check if key is like uid55
-							$this->markerArray['###'.strtoupper($k).'###'] = $this->div_functions->nl2br2(stripslashes($v)); // fill ###UID55###
-							$this->markerArray['###'.strtolower($k).'###'] = $this->div_functions->nl2br2(stripslashes($v)); // fill ###uid55###
+							$this->markerArray['###'.strtoupper($k).'###'] = stripslashes($this->div_functions->nl2br2($v)); // fill ###UID55###
+							$this->markerArray['###'.strtolower($k).'###'] = stripslashes($this->div_functions->nl2br2($v)); // fill ###uid55###
 							
 							// ###POWERMAIL_ALL###
 							if(!in_array(strtoupper($k),$this->notInMarkerAll) && !in_array('###'.strtoupper($k).'###',$this->notInMarkerAll)) {
 								$markerArray['###POWERMAIL_LABEL###'] = $this->GetLabelfromBackend($k,$v);
-								$markerArray['###POWERMAIL_VALUE###'] = $this->div_functions->nl2br2(stripslashes($v));
+								$markerArray['###POWERMAIL_VALUE###'] = stripslashes($this->div_functions->nl2br2($v));
 								$content_item .= $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['all']['item'],$markerArray);
 							}
 						}
@@ -62,14 +62,14 @@ class tx_powermail_markers extends tslib_pibase {
 						$i=0; // init counter
 						foreach($v as $kv => $vv) { // One loop for every piVar
 							if(is_numeric(str_replace('uid','',$k))) { // check if key is like uid55
-								$this->markerArray['###'.strtoupper($k).'_'.$kv.'###'] = $this->div_functions->nl2br2(stripslashes($vv)); // fill ###UID55_0###
-								$this->markerArray['###'.strtolower($k).'_'.$kv.'###'] = $this->div_functions->nl2br2(stripslashes($vv)); // fill ###uid55_0###
-								$this->markerArray['###'.strtoupper($k).'###'] .= ($i!=0?', ':'').$this->div_functions->nl2br2(stripslashes($vv)); // fill ###UID55### (comma between every value)
+								$this->markerArray['###'.strtoupper($k).'_'.$kv.'###'] = stripslashes($this->div_functions->nl2br2($vv)); // fill ###UID55_0###
+								$this->markerArray['###'.strtolower($k).'_'.$kv.'###'] = stripslashes($this->div_functions->nl2br2($vv)); // fill ###uid55_0###
+								$this->markerArray['###'.strtoupper($k).'###'] .= ($i!=0?', ':'').stripslashes($this->div_functions->nl2br2($vv)); // fill ###UID55### (comma between every value)
 								
 								// ###POWERMAIL_ALL###
 								if(!in_array(strtoupper($k),$this->notInMarkerAll) && !in_array('###'.strtoupper($k).'###',$this->notInMarkerAll)) {
 									$markerArray['###POWERMAIL_LABEL###'] = $this->GetLabelfromBackend($k,$v);
-									$markerArray['###POWERMAIL_VALUE###'] = $this->div_functions->nl2br2(stripslashes($vv));
+									$markerArray['###POWERMAIL_VALUE###'] = stripslashes($this->div_functions->nl2br2($vv));
 									$content_item .= $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['all']['item'],$markerArray);
 								}
 								$i++; // increase counter
