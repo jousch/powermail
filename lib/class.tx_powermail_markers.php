@@ -80,11 +80,12 @@ class tx_powermail_markers extends tslib_pibase {
         }
         
         // add standard Markers
+		$this->markerArray['###POWERMAIL_UPLOADFOLDER###'] = $this->conf['upload.']['folder']; // Relative upload folder from constants
+		$this->markerArray['###POWERMAIL_BASEURL###'] = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')); // absolute path (baseurl)
 		$this->markerArray['###POWERMAIL_ALL###'] = $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['all']['all'], array(), $subpartArray); // Fill ###POWERMAIL_ALL###
         $this->markerArray['###POWERMAIL_THX_RTE###'] = $this->pibase->pibase->pi_RTEcssText(tslib_cObj::substituteMarkerArrayCached($this->pibase->pibase->cObj->data['tx_powermail_thanks'],$this->markerArray)); // Thx message with ###fields###
         $this->markerArray['###POWERMAIL_EMAILRECIPIENT_RTE###'] = $this->pibase->pibase->pi_RTEcssText(tslib_cObj::substituteMarkerArrayCached($this->pibase->pibase->cObj->data['tx_powermail_mailreceiver'],$this->markerArray)); // Email to receiver message with ###fields###
         $this->markerArray['###POWERMAIL_EMAILSENDER_RTE###'] = $this->pibase->pibase->pi_RTEcssText(tslib_cObj::substituteMarkerArrayCached($this->pibase->pibase->cObj->data['tx_powermail_mailsender'],$this->markerArray)); // Email to sender message with ###fields###
-		$this->markerArray['###POWERMAIL_BASEURL###'] = ($GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] ? $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL'] : t3lib_div::getIndpEnv('TYPO3_SITE_URL')); // absolute path (baseurl)
 		
 		if(isset($this->markerArray)) return $this->markerArray;
     }

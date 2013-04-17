@@ -52,8 +52,7 @@ class tx_powermail_submit extends tslib_pibase {
 		
 		// Configuration
 		$this->sessiondata = $GLOBALS['TSFE']->fe_user->getKey('ses',$this->extKey.'_'.$this->pibase->cObj->data['uid']); // Get piVars from session
-		$this->sender = $this->noreply_prefix.'@'.$_SERVER['SERVER_NAME']; // Sender email: standard value (noreply@currentdomain.com)
-		if(isset($this->pibase->cObj->data['tx_powermail_sender'])) $this->sender = $this->sessiondata[$this->pibase->cObj->data['tx_powermail_sender']]; // Sender email: set it if exist
+		$this->sender = ($this->pibase->cObj->data['tx_powermail_sender'] ? $this->pibase->cObj->data['tx_powermail_sender'] : $this->noreply_prefix.'@'.$_SERVER['SERVER_NAME']); // email sender
 		$this->receiver = $this->emailReceiver(); // Receiver mail
 		$this->subject_r = $this->pibase->cObj->data['tx_powermail_subject_r']; // Subject of mails (receiver)
 		$this->subject_s = $this->pibase->cObj->data['tx_powermail_subject_s']; // Subject of mails (sender)
