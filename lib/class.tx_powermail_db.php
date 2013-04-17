@@ -73,7 +73,7 @@ class tx_powermail_db extends tslib_pibase {
 							
 							
 							// 2.1 db entry for mm tables if set
-							if (count($this->conf['dbEntry.'][$key]['_mm.'] > 0)) { // if mm entry enabled
+							if (count($this->conf['dbEntry.'][$key]['_mm.']) > 0) { // if mm entry enabled
 								foreach ($this->conf['dbEntry.'][$key]['_mm.'] as $kkk => $vvv) { // One loop for every mm db insert
 									if (substr($kkk, -1) == '.') { // We want the array
 										if (

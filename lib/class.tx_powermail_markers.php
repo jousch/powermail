@@ -45,7 +45,7 @@ class tx_powermail_markers extends tslib_pibase {
 
 		if(isset($this->sessiondata) && is_array($this->sessiondata)) {
             foreach($this->sessiondata as $k => $v) { // One loop for every piVar
-				if($k == 'FILE' && count($v)>1) {
+				if($k == 'FILE' && count($v)>0) { // only if min one file
 				    $i = 1;
 					foreach($v as $key => $file) {
 						$this->markerArray['###'.strtoupper($k).'_'.$key.'###'] = stripslashes($this->div_functions->nl2br2($file));
