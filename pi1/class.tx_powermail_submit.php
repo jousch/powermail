@@ -76,8 +76,8 @@ class tx_powermail_submit extends tslib_pibase {
 			if($this->conf['allow.']['dblog']) $this->saveMail(); // 2c. Safe values to DB (if allowed via TS)
 			
 		} else { // Spam hook is true (maybe spam recognized)
-			//$this->markerArray = array(); // clear markerArray
-			$this->markerArray['###POWERMAIL_THX_MESSAGE###'] = $this->hook_submit_beforeEmails(); // Fill ###THX_MESSAGE### with error message from Hook
+			$this->markerArray = array(); // clear markerArray
+			$this->markerArray['###POWERMAIL_THX_ERROR###'] = $this->hook_submit_beforeEmails(); // Fill ###POWERMAIL_THX_MESSAGE### with error message from Hook
 		}
 		
 		// 3. Return Message to FE
@@ -220,7 +220,7 @@ class tx_powermail_submit extends tslib_pibase {
 		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitBeforeMarkerHook'])) { // Adds hook for processing of extra global markers
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitBeforeMarkerHook'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				return $_procObj->PM_SubmitBeforeMarkerHook($this); // Get new marker Array from other extensions - if TRUE, don't send mails (maybe spam)
+				return $_procObj->PM_SubmitBeforeMarkerHook($this,$this->markerArray,$this->sessiondata); // Get new marker Array from other extensions - if TRUE, don't send mails (maybe spam)
 			}
 		} else { // if hook is not set
 			return FALSE; // Return False is default (no spam, so emails could be sent)
@@ -233,7 +233,7 @@ class tx_powermail_submit extends tslib_pibase {
 		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitAfterMarkerHook'])) { // Adds hook for processing of extra global markers
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_SubmitAfterMarkerHook'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				$_procObj->PM_SubmitAfterMarkerHook($this); // Get new marker Array from other extensions
+				$_procObj->PM_SubmitAfterMarkerHook($this,$this->markerArray,$this->sessiondata); // Get new marker Array from other extensions
 			}
 		}
 	}
