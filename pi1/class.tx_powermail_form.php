@@ -42,7 +42,8 @@ class tx_powermail_form extends tslib_pibase {
 		else $this->baseurl = $GLOBALS['TSFE']->tmpl->setup['config.']['baseURL']; // set baseurl
 		
 		// load mandatory javascript in header if needed
-		$js = $this->includeJavaScript("js/mandatoryjs/lib/","prototype.js"); // add file 1 (always because prototype.js is used with date2cal)
+		$js = '';
+		if ($this->conf['js.']['Prototype'] == 1) $js = $this->includeJavaScript("js/mandatoryjs/lib/","prototype.js"); // add file 1 (always because prototype.js is used with date2cal)
 		if ($this->conf['js.']['mandatorycheck'] == 1) {
 			$js .= $this->includeJavaScript("js/mandatoryjs/src/","effects.js"); // add file 2
 			$js .= $this->includeJavaScript("js/mandatoryjs/","fabtabulous.js"); // add file 3

@@ -169,7 +169,7 @@ class tx_powermail_html extends tslib_pibase {
 			$content_item = '';
 
 			for($i=0;$i<count($optionlines);$i++) { // One tag for every option
-				$markerArray['###VALUE###'] = $optionlines[$i];
+				$markerArray['###VALUE###'] = $this->dontAllow($optionlines[$i]);
 				$content_item .= $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['html_select']['item'], $markerArray);
 			}
 		}
@@ -196,11 +196,11 @@ class tx_powermail_html extends tslib_pibase {
 
 			for($i=0;$i<count($optionlines);$i++) { // One tag for every option
 				$markerArray['###NAME###'] = 'name="'.$this->prefixId.'[uid'.$this->uid.']['.$i.']" '; // add name to markerArray
-				$markerArray['###LABEL###'] = $optionlines[$i]; // add label
+				$markerArray['###LABEL###'] = $this->dontAllow($optionlines[$i]); // add label
 				$markerArray['###LABEL_NAME###'] = $this->div_functions->clearName($optionlines[$i]); // add labelname
 				$markerArray['###ID###'] = 'id="'.$this->div_functions->clearName($optionlines[$i]).'" '; // add labelname
-				$markerArray['###VALUE###'] = 'value="'.$optionlines[$i].'" '; // add labelname
-				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.'powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
+				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow($optionlines[$i]).'" '; // add labelname
+				$markerArray['###CLASS###'] = 'class="required powermail_'.$this->formtitle.' powermail_'.$this->type.'powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
 				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
 				
 				// ###CHECKED###
@@ -239,10 +239,10 @@ class tx_powermail_html extends tslib_pibase {
 
 			for($i=0;$i<count($optionlines);$i++) { // One tag for every option
 				$markerArray['###NAME###'] = 'name="'.$this->prefixId.'[uid'.$this->uid.']" '; // add name to markerArray
-				$markerArray['###LABEL###'] = $optionlines[$i]; // add label
+				$markerArray['###LABEL###'] = $this->dontAllow($optionlines[$i]); // add label
 				$markerArray['###LABEL_NAME###'] = $this->div_functions->clearName($optionlines[$i]); // add labelname
 				$markerArray['###ID###'] = 'id="'.$this->div_functions->clearName($optionlines[$i]).'" '; // add labelname
-				$markerArray['###VALUE###'] = 'value="'.$optionlines[$i].'" '; // add labelname
+				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow($optionlines[$i]).'" '; // add labelname
 				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
 				
 				// ###CHECKED###
@@ -588,8 +588,8 @@ class tx_powermail_html extends tslib_pibase {
 			);
 			if ($res) { // If there is a result
 				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every country
-					$markerArray['###VALUE###'] = $row['cn_iso_2'];
-					$markerArray['###LONGVALUE###'] = $row['cn_short_en'];
+					$markerArray['###VALUE###'] = $this->dontAllow($row['cn_iso_2']);
+					$markerArray['###LONGVALUE###'] = $this->dontAllow($row['cn_short_en']);
 					
 					// Preselection
 					if($row['uid'] == $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'preselect') && $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'preselect') > 0) $markerArray['###SELECTED###'] = 'selected="selected" '; // preselect one country
@@ -708,12 +708,12 @@ class tx_powermail_html extends tslib_pibase {
 		}
 		
 		// ###VALUE###
-		$this->markerArray['###VALUE###'] = 'value="'.strip_tags($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')).'" '; // add value to markerArray (don't allow html/php tags)
-		if($this->fe_field && $GLOBALS['TSFE']->fe_user->user[$this->fe_field]) $this->markerArray['###VALUE###'] = 'value="'.strip_tags($GLOBALS['TSFE']->fe_user->user[$this->fe_field]).'" '; // add value to markerArray if should filled from feuser data
-		if(isset($this->piVarsFromSession['uid'.$this->uid])) $this->markerArray['###VALUE###'] = 'value="'.$this->div_functions->nl2nl2($this->piVarsFromSession['uid'.$this->uid]).'" '; // Overwrite value from session value
+		$this->markerArray['###VALUE###'] = 'value="'.$this->dontAllow(strip_tags($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value'))).'" '; // add value to markerArray (don't allow html/php tags)
+		if($this->fe_field && $GLOBALS['TSFE']->fe_user->user[$this->fe_field]) $this->markerArray['###VALUE###'] = 'value="'.$this->dontAllow(strip_tags($GLOBALS['TSFE']->fe_user->user[$this->fe_field])).'" '; // add value to markerArray if should filled from feuser data
+		if(isset($this->piVarsFromSession['uid'.$this->uid])) $this->markerArray['###VALUE###'] = 'value="'.$this->dontAllow($this->div_functions->nl2nl2($this->piVarsFromSession['uid'.$this->uid])).'" '; // Overwrite value from session value
 		
 		// ###LABEL###
-		$this->markerArray['###LABEL###'] = $this->title; // add label to markerArray
+		$this->markerArray['###LABEL###'] = $this->dontAllow($this->title); // add label to markerArray
 		
 		// ###MANDATORY_SYMBOL###
 		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1 || $this->type == 'captcha') $this->markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|');
@@ -776,10 +776,15 @@ class tx_powermail_html extends tslib_pibase {
 			}
 		}
 	}
+	
+	
+	// function dontAllow() removes not allowed sign from html tags
+	function dontAllow($string) {
+		return str_replace(array('"',"'"),'',$string); // return value without don't allowed signs
+	}
 
 
-	//function for initialisation.
-	// to call cObj, make $this->pibase->cObj->function()
+	// function for initialisation to call cObj, make $this->pibase->cObj->function()
 	function init(&$conf,&$pibase) {
 		$this->conf = $conf;
 		$this->pibase = $pibase;

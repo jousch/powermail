@@ -294,7 +294,7 @@ if($confArr['usePreview'] != 1) $TCA['tt_content']['types'][$_EXTKEY.'_pi1']['sh
 
 
 $TCA['tt_content']['ctrl']['requestUpdate'] = "tx_powermail_recip_table";
-$TCA['tt_content']['ctrl']['dividers2tabs'] = $confArr['noTabDividers']?FALSE:TRUE;
+$TCA['tt_content']['ctrl']['dividers2tabs'] = $confArr['TabDividers'] == 0 ? FALSE : TRUE; // activate dividers2tabs
 
 
 

@@ -162,7 +162,7 @@ $validationJS = '
 					var advice = Validation.getAdvice(name, elm);
 					if(advice == null) {
 						var errorMsg = useTitle ? ((elm && elm.title) ? elm.title : v.error) : v.error;
-						advice = \'<div class="'.$this->conf['js.']['mandatordivclass'].'" id="advice-\' + name + \'-\' + Validation.getElmID(elm) +\'" style="display:none">\' + errorMsg + \'</div>\'
+						advice = \'<div class="'.$this->conf['js.']['mandatorydivclass'].'" id="advice-\' + name + \'-\' + Validation.getElmID(elm) +\'" style="display:none">\' + errorMsg + \'</div>\'
 						switch (elm.type.toLowerCase()) {
 							case \'checkbox\':
 							case \'radio\':

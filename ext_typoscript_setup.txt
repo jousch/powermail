@@ -26,10 +26,10 @@ plugin.tx_powermail_pi1 {
 	upload.filesize = {$plugin.powermail.upload.filesize}
 	clear.session = {$plugin.powermail.clear.session}
 	js.mandatorycheck = {$plugin.powermail.js.mandatorycheck}
-	js.mandatordivclass = {$plugin.powermail.js.mandatordivclass}
+	js.mandatorydivclass = {$plugin.powermail.js.mandatorydivclass}
 	js.onfocus = {$plugin.powermail.js.onfocus}
-	js.init = {$plugin.powermail.js.init}
 	js.onchange = {$plugin.powermail.js.onchange}
+	js.Prototype = {$plugin.powermail.js.Prototype}
 }
 
 # TypeNum 3131 offers a dynamic javascript for powermail which allows to validate different fields

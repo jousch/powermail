@@ -43,7 +43,7 @@ class tx_powermail_submit extends tslib_pibase {
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
 		$this->pi_initPIflexform(); // Init and get the flexform data of the plugin
-		
+
 		// Instances
 		$this->htmlMail = t3lib_div::makeInstance('t3lib_htmlmail'); // New object: TYPO3 mail functions
 		$this->div_functions = t3lib_div::makeInstance('tx_powermail_functions_div'); // New object: div functions
@@ -159,8 +159,8 @@ class tx_powermail_submit extends tslib_pibase {
 		$this->htmlMail->returnPath = $sender;
 		$this->htmlMail->replyto_email = ''; // clear replyto email
 		$this->htmlMail->replyto_name = ''; // clear replyto name
-		$this->htmlMail->charset = 'utf-8';
-		$this->htmlMail->defaultCharset = 'utf-8';
+		$this->htmlMail->charset = $GLOBALS['TSFE']->metaCharset; // set current charset
+		$this->htmlMail->defaultCharset = $GLOBALS['TSFE']->metaCharset; // set current charset
 		$this->htmlMail->addPlain($this->mailcontent[$subpart]);
 		$this->htmlMail->setHTML($this->htmlMail->encodeMsg($this->mailcontent[$subpart]));
 		$this->htmlMail->send($receiver);
