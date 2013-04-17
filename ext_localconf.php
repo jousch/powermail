@@ -47,7 +47,6 @@ if(t3lib_extMgm::isLoaded('realurl',0)) { // only if realurl is loaded
         );
 	}
 	
-	
 	// $TYPO3_CONF_VARS['EXTCONF']['realurl']['www.currentURL.com']
 	if(isset($TYPO3_CONF_VARS['EXTCONF']['realurl'][$_SERVER['HTTP_HOST']])) { // only if array is already set in localconf.php
 		$i=0; $set=0; // init counter and flag
@@ -67,6 +66,14 @@ if(t3lib_extMgm::isLoaded('realurl',0)) { // only if realurl is loaded
 				'noMatch' => 'bypass'
 			);
 		}
+	} else { // set preVars for realurl
+		$TYPO3_CONF_VARS['EXTCONF']['realurl'][$_SERVER['HTTP_HOST']]['preVars'][] = array ( // add complete type array
+        	'GETvar' => 'type',
+        	'valueMap' => array (
+            	'validation' => '3131'
+        	),
+        	'noMatch' => 'bypass'
+        );
 	}
 	
 }

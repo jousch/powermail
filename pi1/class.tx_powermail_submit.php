@@ -95,6 +95,12 @@ class tx_powermail_submit extends tslib_pibase {
 			$this->clearSession();
 		}
 		
+		// 5. Clear sessions of captcha
+		session_start(); // start session
+		if(isset($_SESSION['tx_captcha_string'])) $_SESSION['tx_captcha_string'] = ''; // clear session of captcha
+		if(isset($_SESSION['sr_freecap_attempts'])) $_SESSION['sr_freecap_attempts'] = 0; // clear session of sr_freecap
+		if(isset($_SESSION['sr_freecap_word_hash'])) $_SESSION['sr_freecap_word_hash'] = false; // clear session of sr_freecap
+		
 		return $this->content; // return HTML for THX Message
 	}
 
