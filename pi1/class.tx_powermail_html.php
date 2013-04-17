@@ -512,6 +512,8 @@ class tx_powermail_html extends tslib_pibase {
 		
 				// init jscalendar class
 				$JSCalendar = JSCalendar::getInstance();
+				$JSCalendar->setConfigOption('ifFormat', $this->conf['format.']['datetime']);
+				$JSCalendar->setConfigOption('daFormat', $this->conf['format.']['datetime']);
 				$JSCalendar->setDateFormat(true);
 				$JSCalendar->setInputField('uid' . $this->uid);
 				$this->markerArray['###FIELD###'] .= $JSCalendar->render($value, 'tx_powermail_pi1[uid' . $this->uid . ']');
@@ -562,6 +564,8 @@ class tx_powermail_html extends tslib_pibase {
 				
 				// init jscalendar class
 				$JSCalendar = JSCalendar::getInstance();
+				$JSCalendar->setConfigOption('ifFormat', $this->conf['format.']['date']);
+				$JSCalendar->setConfigOption('daFormat', $this->conf['format.']['date']);
 				$JSCalendar->setInputField('uid' . $this->uid);
 				$this->markerArray['###FIELD###'] .= $JSCalendar->render($value, 'tx_powermail_pi1[uid' . $this->uid . ']');
 				

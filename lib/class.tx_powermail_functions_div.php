@@ -75,6 +75,12 @@ class tx_powermail_functions_div {
 		}
 	}
 	
+	// Function changeValues() to change values after submit (timestring to date or something like that...)
+	function changeValues($piVars) {
+		// TODO Changing piVars via typoscript
+		return $piVars;
+	}
+	
 	// Function clearName() to disable not allowed letters (only A-Z and 0-9 allowed) (e.g. Perfect Extension -> perfectextension)
 	function clearName($string,$strtolower = 0,$cut = 0) {
 		$string = preg_replace("/[^a-zA-Z0-9]/","",$string); // replace not allowed letters with nothing
