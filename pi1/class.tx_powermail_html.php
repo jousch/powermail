@@ -197,8 +197,8 @@ class tx_powermail_html extends tslib_pibase {
 			for($i=0;$i<count($optionlines);$i++) { // One tag for every option
 				$markerArray['###NAME###'] = 'name="'.$this->prefixId.'[uid'.$this->uid.']['.$i.']" '; // add name to markerArray
 				$markerArray['###LABEL###'] = $this->dontAllow($optionlines[$i]); // add label
-				$markerArray['###LABEL_NAME###'] = $this->div_functions->clearName($optionlines[$i]); // add labelname
-				$markerArray['###ID###'] = 'id="'.$this->div_functions->clearName($optionlines[$i]).'" '; // add labelname
+				$markerArray['###LABEL_NAME###'] = 'uid'.$this->uid.'_'.$i; // add labelname
+				$markerArray['###ID###'] = 'id="uid'.$this->uid.'_'.$i.'" '; // add labelname
 				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow($optionlines[$i]).'" '; // add labelname
 				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.'powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
 				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
@@ -240,8 +240,8 @@ class tx_powermail_html extends tslib_pibase {
 			for($i=0;$i<count($optionlines);$i++) { // One tag for every option
 				$markerArray['###NAME###'] = 'name="'.$this->prefixId.'[uid'.$this->uid.']" '; // add name to markerArray
 				$markerArray['###LABEL###'] = $this->dontAllow($optionlines[$i]); // add label
-				$markerArray['###LABEL_NAME###'] = $this->div_functions->clearName($optionlines[$i]); // add labelname
-				$markerArray['###ID###'] = 'id="'.$this->div_functions->clearName($optionlines[$i]).'" '; // add labelname
+				$markerArray['###LABEL_NAME###'] = 'uid'.$this->uid.'_'.$i; // add labelname
+				$markerArray['###ID###'] = 'id="uid'.$this->uid.'_'.$i.'" '; // add labelname
 				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow($optionlines[$i]).'" '; // add labelname
 				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
 				
@@ -254,6 +254,7 @@ class tx_powermail_html extends tslib_pibase {
 				
 				$content_item .= $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['html_radio']['item'], $markerArray); // substitute Marker in Template (subpart 2)
  			}
+
 
 		}
 		$subpartArray = array(); // init

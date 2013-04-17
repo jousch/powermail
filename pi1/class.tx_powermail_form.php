@@ -47,12 +47,14 @@ class tx_powermail_form extends tslib_pibase {
 		if ($this->conf['js.']['mandatorycheck'] == 1) {
 			$js .= $this->includeJavaScript("js/mandatoryjs/src/","effects.js"); // add file 2
 			$js .= $this->includeJavaScript("js/mandatoryjs/","fabtabulous.js"); // add file 3
-			$js .= "\t".'<script src="'.$this->pibase->cObj->typolink ( // add dynamic file (current page with type=3131)
-				'x', 
-				array(
-					'returnLast'=>'url',
-					'parameter'=>$GLOBALS['TSFE']->id,
-					'additionalParams'=>'&type=3131'
+			$js .= "\t".'<script src="'.htmlentities(
+				$this->pibase->cObj->typolink ( // add dynamic file (current page with type=3131)
+					'x', 
+					array(
+						'returnLast'=>'url',
+						'parameter'=>$GLOBALS['TSFE']->id,
+						'additionalParams'=>'&type=3131'
+					)
 				)
 			).'" type="text/javascript"></script>'."\n";
 		}
@@ -88,7 +90,7 @@ class tx_powermail_form extends tslib_pibase {
 
 		// Form tag generation
 		$this->InnerMarkerArray = array(); $this->OuterMarkerArray = array(); $this->content_item = ''; // init
-		$this->OuterMarkerArray['###POWERMAIL_TARGET###'] = $this->pibase->cObj->typolink('x',array("returnLast"=>"url","parameter"=>$GLOBALS['TSFE']->id,"additionalParams"=>'&tx_powermail_pi1[mailID]='.$this->pibase->cObj->data['uid'],"useCacheHash"=>1)); // Fill Marker with action parameter
+		$this->OuterMarkerArray['###POWERMAIL_TARGET###'] = htmlentities($this->pibase->cObj->typolink('x',array("returnLast"=>"url","parameter"=>$GLOBALS['TSFE']->id,"additionalParams"=>'&tx_powermail_pi1[mailID]='.$this->pibase->cObj->data['uid'],"useCacheHash"=>1))); // Fill Marker with action parameter
 		$this->OuterMarkerArray['###POWERMAIL_NAME###'] = $this->pibase->cObj->data['tx_powermail_title']; // Fill Marker with formname
 		$this->OuterMarkerArray['###POWERMAIL_METHOD###'] = $this->conf['form.']['method']; // Form method
 		$this->OuterMarkerArray['###POWERMAIL_FORM_UID###'] = $this->pibase->cObj->data['uid']; // Form method
