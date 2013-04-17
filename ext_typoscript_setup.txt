@@ -84,7 +84,7 @@ plugin.tx_powermail_pi1 {
 	dbEntry {
 		# Enable or disable db insert for table tt_address (0/1)
 		tt_address.enable = TEXT
-		tt_address.enable.value = 1
+		tt_address.enable.value = 0
 
 		# Enter values from piVars (POST parameter)
 		tt_address.uid998 = email
