@@ -757,7 +757,7 @@ class tx_powermail_html extends tslib_pibase {
 		if($this->conf['js.']['onchange']) {
 			$this->markerArray['###ONCHANGE###'] = 'onchange="this.form.submit()"'; // onchange js for select fields
 		}
-
+		
 		// ###ONFOCUS### Marker
 		if($this->conf['js.']['init'] || $this->conf['js.']['onfocus']) { // only allowed if jsinit or onfocus set
 			if($this->conf['js.']['init'] && 1==0) { // if jsinit allowed (currently deactivated!!!)
@@ -779,6 +779,7 @@ class tx_powermail_html extends tslib_pibase {
 			}
 			$this->markerArray['###ONFOCUS###'] = $js; // Fill markerArray with JS
 		}
+		if(!isset($this->markerArray['###ONFOCUS###'])) $this->markerArray['###ONFOCUS###'] = '';
 	}
 
 
@@ -802,7 +803,7 @@ class tx_powermail_html extends tslib_pibase {
 	
 	// function dontAllow() removes not allowed sign from html tags
 	function dontAllow($string) {
-		return str_replace(array('"',"'"),'',$string); // return value without don't allowed signs
+		return str_replace(array('"'),'',$string); // return value without don't allowed signs
 	}
 
 

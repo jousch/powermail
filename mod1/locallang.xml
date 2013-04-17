@@ -50,6 +50,21 @@
 			<label index="export_download_download">Download CSV File</label>
 			<label index="export_download_downloadZIP">Download compressed CSV File</label>
 		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="title">Powermail</label>
+			<label index="function1">Powermail liste et export</label>
+			<label index="nopowermails1">Aucun powermail sur cette page!</label>
+			<label index="nopowermails2">Vueillez choisir une page avec powermail dans l'arborescence.</label>
+			<label index="title_no">#</label>
+			<label index="title_date">Date</label>
+			<label index="title_sender">Expéditeur</label>
+			<label index="title_IP">IP de l'expéditeur</label>
+			<label index="title_receiver">Destinataire</label>
+			<label index="title_details">Details</label>
+			<label index="export_download_success">Succès!</label>
+			<label index="export_download_download">Télécharger le fichier CSV</label>
+			<label index="export_download_downloadZIP">Télécharger le fichier CSV compressé</label>
+		</languageKey>
 		<languageKey index="nl" type="array">
 			<label index="title">Powermail</label>
 			<label index="function1">Powermail lijst en export</label>

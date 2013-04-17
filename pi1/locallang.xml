@@ -110,6 +110,41 @@
 			<label index="JSvalidation_label_validate_selection">Please make a selection</label>
 			<label index="JSvalidation_label_validate_one_required">Please select one of the above options</label>
 		</languageKey>		
+		<languageKey index="fr" type="array">
+			<label index="locallangmarker_confirmation_question">Ces informations sont-elles correctes?</label>
+			<label index="locallangmarker_confirmation_back">Retour</label>
+			<label index="locallangmarker_confirmation_submit">Confirmer</label>
+			<label index="locallangmarker_email_receiver">Merci pour votre email:</label>
+			<label index="locallangmarker_email_sender">Vous avez un nouveau email:</label>
+			<label index="locallangmarker_mandatory_message">Il y a des erreurs:</label>
+			<label index="locallangmarker_mandatory_emptyfield">Ce champ doit être rempli:</label>
+			<label index="locallangmarker_mandatory_submit">Retour au formulaire</label>
+			<label index="locallangmarker_error_validemail">Cette adresse email n'est pas valable</label>
+			<label index="locallangmarker_error_file_main">Ce fichier ne peut pas être chargé:</label>
+			<label index="locallangmarker_error_file_toolarge">Ce fichier est trop grand:</label>
+			<label index="locallangmarker_error_file_extension">Cette extension de fichier n'est pas autorisée</label>
+			<label index="error_check_prefix">Erreur powermail!! Veuillez remplir les champs backend:</label>
+			<label index="error_check_subject_r">Sujet de l'email du destinataire</label>
+			<label index="error_check_recipient">Adresse email du destinataire</label>
+			<label index="error_captcha_empty">Le code de vérification n'a pas été saisi</label>
+			<label index="error_captcha_wrong">Le code de vérification est erroné</label>
+			<label index="error_backend_noip">Journalisation des adresses IP désactivée</label>
+			<label index="multiple_forward">Etape suivante</label>
+			<label index="multiple_back">Etape précédente</label>
+			<label index="pagebrowser_inner">de</label>
+			<label index="JSvalidation_label_required">Ce champ est obligatoire</label>
+			<label index="JSvalidation_label_validate_number">Veuillez entrer un chiffre valable dans ce champ</label>
+			<label index="JSvalidation_label_validate_digits">Veuillez utiliser uniquement des chiffres dans ce champ. Evitez les espaces et d'autres caractères comme les points ou les virgules</label>
+			<label index="JSvalidation_label_validate_alpha">Veuillez utiliser uniquement des lettres (a-z) dans ce champ</label>
+			<label index="JSvalidation_label_validate_alphanum">Veuillez utiliser uniquement des lettres (a-z) ou des chiffres (0-9) dans ce champ. Aucun espace ou autres caractères ne sont autorisés.</label>
+			<label index="JSvalidation_label_validate_date">Veuillez entrer une date valable</label>
+			<label index="JSvalidation_label_validate_email">Veuillez entrer une adresse email valable (test@test.com)</label>
+			<label index="JSvalidation_label_validate_url">Veuillez entrer une URL valable (http://www.test.com)</label>
+			<label index="JSvalidation_label_validate_date_au">Veuillez utiliser ce format de date: jj/mm/aaaa. Par exemple 17/03/2006 pour le 17 mars 2006</label>
+			<label index="JSvalidation_label_validate_currency_dollar">Veuillez entrer une somme en dollars valable. Par exemple $100.00.</label>
+			<label index="JSvalidation_label_validate_selection">Veuillez faire un choix</label>
+			<label index="JSvalidation_label_validate_one_required">Veuillez choisir une des options ci-dessus</label>
+		</languageKey>
 		<languageKey index="nl" type="array">
 			<label index="locallangmarker_confirmation_question">Zijn deze waarden correct?</label>
 			<label index="locallangmarker_confirmation_back">Ga terug</label>

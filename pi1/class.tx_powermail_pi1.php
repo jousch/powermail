@@ -163,7 +163,7 @@ class tx_powermail_pi1 extends tslib_pibase {
 		if (!$this->cObj->data['tx_powermail_subject_r']) { // If subject of receiver is not set
 			$error .= $prefix.'<b>'.$this->pi_getLL('error_check_subject_r','<strong>Email receiver subject</strong>').'</b><br />'; // Error MSG
 		}
-		if (!$this->cObj->data['tx_powermail_recipient'] && !$this->cObj->data['tx_powermail_recip_id'] && !$this->cObj->data['tx_powermail_recip_field']) { // If email of receiver is not set
+		if (!$this->cObj->data['tx_powermail_recipient'] && !$this->cObj->data['tx_powermail_recip_id'] && !$this->cObj->data['tx_powermail_recip_field'] && !$this->cObj->data['tx_powermail_query']) { // If email of receiver is not set
 			$error .= $prefix.'<b>'.$this->pi_getLL('error_check_recipient','<strong>Email address of receiver</strong>').'</b><br />'; // Error MSG
 		}
 		return $error;

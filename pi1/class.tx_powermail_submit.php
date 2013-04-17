@@ -196,6 +196,7 @@ class tx_powermail_submit extends tslib_pibase {
 	
 	// Function emailReceiver() returns comma-separated list of email receivers
 	function emailReceiver() {
+		$emails = ''; // init
 		
 		if ($this->pibase->cObj->data['tx_powermail_recipient']) { // If receivers are listed in field receiver
 			$emails = str_replace(array("\r\n","\n\r","\n","\r"),',',$this->pibase->cObj->data['tx_powermail_recipient']); // commaseparated list of emails
@@ -205,9 +206,25 @@ class tx_powermail_submit extends tslib_pibase {
 			$emails = $this->pibase->cObj->data['tx_powermail_recip_id']; // commaseparated list of emails
 		}
 		
-		elseif ($this->pibase->cObj->data['tx_powermail_recip_field']) { // If own select query is chosen
-			//$emails = $this->pibase->cObj->data['tx_powermail_recip_field']; // commaseparated list of emails
-			echo 'TODO'; // TODO
+		elseif ($this->pibase->cObj->data['tx_powermail_query']) { // If own select query is chosen
+			$query = $this->secQuery($this->pibase->cObj->data['tx_powermail_query']); // secure function of query
+			$res = mysql_query($query); // mysql query
+			
+			if ($res && $query) { // If there is a result
+				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every result
+					$i = 0; // init
+					if (is_array($row)) { // if $row is an array
+						foreach ($row as $key => $value) { // give me the key
+							if ($i == 0) { // take only first result
+								if(t3lib_div::validEmail($row[$key])) { // only if result is a valid email address
+									$emails .= $row[$key].', '; // add email address with comma at the end
+								}
+							}
+						}
+					}
+				}
+				if($emails) $emails = substr(trim($emails), 0, -1); // delete last ,
+			}
 		}
 		
 		if (isset($emails)) return $emails; // return email receiver list
@@ -238,6 +255,7 @@ class tx_powermail_submit extends tslib_pibase {
 		}
 	}
 	
+	
 	// Function to clear the Session after submitting the form. Will only be cleared when option is selected in Constant-Editor oder set by TS
 	function clearSession() {
 		if($this->conf['clear.']['session'] == 1) {
@@ -246,6 +264,7 @@ class tx_powermail_submit extends tslib_pibase {
 		}
 	}
 	
+	
 	// Function clearCaptchaSession() clears already filled captcha sessions from captcha or sr_freecap
 	function clearCaptchaSession() {
 		session_start(); // start session
@@ -253,6 +272,31 @@ class tx_powermail_submit extends tslib_pibase {
 		if(isset($_SESSION['sr_freecap_attempts'])) $_SESSION['sr_freecap_attempts'] = 0; // clear session of sr_freecap
 		if(isset($_SESSION['sr_freecap_word_hash'])) $_SESSION['sr_freecap_word_hash'] = false; // clear session of sr_freecap
 	}
+	
+	
+	// Function secQuery() disables query functions like UPDATE, TRUNCATE, DELETE, and so on
+	function secQuery($string) {
+		$notAllowed = array('UPDATE','TRUNCATE','DELETE','INSERT','REPLACE','DO','HANDLER','LOAD','ALTER','CREATE','DROP','RENAME','DESCRIBE','USE','BEGIN','COMMIT','ROLLBACK','LOCK','SET','REVOKE','GRANT'); // list of all not allowed strings for querycheck
+		$error = 0; // init 
+		
+		if(is_array($notAllowed)) { // only if array
+			foreach ($notAllowed as $key => $value) { // one loop for every not allowed string
+				if (strpos($string, $value) !== false) { // search for (e.g.) "DELETE" in string
+					$error = 1; // set error
+				}
+				if (strpos($string, strtolower($value)) !== false) { // search for (e.g.) "delete" in string
+					$error = 1; // set error
+				}
+			}
+		}
+		
+		if($error === 0) return $string; // return query if no error
+		else { // if error
+			echo 'Not allowed string in receiver sql query!'; // print error message
+			return false; // no return
+		}
+	}
+
 
 	//function for initialisation.
 	// to call cObj, make $this->pibase->cObj->function()

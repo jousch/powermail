@@ -17,6 +17,12 @@
 			<label index="pi1_title">powermail</label>
 			<label index="pi1_plus_wiz_description">Powerful mailform extension</label>
 		</languageKey>
+		<data type="array">
+			<languageKey index="fr" type="array">
+				<label index="pi1_title">Powermail</label>
+				<label index="pi1_plus_wiz_description">Extension puissante et flexible pour la création de formulaires et leur envoi par mail</label>
+			</languageKey>
+		</data>
 		<languageKey index="nl" type="array">
 			<label index="pi1_title">powermail</label>
 			<label index="pi1_plus_wiz_description">Krachtige mailform module</label>

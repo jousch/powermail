@@ -101,6 +101,7 @@ class tx_powermail_functions_div {
 					
 				}
 			}
+			$array = array_map("trim", $array); // trim values
 			
 			return $array;
 			
