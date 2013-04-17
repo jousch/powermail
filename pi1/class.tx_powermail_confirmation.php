@@ -64,7 +64,7 @@ class tx_powermail_confirmation extends tslib_pibase {
 	}
 	
 	
-	// Function hook() to enable manipulation datas with another extension(s)
+	// Function hook() to enable manipulation data with another extension(s)
 	function hook() {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_ConfirmationHook'])) { // Adds hook for processing of extra global markers
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_ConfirmationHook'] as $_classRef) {

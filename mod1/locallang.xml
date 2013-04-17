@@ -25,6 +25,8 @@
 			<label index="pagebrowser_page">page</label>
 			<label index="pagebrowser_upto">up to</label>
 			<label index="pagebrowser_within">within</label>
+			<label index="filter_start">Start</label>
+			<label index="filter_end">End</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="title">Powermail</label>
@@ -46,6 +48,8 @@
 			<label index="pagebrowser_page">Seite</label>
 			<label index="pagebrowser_upto">bis</label>
 			<label index="pagebrowser_within">von insgesamt</label>
+			<label index="filter_start">Beginn</label>
+			<label index="filter_end">Ende</label>
 		</languageKey>
 		<languageKey index="en" type="array">
 			<label index="title">Powermail</label>
@@ -67,6 +71,8 @@
 			<label index="pagebrowser_page">page</label>
 			<label index="pagebrowser_upto">up to</label>
 			<label index="pagebrowser_within">within</label>
+			<label index="filter_start">Start</label>
+			<label index="filter_end">End</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="title">Powermail</label>

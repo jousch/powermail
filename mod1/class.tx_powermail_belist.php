@@ -121,8 +121,8 @@ class tx_powermail_belist {
 	// Show input fields for filtering
 	function inputFields() {
 		$content = '<div style="float: left;">'."\n";
-		$content .= '<label for="startdate" style="font-weight: bold; display: block; float: left; width: 40px;">Start:</label><input type="text" name="startdate" id="startdate" value="'.$this->startdate.'" /><br />'."\n";
-		$content .= '<label for="enddate" style="font-weight: bold; display: block; float: left; width: 40px; clear: both;">End:</label><input type="text" name="enddate" id="enddate" value="'.$this->enddate.'" />'."\n";
+		$content .= '<label for="startdate" style="font-weight: bold; display: block; float: left; width: 50px;">'.$this->LANG->getLL('filter_start').':</label><input type="text" name="startdate" id="startdate" value="'.$this->startdate.'" /><br />'."\n";
+		$content .= '<label for="enddate" style="font-weight: bold; display: block; float: left; width: 50px; clear: both;">'.$this->LANG->getLL('filter_end').':</label><input type="text" name="enddate" id="enddate" value="'.$this->enddate.'" />'."\n";
 		if(isset($_GET['id'])) $content .= '<input type="hidden" name="id" value="'.$_GET['id'].'" />'."\n";
 		$content .= '<input type="submit" value="Filter" />'."\n";
 		$content .= '</div>'."\n";

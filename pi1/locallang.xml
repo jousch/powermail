@@ -8,6 +8,7 @@
 		<languageKey index="default" type="array">
 			<label index="locallangmarker_confirmation_question">Are this values correct?</label>
 			<label index="locallangmarker_confirmation_back">Go back</label>
+			<label index="locallangmarker_confirmation_files">Attached file %s: </label>
 			<label index="locallangmarker_confirmation_submit">Send values now</label>
 			<label index="locallangmarker_email_receiver">Thank you for your email:</label>
 			<label index="locallangmarker_email_sender">You've got a new email:</label>
@@ -45,6 +46,7 @@
 		<languageKey index="de" type="array">
 			<label index="locallangmarker_confirmation_question">Sind diese Angaben korrekt?</label>
 			<label index="locallangmarker_confirmation_back">Zurück</label>
+			<label index="locallangmarker_confirmation_files">Angehängte Datei %s: </label>
 			<label index="locallangmarker_confirmation_submit">Angaben abschicken</label>
 			<label index="locallangmarker_email_receiver">Danke fuer Ihre E-Mail:</label>
 			<label index="locallangmarker_email_sender">Sie haben eine neue E-Mail erhalten:</label>
@@ -82,6 +84,7 @@
 		<languageKey index="en" type="array">
 			<label index="locallangmarker_confirmation_question">Are this values correct?</label>
 			<label index="locallangmarker_confirmation_back">Go back</label>
+			<label index="locallangmarker_confirmation_files">Attached file %s:</label>
 			<label index="locallangmarker_confirmation_submit">Send values now</label>
 			<label index="locallangmarker_email_receiver">Thank you for your email:</label>
 			<label index="locallangmarker_email_sender">You've got a new email:</label>
