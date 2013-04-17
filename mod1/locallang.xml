@@ -19,6 +19,9 @@
 			<label index="export_download_success">Success!</label>
 			<label index="export_download_download">Download CSV File</label>
 			<label index="export_download_downloadZIP">Download compressed CSV File</label>
+			<label index="pagebrowser_page">page</label>
+			<label index="pagebrowser_upto">up to</label>
+			<label index="pagebrowser_within">within</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="title">Powermail</label>
@@ -34,6 +37,9 @@
 			<label index="export_download_success">Erfolg!</label>
 			<label index="export_download_download">CSV Datei Download</label>
 			<label index="export_download_downloadZIP">CSV Datei Download (komprimiert)</label>
+			<label index="pagebrowser_page">Seite</label>
+			<label index="pagebrowser_upto">bis</label>
+			<label index="pagebrowser_within">von insgesamt</label>
 		</languageKey>
 		<languageKey index="en" type="array">
 			<label index="title">Powermail</label>
@@ -49,6 +55,9 @@
 			<label index="export_download_success">Success!</label>
 			<label index="export_download_download">Download CSV File</label>
 			<label index="export_download_downloadZIP">Download compressed CSV File</label>
+			<label index="pagebrowser_page">page</label>
+			<label index="pagebrowser_upto">up to</label>
+			<label index="pagebrowser_within">within</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="title">Powermail</label>

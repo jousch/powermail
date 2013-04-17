@@ -62,7 +62,7 @@ class  tx_powermail_module1 extends t3lib_SCbase {
 				// Draw the header.
 			$this->doc = t3lib_div::makeInstance('mediumDoc');
 			$this->doc->backPath = $BACK_PATH;
-			$this->doc->form='<form action="" method="POST">';
+			$this->doc->form='<form action="" method="GET">';
 	
 				// JavaScript
 			$this->doc->JScode = '
@@ -145,7 +145,7 @@ class  tx_powermail_module1 extends t3lib_SCbase {
 						$this->content .= $this->belist->main($this->id, $BACK_PATH); // Show list
 					} else {
 						$this->export = t3lib_div::makeInstance('tx_powermail_export');
-						$this->content .= $this->export->main($_GET['export'], $this->id, $LANG); // Show export functions
+						$this->content = $this->export->main($_GET['export'], $this->id, $LANG); // Show export functions
 					}
 				} else { // show only one with details
 					$this->belist = t3lib_div::makeInstance('tx_powermail_belist');
@@ -158,7 +158,7 @@ class  tx_powermail_module1 extends t3lib_SCbase {
 			break;
 			case 2:
 				$this->content .= 'xx';
-				print_r($_POST);
+				print_r($_GET);
 			break;
 		}
 	}
