@@ -360,5 +360,5 @@ powermailJS {
 
 
 [globalVar = LIT:mootools = {$plugin.powermail.libraryToUse}]
-	#powermailJS.10.template.file = EXT:powermail/js/mootools/tx_powermail-packed.js
+	powermailJS.10.template.file = EXT:powermail/js/mootools/tx_powermail-packed.js
 [global]

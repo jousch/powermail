@@ -161,7 +161,7 @@ class tx_powermail_functions_div {
 	}
 	
 	
-	// Function uidReplace is used for the callback function to replace ###UID55## with value
+	// Function uidReplaceIt is used for the callback function to replace ###UID55## with value
 	function uidReplaceIt($uid) {
 		if (strpos($uid[1], '_')  === false) { // if this is a field like ###UID55### and not like ###UID55_1###
 			if (isset($this->sessiondata['uid'.$uid[1]])) { // if there is a value in the session like uid32 = bla
@@ -192,9 +192,9 @@ class tx_powermail_functions_div {
 	// Function checkMX() checks if a domain exists
 	function checkMX($email, $record = 'MX') {
 		if (function_exists('checkdnsrr')) { // if function checkdnsrr() exist (not available on windows systems)
-			list($user,$domain) = split('@',$email); // split email in user and domain
+			list($user, $domain) = split('@', $email); // split email in user and domain
 			
-			if (checkdnsrr($domain,$record) == 1) return TRUE; // return true if mx record exist
+			if (checkdnsrr($domain, $record) == 1) return TRUE; // return true if mx record exist
 			else return FALSE; // return false if not
 		
 		} else {
@@ -346,9 +346,12 @@ class tx_powermail_functions_div {
 	
 	// Function mimecheck() returns true or false if file fits mime check
 	function mimecheck($filename, $origfilename) {
+		$ok = 0; // disallow on begin
 		$ext = strtolower(array_pop(explode('.', $origfilename))); // get the extension of the upload
 
-		$mime_types = array( // define basic mime-types
+		$mime_types = array( // mime-type definition of files
+		
+			// basic mime-types
 			'txt' => 'text/plain',
 			'htm' => 'text/html',
 			'html' => 'text/html',
@@ -374,7 +377,13 @@ class tx_powermail_functions_div {
 			'svgz' => 'image/svg+xml',
 
 			// archives
-			'zip' => 'application/zip',
+			'zip' => array (
+				'application/zip',
+				'application/x-compressed',
+				'application/x-zip-compressed',
+				'application/x-zip',
+				'multipart/x-zip'
+			),
 			'rar' => 'application/x-rar-compressed',
 			'exe' => 'application/x-msdownload',
 			'msi' => 'application/x-msdownload',
@@ -397,28 +406,52 @@ class tx_powermail_functions_div {
 			'rtf' => 'application/rtf',
 			'xls' => 'application/vnd.ms-excel',
 			'ppt' => 'application/vnd.ms-powerpoint',
+			'docx' => 'application/x-zip',
+			'xlsx' => 'application/x-zip',
+			'pptx' => 'application/x-zip',
 
 			// open office
 			'odt' => 'application/vnd.oasis.opendocument.text',
-			'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+			'ods' => 'application/vnd.oasis.opendocument.spreadsheet'
 		);
 		
-		if (function_exists('finfo_open')) { // Get mimetype via finfo (PECL-Extension needed)
-			$finfo = finfo_open(FILEINFO_MIME);
-			$mimetype = finfo_file($finfo, $filename);
-			finfo_close($finfo);
-		} elseif (function_exists('mime_content_type')) { // Get mimetype via mime_content_type (Deprecated function, but sometimes still active)
-			$mimetype = mime_content_type($filename);
-		} elseif (file_exists("/usr/bin/file")) { // Use file-command with unix to determine
-			$mimetype = exec("/usr/bin/file -bi $filename");
-		} else { // If no method above applies, shrug with your shoulders and make the result true
-			$mimetype = $mime_types[$ext]; 
-		}
-		
-		if ($mimetype != $mime_types[$ext]) { // If the mimetype doesn't match the file extension
-			return false;
-		} else { // Well, if it does - HOORAY!
-			return true;
+		if (array_key_exists($ext, $mime_types)) { // if there is a mimetype definition of current uploaded file
+			
+			// 1. get mimetype
+			if (function_exists('finfo_open')) { // Get mimetype via finfo (PECL-Extension needed)
+				$finfo = finfo_open(FILEINFO_MIME);
+				$mimetype = finfo_file($finfo, $filename);
+				finfo_close($finfo);
+			} elseif (function_exists('mime_content_type')) { // Get mimetype via mime_content_type (Deprecated function, but sometimes still active)
+				$mimetype = mime_content_type($filename);
+			} elseif (file_exists('/usr/bin/file')) { // Use file-command with unix to determine
+				$mimetype = exec('/usr/bin/file -bi '. $filename);
+			} else { // If no method above applies, shrug with your shoulders and make the result true
+				$ok = 1; // allow upload
+			}
+			
+			// 2. set variable $ok if ok
+			if (!$ok) { // if it's not yet ok to upload files
+				if (!is_array($mime_types[$ext])) { // if definition is not an array
+					if ($mimetype == $mime_types[$ext]) { // if mimetype is correct
+						$ok = 1; // allow upload
+					}
+				} else { // defintion is array
+					if (in_array($mimetype, $mime_types[$ext])) { // if mimetype is in array
+						$ok = 1; // allow upload
+					}
+				}
+			}
+			
+			// 3. return 0/1
+			if ($ok) { // if upload allowed
+				return true; // upload allowed, stop further process
+			} else { // if upload not allowed
+				return false; // upload disallowed
+			}
+			
+		} else { // no mime type definition in array above
+			return true; // upload allowed
 		}
 	}
 	

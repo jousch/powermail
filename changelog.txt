@@ -4,6 +4,16 @@
 
 
 ## Powermail version 1.4.x stable ##
+- Update on 15.07.2009 version 1.4.16
+Bugfix #3112: Don't use onfocus javascript with readonly fields
+Bugfix #3632: Recipient Table shouldn't list deleted records
+Bugfix #3638: "Missing argument 6 for tx_powermail_html::main() fixed
+Bugfix #3652: Additional CSS class for submit and reset
+Bugfix #3696: Backlink on confirmation page
+Bugfix #3724: Mime check fix for ZIP files
+Bugfix #3853: Set Additional CSS classes without IRRE
+Feature #2697: Mootools instead of Prototype
+
 - Update on 28.05.2009 version 1.4.15
 Feature #3493: Add own classes to fields and fieldsets
 Feature #3108: JS in form.html to add own regEx

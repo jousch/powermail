@@ -118,7 +118,7 @@ plugin.powermail {
 	upload.folder = uploads/tx_powermail/files/
 	
 	# cat=plugin.powermail_additionalconfig//0570; type=text; label= Allow files for upload: If you are using min. one upload field in frontend, you can set the allowed extension of this files (use small letters)
-	upload.file_extensions = jpg,jpeg,gif,png,tif,txt,doc,xls,sxw,html,swf,pdf
+	upload.file_extensions = jpg,jpeg,gif,png,tif,txt,doc,docx,xls,xlsx,ppt,pptx,pdf,flv,mpg,mpeg,avi,mp3,zip,rar,ace
 	
 	# cat=plugin.powermail_additionalconfig//0580; type=boolean; label= Mime check for upload: Checks if uploaded file is realy the file which it should be (mime check)
 	upload.mimecheck = 1

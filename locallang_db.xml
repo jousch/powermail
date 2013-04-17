@@ -51,6 +51,7 @@
 			<label index="tx_powermail_fieldsets.fields">Fields</label>
 			<label index="tx_powermail_fieldsets.addition">Additional Settings</label>
 			<label index="tx_powermail_fieldsets.class">Add CSS class</label>
+			<label index="tx_powermail_fieldsets.tt_content">Powermail Content Element</label>
 			<label index="tx_powermail_fields">Fields</label>
 			<label index="tx_powermail_fields.fieldset">Fieldset</label>
 			<label index="tx_powermail_fields.title">Title</label>
@@ -193,6 +194,7 @@
 			<label index="tx_powermail_fieldsets.fields">Felder</label>
 			<label index="tx_powermail_fieldsets.addition">Zusätzliche Einstellungen</label>
 			<label index="tx_powermail_fieldsets.class">CSS Klasse hinzufügen</label>
+			<label index="tx_powermail_fieldsets.tt_content">Powermail Seiteninhalt</label>
 			<label index="tx_powermail_fields">Formularfelder</label>
 			<label index="tx_powermail_fields.fieldset">Fieldset</label>
 			<label index="tx_powermail_fields.title">Beschriftung</label>
@@ -330,7 +332,8 @@
 			<label index="tx_powermail_fieldsets.title">Title</label>
 			<label index="tx_powermail_fieldsets.fields">Fields</label>
 			<label index="tx_powermail_fieldsets.addition">Additional Settings</label>
-			<label index="tx_powermail_fieldsets.class">CSS Klasse hinzufügen</label>
+			<label index="tx_powermail_fieldsets.class">Add CSS class</label>
+			<label index="tx_powermail_fieldsets.tt_content">Powermail Content Element</label>
 			<label index="tx_powermail_fields">Fields</label>
 			<label index="tx_powermail_fields.fieldset">Fieldset</label>
 			<label index="tx_powermail_fields.title">Title</label>

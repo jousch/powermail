@@ -146,17 +146,19 @@ $TCA['tx_powermail_fieldsets'] = array (
 );
 
 // Make powermail available in older TYPO3 version (fieldsets)
-if(t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.1.0') || $confArr['useIRRE'] == 0) { // if current version older than 4.1 or IRRE deaktivated in ext manager
-	$TCA['tx_powermail_fieldsets']['columns']['tt_content']['config'] = array (
-		'type' => 'select',
-		'foreign_table' => 'tt_content',
-		'foreign_table_where' => 'AND tt_content.pid=###CURRENT_PID### ',
-		'maxitems' => 1,
-		'itemsProcFunc' => 'user_powermail_tx_powermail_fieldsetchoose->main',
+if (t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.1.0') || $confArr['useIRRE'] == 0) { // if current version older than 4.1 or IRRE deaktivated in ext manager
+	$TCA['tx_powermail_fieldsets']['columns']['tt_content'] = array (
+		'label' => 'LLL:EXT:powermail/locallang_db.xml:tx_powermail_fieldsets.tt_content',
+		'config' => array (
+			'type' => 'select',
+			'foreign_table' => 'tt_content',
+			'foreign_table_where' => 'AND tt_content.pid=###CURRENT_PID### ',
+			'maxitems' => 1,
+			'itemsProcFunc' => 'user_powermail_tx_powermail_fieldsetchoose->main'
+		)
 	);
-	$TCA['tx_powermail_fieldsets']['columns']['tt_content']['label'] = 'LLL:EXT:powermail/locallang_db.xml:tx_powermail_fieldsets.tt_content';
 	$TCA['tx_powermail_fieldsets']['columns']['felder']['config']['type'] = 'passthrough';
-	$TCA['tx_powermail_fieldsets']['types']['0']['showitem'] = 'form, title;;;;2-2-2, tt_content, felder';
+	$TCA['tx_powermail_fieldsets']['types']['0']['showitem'] = 'tt_content, ' . $TCA['tx_powermail_fieldsets']['types']['0']['showitem']; // add "tt_content" field in front of all fields
 }
 
 
@@ -388,14 +390,16 @@ if(!t3lib_extMgm::isLoaded('date2cal',0)) {
 
 // Make powermail available in older TYPO3 version (fields)
 if(t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.1.0') || $confArr['useIRRE'] == 0) { // if current version older than 4.1 or IRRE deaktivated in ext manager
-	$TCA['tx_powermail_fields']['columns']['fieldset']['config'] = array (
-		'type' => 'select',
-		'foreign_table' => 'tx_powermail_fieldsets',
-		'maxitems' => 1,
-		'itemsProcFunc' => 'user_powermail_tx_powermail_fieldsetchoose->main',
+	$TCA['tx_powermail_fields']['columns']['fieldset'] = array (
+		'label' => 'LLL:EXT:powermail/locallang_db.xml:tx_powermail_fields.fieldset',
+		'config' => array (
+			'type' => 'select',
+			'foreign_table' => 'tx_powermail_fieldsets',
+			'maxitems' => 1,
+			'itemsProcFunc' => 'user_powermail_tx_powermail_fieldsetchoose->main'
+		)
 	);
-	$TCA['tx_powermail_fields']['columns']['fieldset']['label'] = 'LLL:EXT:powermail/locallang_db.xml:tx_powermail_fields.fieldset';
-	$TCA['tx_powermail_fields']['types']['0']['showitem'] = 'title;;;;1-1-1, fieldset, formtype;;;;2-2-2, flexform;;;;3-3-3, description;;;;3-3-3, fe_field;;;;4-4-4';
+	$TCA['tx_powermail_fields']['palettes']['1']['showitem'] = 'fieldset, ' . $TCA['tx_powermail_fields']['palettes']['1']['showitem']; // add "fieldset" field in front of the first palette
 }
 
 
@@ -534,7 +538,7 @@ $TCA['tx_powermail_mails'] = array (
 
 // Disable Start- and Stoptime for fields and fieldsets
 if ($confArr['disableStartStop'] == 1) {
-	$TCA['tx_powermail_fieldsets']['palettes']['1']['showitem'] = 'form, title, hidden';
-	$TCA['tx_powermail_fields']['palettes']['1']['showitem'] = 'title, hidden';
+	$TCA['tx_powermail_fieldsets']['palettes']['1']['showitem'] = str_replace(array('starttime', 'endtime'), '', $TCA['tx_powermail_fieldsets']['palettes']['1']['showitem']); // remove starttime and stoptime from fieldsets TCA
+	$TCA['tx_powermail_fields']['palettes']['1']['showitem'] = str_replace(array('starttime', 'endtime'), '', $TCA['tx_powermail_fields']['palettes']['1']['showitem']); // remove starttime and stoptime from fields TCA
 }
 ?>
