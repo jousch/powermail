@@ -101,6 +101,7 @@ $validationJS = '
 				onSubmit : true,
 				stopOnFirst : false,
 				immediate : false,
+
 				focusOnError : true,
 				useTitles : false,
 				onFormValidate : function(result, form) {},
@@ -262,7 +263,7 @@ $validationJS = '
 					return Validation.get(\'IsEmpty\').test(v) ||  !/[^\d]/.test(v);
 				}],
 		[\'validate-alpha\', \''.str_replace("'",'',$this->pi_getLL('JSvalidation_label_validate_alpha')).'\', function (v) {
-					return Validation.get(\'IsEmpty\').test(v) ||  /^[a-zA-Z]+$/.test(v)
+					return Validation.get(\'IsEmpty\').test(v) ||  /^[a-zA-Z\-\' '.utf8_encode('öäüÖÄÜß').']+$/.test(v)
 				}],
 		[\'validate-alphanum\', \''.str_replace("'",'',$this->pi_getLL('JSvalidation_label_validate_alphanum')).'\', function(v) {
 					return Validation.get(\'IsEmpty\').test(v) ||  !/\W/.test(v)

@@ -54,11 +54,11 @@ class tx_powermail_form extends tslib_pibase {
 					array(
 						'returnLast' => 'url',
 						'parameter' => $GLOBALS['TSFE']->id,
-						'additionalParams' => '&type=3131'
+						'additionalParams' => '&type=3131'.(intval(t3lib_div::GPvar('L'))>0?'&L='.t3lib_div::GPvar('L'):'')
 					)
 				);
 			} else { // simulatestaticdocuments active
-				$dynjslink = 'index.php?id='.$GLOBALS['TSFE']->id.'&type=3131';
+				$dynjslink = 'index.php?id='.$GLOBALS['TSFE']->id.'&type=3131'.(intval(t3lib_div::GPvar('L'))>0?'&L='.t3lib_div::GPvar('L'):''); // Link to JavaScript if ssd is active
 			}
 			$js .= "\t".'<script src="'.($this->conf['js.']['HTMLentities']==1 ? htmlentities($dynjslink) : $dynjslink).'" type="text/javascript"></script>'."\n";
 		}
