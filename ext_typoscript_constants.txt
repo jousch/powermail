@@ -36,7 +36,7 @@ plugin.powermail {
 	# cat=plugin.powermail_mainconfig/enable/130; type=boolean; label= Log every mail in db: Disable logging, if you want only to get mails
 	allow.dblog = 1
 	
-	# cat=plugin.powermail_mainconfig/enable/200; type=text; label= PID where to save logfiles: Enter a Page ID where the form values should be saved to the db (empty: same PID as form PID)
+	# cat=plugin.powermail_mainconfig/enable/200; type=int; label= PID where to save logfiles: Enter a Page ID where the form values should be saved to the db (empty: same PID as form PID)
 	PID.dblog = 
 	
 	

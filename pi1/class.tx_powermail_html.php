@@ -189,6 +189,7 @@ class tx_powermail_html extends tslib_pibase {
 			}
 		}
 		$subpartArray['###CONTENT###'] = $content_item; // subpart 3
+		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'multiple')) $this->markerArray['###NAME###'] = 'name="'.$this->prefixId.'[uid'.$this->uid.'][]" '; // overwrite name to markerArray like tx_powermail_pi1[55][]
 
 		$content = $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['html_select']['all'],$this->markerArray,$subpartArray); // substitute Marker in Template
 		$content = preg_replace("|###.*###|i","",$content); // Finally clear not filled markers
@@ -719,6 +720,11 @@ class tx_powermail_html extends tslib_pibase {
 		// ###SIZE###
 		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')) {
 			$this->markerArray['###SIZE###'] = 'size="'.intval($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'size')).'" '; // add size to markerArray
+		}
+		
+		// ###MULTIPLE###
+		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'multiple')) {
+			$this->markerArray['###MULTIPLE###'] = 'multiple="multiple" '; // add multiple to markerArray
 		}
 		
 		// ###MAXLENGTH###
