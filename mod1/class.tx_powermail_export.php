@@ -1,4 +1,27 @@
 <?php
+/***************************************************************
+*  Copyright notice
+*
+*  (c) 2008 Alex Kellner, Mischa Heissmann <alexander.kellner@einpraegsam.net, typo3.2008@heissmann.org>
+*  All rights reserved
+*
+*  This script is part of the TYPO3 project. The TYPO3 project is
+*  free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation; either version 2 of the License, or
+*  (at your option) any later version.
+*
+*  The GNU General Public License can be found at
+*  http://www.gnu.org/copyleft/gpl.html.
+*
+*  This script is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  This copyright notice MUST APPEAR in all copies of the script!
+***************************************************************/
+
 require_once('../lib/class.tx_powermail_functions_div.php'); // include div functions
 
 class tx_powermail_export {
@@ -9,10 +32,23 @@ class tx_powermail_export {
 	var $seperator = ';'; // separator for csv
 	var $csvfilename = 'powermail_export_'; // filename of exported CSV file
 	var $zip = 1; // activate CSV file compressing to .gz
-	var $rowconfig = array('number'=>'#', 'date'=>'Date', 'time'=>'Time', 'uid'=>'all', 'sender'=>'Sender email', 'senderIP'=>'Sender IP address', 'recipient'=>'Recipient email', 'subject_r'=>'Email subject', 'formid'=>'Page ID', 'UserAgent'=>'UserAgent', 'Referer'=>'Referer', 'SP_TZ'=>'Sender location'); // set order for export
 	var $LANG; // Local copy of lang object
 	var $outputEncoding; // Encoding for data output
 	var $tsconfig; // Module's TSconfig
+	var $rowconfig = array ( // set order for export
+		'number' => '#', 
+		'date' => 'Date', 
+		'time' => 'Time', 
+		'uid' => 'all', 
+		'sender' => 'Sender email', 
+		'senderIP' => 'Sender IP address', 
+		'recipient' => 'Recipient email', 
+		'subject_r' => 'Email subject', 
+		'formid' => 'Page ID', 
+		'UserAgent' => 'UserAgent', 
+		'Referer' => 'Referer', 
+		'SP_TZ' => 'Sender location'
+	);
 
 	// Function Main
 	function main($export, $pid = 0, $LANG = '') {
@@ -42,11 +78,11 @@ class tx_powermail_export {
 			$limit = ''
 		);
 		if ($res) { // If on current page is a result
-			if($export == 'xls' || $export == 'table') { // if Excel export or HTML Table
+			if ($export == 'xls' || $export == 'table') { // if Excel export or HTML Table
 				$table = '<table>'; // Init table
 				$table .= $this->setTitle($export,$row); // Title
-				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // one loop for every db entry
-					if($row['piVars']) {
+				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // one loop for every db entry
+					if ($row['piVars']) {
 						if ($this->outputEncoding != 'utf-8') $row['piVars'] = $this->LANG->csConvObj->conv($row['piVars'], $this->LANG->charSet, 'utf-8'); // change to utf8 to avoid problems with umlauts
 						$values = t3lib_div::xml2array($row['piVars'], 'piVars'); // xml2array
 						
@@ -57,7 +93,7 @@ class tx_powermail_export {
 							elseif ($key == 'date') $table .= '<td>'.date($this->dateformat, $row['crdate']).'</td>'; // if current row is date
 							elseif ($key == 'time') $table .= '<td>'.date($this->timeformat, $row['crdate']).'</td>'; // if current row is time
 							elseif ($key == 'uid') { // if current row should show all dynamic values (piVars)
-								if(isset($values) && is_array($values)) {
+								if (isset($values) && is_array($values)) {
 									foreach ($values as $key => $value) { // one loop for every piVar
 										if (!is_array($value)) $table .= '<td>'.$this->cleanString($value, $export).'</td>';
 										else {
@@ -93,7 +129,7 @@ class tx_powermail_export {
 			} elseif ($export == 'csv') { // if CSV Export
 				//$table .= 'sep=,'."\n"; // write first line
 				$table .= $this->setTitle($export,$row); // Title
-				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // one loop for every db entry
+				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // one loop for every db entry
 					if($row['piVars']) {
 						$i++; // increase counter
 						if ($this->LANG->charSet != 'utf-8') $row['piVars'] = $this->LANG->csConvObj->conv($row['piVars'], $this->LANG->charSet, 'utf-8'); // change to utf8 to avoid problems with umlauts
@@ -106,10 +142,10 @@ class tx_powermail_export {
 							elseif ($key == 'date') $table .= '"'.date($this->dateformat, $row['crdate']).'"'.$this->seperator; // if current row is date
 							elseif ($key == 'time') $table .= '"'.date($this->timeformat, $row['crdate']).'"'.$this->seperator; // if current row is time
 							elseif ($key == 'uid') { // if current row should show all dynamic values (piVars)
-								if(isset($values) && is_array($values)) {
+								if (isset($values) && is_array($values)) {
 									foreach ($values as $key => $value) { // one loop for every piVar
 										//if(!is_array($value)) $table .= '"'.str_replace('"',"'",str_replace(array("\n\r","\r\n","\n","\r"),'',$value)).'"'.$this->seperator;
-										if(!is_array($value)) $table .= '"'.$this->cleanString($value).'"'.$this->seperator;
+										if (!is_array($value)) $table .= '"'.$this->cleanString($value).'"'.$this->seperator;
 										else {
 											foreach ($values[$key] as $key2 => $value2) { // one loop for every piVar in second level
 												//$table .= '"'.str_replace('"',"'",str_replace(array("\n\r","\r\n","\n","\r"),'',$value2)).'"'.$this->seperator;
@@ -162,7 +198,7 @@ class tx_powermail_export {
 				$content .= t3lib_div::writeFileToTypo3tempDir(PATH_site.'typo3temp/'.$this->csvfilename.$hash.'.csv', $table);
 			}
 		
-		} elseif($export == 'table') {
+		} elseif ($export == 'table') {
 		
 			$content .= $table; // add table to content
 		
@@ -185,22 +221,22 @@ class tx_powermail_export {
 	}
 
 	// Compress a file
-	function gzcompressfile($source,$level=false){ 
+	function gzcompressfile($source, $level = false) { 
 		$dest = $source.'.gz';
 		$mode = 'wb'.$level;
 		$error = false;
-		if($fp_out=gzopen($dest,$mode)){
-			if($fp_in=fopen($source,'rb')){
-				while(!feof($fp_in))
-				gzwrite($fp_out,fread($fp_in,1024*512));
+		if ($fp_out = gzopen($dest, $mode)) {
+			if ($fp_in = fopen($source, 'rb')) {
+				while (!feof($fp_in))
+				gzwrite($fp_out, fread($fp_in, 1024*512));
 				fclose($fp_in);
 			}
-			else $error=true;
+			else $error = true;
 			gzclose($fp_out);
 		}
-		else $error=true;
+		else $error = true;
 		
-		if($error) return false;
+		if ($error) return false;
 		else return $dest;
 	}
 	
@@ -221,7 +257,7 @@ class tx_powermail_export {
 						$table .= '<td><b>'.$value.'</b></td>';
 					}
 				} else {
-					if(isset($values) && is_array($values)) {
+					if (isset($values) && is_array($values)) {
 						foreach ($values as $key => $value) { // one loop for every piVar
 							//if (!is_array($value) && $export == 'csv') $table .= '"'.str_replace('"',"'",str_replace(array("\n\r","\r\n","\n","\r"),'', $this->GetLabelfromBackend($key, $value))).'"'.$this->seperator;
 							//elseif (!is_array($value)) $table .= '<td>'.$this->GetLabelfromBackend($key, $value).'</td>';
@@ -246,9 +282,9 @@ class tx_powermail_export {
     
 	
     // Function GetLabelfromBackend() to get label to current field for emails and thx message
-    function GetLabelfromBackend($name,$value) {
-		if(strpos($name,'uid') !== FALSE) { // $name like uid55
-			$uid = str_replace('uid','',$name);
+    function GetLabelfromBackend($name, $value) {
+		if (strpos($name, 'uid') !== FALSE) { // $name like uid55
+			$uid = str_replace('uid', '', $name);
 
 			$where_clause = 'c.deleted=0 AND c.hidden=0 AND (c.starttime<='.time().') AND (c.endtime=0 OR c.endtime>'.time().') AND (c.fe_group="" OR c.fe_group IS NULL OR c.fe_group="0" OR (c.fe_group LIKE "%,0,%" OR c.fe_group LIKE "0,%" OR c.fe_group LIKE "%,0" OR c.fe_group="0") OR (c.fe_group LIKE "%,-1,%" OR c.fe_group LIKE "-1,%" OR c.fe_group LIKE "%,-1" OR c.fe_group="-1"))'; // enable fields for tt_content
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery ( // GET title where fields.flexform LIKE <value index="vDEF">vorname</value>
@@ -261,7 +297,7 @@ class tx_powermail_export {
 			);
 			if ($res) $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 
-			if(isset($row['title'])) return $row['title']; // if title was found return ist
+			if (isset($row['title'])) return $row['title']; // if title was found return ist
 			else if ($uid < 100000) return 'POWERMAIL ERROR: No title to current field found in DB'; // if no title was found return 
 		} else { // no uid55 so return $name
 			return $name;

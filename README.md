@@ -1,16 +1,16 @@
 # TYPO3 Extension "powermail"
 Powermail is a well-known, powerful and easy to use mailform extension with a lots of features (spam prevention, marketing, double-optin, etc...)
 
-## Version 1.4.10
+## Version 1.4.11
 ** BE AWARE: This extension has been marked as insecure by the security team! **.
 
 
 
 <table>
-	<tr><td>Version</td><td>1.4.10 stable</td></tr>
-	<tr><td>Release date</td><td>25. February 2009</td></tr>
+	<tr><td>Version</td><td>1.4.11 stable</td></tr>
+	<tr><td>Release date</td><td>15. March 2009</td></tr>
 	<tr><td>Author</td><td>Alexander Kellner, Mischa Heissmann</td></tr>
-	<tr><td>Comment</td><td>Mootools can be selected in constants now! Bugfixes 2695, 2694, 2657, 2656, Features 2703, 2701, 2697, 2690, 2658, 2654, 2651, 2647, 2624</td></tr>
+	<tr><td>Comment</td><td>Bugfix 2433, Bugfix 2710, Feature 2785</td></tr>
 </table>
 
 ## !! Attention !!

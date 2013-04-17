@@ -66,12 +66,16 @@ plugin.tx_powermail_pi1 {
 			reply.email = TEXT
 			reply.email.value = 
 			
+			# Return path (if not set, sender will be used)
+			returnpath = TEXT
+			returnpath.value = 
+			
 			# Add some attachments to the email (wrap every attachment with , if you want to add more than only one)
 			addAttachment = COA
 			addAttachment {
 				10 = TEXT
 				#10.value = fileadmin/pic.jpg
-				10.wrap = |,
+				#10.wrap = |,
 			}
 		}
 		
@@ -85,12 +89,16 @@ plugin.tx_powermail_pi1 {
 			reply.email = TEXT
 			reply.email.value = 
 			
+			# Return path (if not set, main receiver will be used)
+			returnpath = TEXT
+			returnpath.value = 
+			
 			# Add some attachments to the email (split every attachment with , if you want to add more than only one)
 			addAttachment = COA
 			addAttachment {
 				10 = TEXT
 				#10.value = fileadmin/pic.jpg
-				10.wrap = |,
+				#10.wrap = |,
 			}
 		}
 	}
@@ -275,7 +283,7 @@ lib.powermail_dynJavascript {
 }
 	# userFunc to check if powermail is on current page
 		# powermail is on current page and prototype should be used
-[userFunc = user_powermailOnCurrentPage()] && [globalVar = LIT:prototype = {$plugin.powermail.libraryToUse}]
+[userFunc = user_powermailOnCurrentPage] && [globalVar = LIT:prototype = {$plugin.powermail.libraryToUse}]
 	page.includeJS.file31312 = EXT:powermail/js/mandatoryjs/lib/prototype.js
 	page.includeJS.file31313 = EXT:powermail/js/mandatoryjs/src/effects.js
 	page.includeJS.file31314 = EXT:powermail/js/mandatoryjs/fabtabulous.js
@@ -284,14 +292,16 @@ lib.powermail_dynJavascript {
 [userFunc = user_powermailOnCurrentPage] && [globalVar = LIT:mootools = {$plugin.powermail.libraryToUse}]
 	page.includeJS.file31312 = EXT:powermail/js/mootools/mootools-1.2.1-packed.js
 [end]
-page.includeJS.file31311 = EXT:powermail/js/checkbox/checkbox.js
-page.headerData.31310 < lib.powermail_dynJavascript
-seite.headerData.31310 < page.headerData.31310
-seite.includeJS.31311 < page.includeJS.file31311
-seite.includeJS.31312 < page.includeJS.file31312
-seite.includeJS.31313 < page.includeJS.file31313
-seite.includeJS.31314 < page.includeJS.file31314
-
+		# powermail is on current page
+[userFunc = user_powermailOnCurrentPage]
+	page.includeJS.file31311 = EXT:powermail/js/checkbox/checkbox.js
+	page.headerData.31310 < lib.powermail_dynJavascript
+	seite.headerData.31310 < page.headerData.31310
+	seite.includeJS.31311 < page.includeJS.file31311
+	seite.includeJS.31312 < page.includeJS.file31312
+	seite.includeJS.31313 < page.includeJS.file31313
+	seite.includeJS.31314 < page.includeJS.file31314
+[end]
 
 
 

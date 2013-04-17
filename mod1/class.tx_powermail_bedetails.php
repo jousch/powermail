@@ -3,7 +3,7 @@
 class tx_powermail_bedetails {
 
 	// Function Main
-	function main($mailID,$LANG) {
+	function main($mailID, $LANG) {
 		// config
 		global $BACK_PATH;
 		$this->mailID = $mailID;

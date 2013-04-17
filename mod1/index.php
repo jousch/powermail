@@ -110,7 +110,7 @@ class  tx_powermail_module1 extends t3lib_SCbase {
 				$this->content.=$this->doc->spacer(20).$this->doc->section('',$this->doc->makeShortcutIcon('id',implode(',',array_keys($this->MOD_MENU)),$this->MCONF['name']));
 			}
 	
-			if(!isset($_GET['export'])) $this->content.=$this->doc->spacer(10);
+			if (!isset($_GET['export'])) $this->content.=$this->doc->spacer(10);
 		} else {
 				// If no access or if ID == zero
 	
@@ -139,7 +139,7 @@ class  tx_powermail_module1 extends t3lib_SCbase {
 	
 	// Final output
 	function printContent()	{
-		if(!isset($_GET['export'])) $this->content.=$this->doc->endPage(); // not needed for export
+		if (!isset($_GET['export'])) $this->content.=$this->doc->endPage(); // not needed for export
 		echo $this->content;
 	}
 	
@@ -153,11 +153,11 @@ class  tx_powermail_module1 extends t3lib_SCbase {
 		}
 		$this->action->deleteFiles(); // delete old temp files from typo3temp folder
 		
-		switch((string)$this->MOD_SETTINGS['function'])	{
+		switch ((string)$this->MOD_SETTINGS['function'])	{
 			case 1:
 			default:
-				if(empty($_GET['mailID'])) { // no mailID set in GET params
-					if(empty($_GET['export'])) { // no export
+				if (empty($_GET['mailID'])) { // no mailID set in GET params
+					if (empty($_GET['export'])) { // no export
 						$this->belist = t3lib_div::makeInstance('tx_powermail_belist');
 						$this->belist->init($LANG);
 						$this->content .= $this->belist->main($this->id, $BACK_PATH); // Show list
