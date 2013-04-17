@@ -86,6 +86,7 @@ class tx_powermail_html extends tslib_pibase {
 		$this->type = $row['f_type'];
 		$this->formtitle = $row['c_title'];
 		$this->uid = $row['f_uid'];
+		$this->fe_field = $row['f_fefield'];
 		$this->tmpl = array('all' => tslib_cObj::fileResource($this->conf['template.']['fieldWrap'])); // Load HTML Template
 
 		// Main functions
@@ -299,13 +300,12 @@ class tx_powermail_html extends tslib_pibase {
 		}
 		$subpartArray = array(); // init
 		$subpartArray['###CONTENT###'] = $content_item; // subpart 3
-		$OutermarkerArray = array ( // OuterMarkerArray for ###LABEL_MAIN### and ######
-			'###LABEL_MAIN###' => $this->title, 
-			'###POWERMAIL_FIELD_UID###' => $this->uid
-		); 
-		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $OutermarkerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
+		$this->markerArray['###LABEL_MAIN###'] = $this->title;
+		$this->markerArray['###POWERMAIL_FIELD_UID###'] = $this->uid;
+		
+		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $this->markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
 
-		$content = $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['html_radio']['all'], $OutermarkerArray, $subpartArray); // substitute Marker in Template
+		$content = $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['html_radio']['all'], $this->markerArray, $subpartArray); // substitute Marker in Template
 		$content = preg_replace("|###.*###|i","",$content); // Finally clear not filled markers
 		return $content; // return HTML
 	}
@@ -392,14 +392,14 @@ class tx_powermail_html extends tslib_pibase {
 		$uid = str_replace('tt_content_','',$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')); // get uid from flexform
 		$conf = array('tables' => 'tt_content','source' => $uid,'dontCheckPid' => 1); // config
 
-		$markerArray = array('###CONTENT###' => $this->pibase->pibase->cObj->RECORDS($conf)); // CONTENT Marker with content
-		$markerArray['###POWERMAIL_FIELD_UID###'] = $this->uid; // UID to marker
+		$this->markerArray = array('###CONTENT###' => $this->pibase->pibase->cObj->RECORDS($conf)); // CONTENT Marker with content
+		$this->markerArray['###POWERMAIL_FIELD_UID###'] = $this->uid; // UID to marker
 
 		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'send')) { // content should be send with email
-			$markerArray['###HIDDEN###'] = '<input type="hidden" name="'.$this->prefixId.'[tt_content]['.$this->div_functions->clearName($this->title,1).']" value="'.$uid.'" />'; // create hidden field
+			$this->markerArray['###HIDDEN###'] = '<input type="hidden" name="'.$this->prefixId.'[tt_content]['.$this->div_functions->clearName($this->title,1).']" value="'.$uid.'" />'; // create hidden field
 		}
 
-		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_content'],$markerArray); // substitute Marker in Template
+		$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_content'],$this->markerArray); // substitute Marker in Template
 		$content = preg_replace("|###.*###|i","",$content); // Finally clear not filled markers
 		return $content; // return HTML
 	}
@@ -478,14 +478,13 @@ class tx_powermail_html extends tslib_pibase {
 			);
 			$jscal = t3lib_div::makeInstance('tx_powermail_renderWizard'); // New object: jscalendar
 	
-			$markerArray = array(); // init
-			$markerArray['###FIELD###'] = $jscal->renderWizard($itemConfig,$this->pibase->pibase->cObj); // start tag generating
-			$markerArray['###LABEL###'] = $this->title; // add label
-			$markerArray['###LABEL_NAME###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name'); // add name for label
-			$markerArray['###POWERMAIL_FIELD_UID###'] = $this->uid; // UID to marker
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
+			$this->markerArray['###FIELD###'] = $jscal->renderWizard($itemConfig,$this->pibase->pibase->cObj); // start tag generating
+			$this->markerArray['###LABEL###'] = $this->title; // add label
+			$this->markerArray['###LABEL_NAME###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name'); // add name for label
+			$this->markerArray['###POWERMAIL_FIELD_UID###'] = $this->uid; // UID to marker
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $this->markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
 	
-			$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_datetime'],$markerArray); // substitute Marker in Template
+			$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_datetime'],$this->markerArray); // substitute Marker in Template
 			$content = preg_replace("|###.*###|i","",$content); // Finally clear not filled markers
 		
 		} else { // Extension date2cal is missing
@@ -526,14 +525,13 @@ class tx_powermail_html extends tslib_pibase {
 				'field' => $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name'),
 			);
 			$jscal = t3lib_div::makeInstance('tx_powermail_renderWizard');
-			$markerArray = array(); // init
-			$markerArray['###FIELD###'] = $jscal->renderWizard($itemConfig,$this->pibase->pibase->cObj); // start tag generating
-			$markerArray['###LABEL###'] = $this->title; // add label
-			$markerArray['###LABEL_NAME###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name'); // add name for label
-			$markerArray['###POWERMAIL_FIELD_UID###'] = $this->uid; // UID to marker
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
+			$this->markerArray['###FIELD###'] = $jscal->renderWizard($itemConfig,$this->pibase->pibase->cObj); // start tag generating
+			$this->markerArray['###LABEL###'] = $this->title; // add label
+			$this->markerArray['###LABEL_NAME###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name'); // add name for label
+			$this->markerArray['###POWERMAIL_FIELD_UID###'] = $this->uid; // UID to marker
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $this->markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
 	
-			$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_date'],$markerArray); // substitute Marker in Template
+			$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_date'],$this->markerArray); // substitute Marker in Template
 			$content = preg_replace("|###.*###|i","",$content); // Finally clear not filled markers
 		
 		} else { // Extension date2cal is missing
@@ -574,14 +572,13 @@ class tx_powermail_html extends tslib_pibase {
 				'field' => $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name'),
 			);
 			$jscal = t3lib_div::makeInstance('tx_powermail_renderWizard');
-			$markerArray = array(); // init
-			$markerArray['###FIELD###'] = $jscal->renderWizard($itemConfig,$this->pibase->pibase->cObj); // start tag generating
-			$markerArray['###LABEL###'] = $this->title; // add label
-			$markerArray['###LABEL_NAME###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name'); // add name for label
-			$markerArray['###POWERMAIL_FIELD_UID###'] = $this->uid; // UID to marker
-			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
+			$this->markerArray['###FIELD###'] = $jscal->renderWizard($itemConfig,$this->pibase->pibase->cObj); // start tag generating
+			$this->markerArray['###LABEL###'] = $this->title; // add label
+			$this->markerArray['###LABEL_NAME###'] = $this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'name'); // add name for label
+			$this->markerArray['###POWERMAIL_FIELD_UID###'] = $this->uid; // UID to marker
+			if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $this->markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
 	
-			$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_time'],$markerArray); // substitute Marker in Template
+			$content = tslib_cObj::substituteMarkerArrayCached($this->tmpl['html_time'],$this->markerArray); // substitute Marker in Template
 		
 		} else { // Extension date2cal is missing
 			$content = 'Please install extension <strong>date2cal</strong> to use time feature';
@@ -730,6 +727,7 @@ class tx_powermail_html extends tslib_pibase {
 		
 		// ###VALUE###
 		$this->markerArray['###VALUE###'] = 'value="'.strip_tags($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'value')).'" '; // add value to markerArray (don't allow html/php tags)
+		if($this->fe_field && $GLOBALS['TSFE']->fe_user->user[$this->fe_field]) $this->markerArray['###VALUE###'] = 'value="'.strip_tags($GLOBALS['TSFE']->fe_user->user[$this->fe_field]).'" '; // add value to markerArray if should filled from feuser data
 		if(isset($this->piVarsFromSession['uid'.$this->uid])) $this->markerArray['###VALUE###'] = 'value="'.$this->piVarsFromSession['uid'.$this->uid].'" '; // Overwrite value from session value
 		
 		// ###LABEL###

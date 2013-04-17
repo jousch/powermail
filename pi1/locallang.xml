@@ -11,8 +11,13 @@
 			<label index="locallangmarker_confirmation_submit">Send values now</label>
 			<label index="locallangmarker_email_receiver">Thank you for your email:</label>
 			<label index="locallangmarker_email_sender">You've got a new email:</label>
-			<label index="locallangmarker_mandatory_message">Sorry, but you forgot to fill out some important fields:</label>
+			<label index="locallangmarker_mandatory_message">There are some errors:</label>
+			<label index="locallangmarker_mandatory_emptyfield">This field must be filled:</label>
 			<label index="locallangmarker_mandatory_submit">Go back to the form</label>
+			<label index="locallangmarker_error_validemail">This is not a valid email address:</label>
+			<label index="locallangmarker_error_file_main">This file could not be uploaded:</label>
+			<label index="locallangmarker_error_file_toolarge">This file is too large:</label>
+			<label index="locallangmarker_error_file_extension">This file extension is not allowed:</label>
 			<label index="multiple_forward">Next step</label>
 			<label index="multiple_back">Last step</label>
 		</languageKey>
@@ -22,8 +27,13 @@
 			<label index="locallangmarker_confirmation_submit">Angaben abschicken</label>
 			<label index="locallangmarker_email_receiver">Danke für deine E-Mail:</label>
 			<label index="locallangmarker_email_sender">Sie haben eine neue E-Mail erhalten:</label>
-			<label index="locallangmarker_mandatory_message">Diese Pflichtfelder müssen ausgefüllt werden:</label>
+			<label index="locallangmarker_mandatory_message">Bitte beachten Sie folgende Fehlermeldungen:</label>
+			<label index="locallangmarker_mandatory_emptyfield">Bitte füllen Sie dieses Feld aus:</label>
 			<label index="locallangmarker_mandatory_submit">Zurück zum Formular</label>
+			<label index="locallangmarker_error_validemail">Dies ist keine gültige E-Mail Adresse:</label>
+			<label index="locallangmarker_error_file_main">Die Datei konnte nicht hochgeladen werden:</label>
+			<label index="locallangmarker_error_file_toolarge">Diese Datei ist zu groß:</label>
+			<label index="locallangmarker_error_file_extension">Diese Datei Endung ist nicht erlaubt:</label>
 			<label index="multiple_forward">Nächster Schritt</label>
 			<label index="multiple_back">Letzter Schritt</label>
 		</languageKey>

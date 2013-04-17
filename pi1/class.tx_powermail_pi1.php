@@ -48,7 +48,7 @@ class tx_powermail_pi1 extends tslib_pibase {
 		$this->content = $content;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
-		$GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode
+		//$GLOBALS['TYPO3_DB']->debugOutput = true; // SQL Debug mode
 		
 		// Instances
 		$this->sessions = t3lib_div::makeInstance('tx_powermail_sessions'); // New object: session functions
@@ -60,12 +60,11 @@ class tx_powermail_pi1 extends tslib_pibase {
 		
 		// Sessionwork
 		$this->sessions->init($this->conf,$this); // Initialise the new instance to make cObj available in all other functions.
-		$oldPiVars = $this->sessions->getSession(0); // Get Old piVars from Session (without not allowed piVars)
-		if(isset($oldPiVars)) $this->piVars = array_merge($oldPiVars, $this->piVars); // Add old piVars to new piVars
-		$this->sessions->setSession($this->piVars); // Set piVars to session
-		$this->sessionfields = $this->sessions->getSession(0); // give me all piVars
+		$this->piVars = $this->sessions->changeData($this->piVars); // manipulate data (upload fields, check email, etc..)
+		$this->sessions->setSession($this->piVars,0); // Set piVars to session (but don't overwrite old values)
+		$this->sessionfields = $this->sessions->getSession(0); // give me all piVars from session (without not needed values)
 		
-		
+		// Start main choose
 		if(isset($this->piVars['multiple']) || isset($this->piVars['mailID']) || isset($this->piVars['sendNow'])) {
 			// What kind of function should be showed in frontend
 			if(!$this->piVars['multiple']) { // if multiple is not set

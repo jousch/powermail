@@ -28,9 +28,11 @@ require_once(str_replace('../','',t3lib_extMgm::extRelPath('powermail')).'lib/cl
 class tx_powermail_mandatory extends tslib_pibase {
 	var $extKey        = 'powermail';	// The extension key.
 	var $pi_checkCHash = true;
+    var $scriptRelPath = 'pi1/class.tx_powermail_mandatory.php';    // Path to pi1 to get locallang.xml from pi1 folder
 
 	function main($conf,$sessionfields){
 		$this->conf = $conf;
+		$this->sessionfields = $sessionfields;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
 		$this->pi_initPIflexform(); // Init and get the flexform data of the plugin
@@ -45,12 +47,11 @@ class tx_powermail_mandatory extends tslib_pibase {
 		$this->tmpl['mandatory']['item'] = $this->pibase->cObj->getSubpart($this->tmpl['mandatory']['all'],'###ITEM###'); // Load HTML Template inner (work on subpart)
 		
 		// Fill Markers
-		$content_item = ''; $this->innerMarkerArray = array(); $fieldarray = array(); $error = 0;
+		$content_item = ''; $this->innerMarkerArray = array(); $fieldarray = array(); $this->error = 0;
 		$this->markerArray = $this->markers->GetMarkerArray(); // Fill markerArray
 		$this->markerArray['###POWERMAIL_TARGET###'] = $this->pibase->cObj->typolink('x',array("returnLast"=>"url","parameter"=>$GLOBALS['TSFE']->id,"useCacheHash"=>1)); // Fill Marker with action parameter
 		$this->markerArray['###POWERMAIL_NAME###'] = $this->pibase->cObj->data['tx_powermail_title'].'_mandatory'; // Fill Marker with formname
 		$this->markerArray['###POWERMAIL_METHOD###'] = $this->conf['form.']['method']; // Form method
-		
 		
 		// Give me all fields of current content uid
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
@@ -64,9 +65,20 @@ class tx_powermail_mandatory extends tslib_pibase {
 		if ($res) { // If there is a result
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every field
 				if($this->pi_getFFvalue(t3lib_div::xml2array($row['flexform']),'mandatory') == 1) { // if in current xml mandatory == 1
-					if(!trim($sessionfields['uid'.$row['uid']]) || !isset($sessionfields['uid'.$row['uid']])) { // only if current value is not set in session (piVars)
-						$error = 1; // min. 1 field was not filled
-						$this->innerMarkerArray['###POWERMAIL_MANDATORY_LABEL###'] = $row['title']; // current field title (label)
+					if(!trim($this->sessionfields['uid'.$row['uid']]) || !isset($this->sessionfields['uid'.$row['uid']])) { // only if current value is not set in session (piVars)
+						$this->sessionfields['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_mandatory_emptyfield').' <b>'.$row['title'].'</b>'; // set current error to sessionlist
+					}
+				}
+			}
+		}
+		
+		// check for errors
+		if(isset($this->sessionfields['ERROR'])) {
+			foreach($this->sessionfields['ERROR'] as $key1 => $value1) { // one loop for every field with an error
+				if(isset($this->sessionfields['ERROR'][$key1])) {
+					foreach($this->sessionfields['ERROR'][$key1] as $key2 => $value2) { // one loop for every error on current field
+						$this->error = 1; // mark as error
+						$this->innerMarkerArray['###POWERMAIL_MANDATORY_LABEL###'] = $value2; // current field title (label)
 						$content_item .= $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['mandatory']['item'], $this->innerMarkerArray); // add to content_item
 					}
 				}
@@ -83,7 +95,19 @@ class tx_powermail_mandatory extends tslib_pibase {
 			$this->content // current content
 		);
 		$this->content = preg_replace("|###.*###|i","",$this->content); // Finally clear not filled markers
-		if($error == 1) return $this->content; // return HTML
+		if($this->error == 1) { // if there is an error
+			$this->clearErrorsInSession();
+			return $this->content; // return HTML
+		}
+	}
+	
+	
+	// Function clearErrorsInSession() removes all global errors, which are marked as an error in the session
+	function clearErrorsInSession() {
+		// Set Session (overwrite all values)
+		unset($this->sessionfields['ERROR']); // remove all error messages
+		$GLOBALS['TSFE']->fe_user->setKey("ses", $this->extKey.'_'.$this->pibase->cObj->data['uid'], $this->sessionfields); // Generate Session without ERRORS
+		$GLOBALS['TSFE']->storeSessionData(); // Save session
 	}
 	
 	

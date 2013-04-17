@@ -99,7 +99,7 @@ class tx_powermail_form extends tslib_pibase {
 
 				// Give me all fields in current fieldset, which are related to current content
 				$res2 = $GLOBALS['TYPO3_DB']->exec_SELECTquery (
-					'fs.uid fs_uid,f.uid f_uid,fs.felder fs_fields,fs.title fs_title,f.title f_title,f.formtype f_type,f.flexform f_field,c.tx_powermail_title c_title',
+					'fs.uid fs_uid,f.uid f_uid,fs.felder fs_fields,fs.title fs_title,f.title f_title,f.formtype f_type,f.flexform f_field,c.tx_powermail_title c_title,f.fe_field f_fefield',
 					'tx_powermail_fieldsets fs LEFT JOIN tx_powermail_fields f ON (fs.uid = f.fieldset) LEFT JOIN tt_content c ON (fs.tt_content = c.uid)',
 					$where_clause = 'fs.deleted = 0 AND fs.hidden = 0 AND fs.tt_content = '.$this->pibase->cObj->data['uid'].' AND f.hidden = 0 AND f.deleted = 0 AND f.fieldset = '.$row_fs['uid'].$whereadd,
 					$groupBy = '',

@@ -54,21 +54,30 @@ plugin.powermail {
 	# cat=plugin.powermail//340; type=text; label= Date format: Frontend time format if time field is in use (see http://php.net/manual/function.strftime.php for strftime details)
 	format.time = %H:%M
 	
-	# cat=plugin.powermail//350; type=boolean; label= OnFocus JavaScript: (De)activate onfocus javascript in fields - removes standard value of (e.g. text-) fields onclick, so the user can click and begin to write
-	js.onfocus = 1
-	
-	# cat=plugin.powermail//360; type=boolean; label= Init JavaScript: (De)activate init javascript in fields - adds an onblur javascript to each field like init(tx_powermail_pi1[textfeld],textfeld,index.php?id=index,'')
-	js.init = 1
-	
-	# cat=plugin.powermail//370; type=boolean; label= Onchange JavaScript: (De)activate onchange javascript for select fields - adds an onchange javascript to all select fields - automatic submit onchange
-	js.onchange = 0
-	
-	# cat=plugin.powermail//380; type=text; label= Allowed tags in labels: Allow some tags for label fields
+	# cat=plugin.powermail//350; type=text; label= Allowed tags in labels: Allow some tags for label fields
 	label.allowTags = <p><br><b><strong><a>
 	
-	# cat=plugin.powermail//390; type=text; label= Add symbol for mandatory fields: If any field is a mandatory field, add this at the end of the label
+	# cat=plugin.powermail//360; type=text; label= Add symbol for mandatory fields: If any field is a mandatory field, add this at the end of the label
 	mandatory.symbol = *
 	
-	# cat=plugin.powermail//400; type=wrap; label= Wrap mandatory symbol: You can wrap the mandatory symbol with any html code
+	# cat=plugin.powermail//370; type=wrap; label= Wrap mandatory symbol: You can wrap the mandatory symbol with any html code
 	mandatory.wrap = <span class="powermail_mandatory">|</span>
+	
+	# cat=plugin.powermail//360; type=text; label= Folder for uploaded files: If you are using min. one upload field in frontend, you can change the folder where the uploaded file is safed
+	upload.folder = uploads/tx_powermail/files/
+	
+	# cat=plugin.powermail//360; type=text; label= Allow files for upload: If you are using min. one upload field in frontend, you can set the allowed extension of this files
+	upload.file_extensions = jpg,gif,png,tif,txt,doc,xls,sxw,html,swf
+	
+	# cat=plugin.powermail//360; type=int; label= Allow filesize for upload: If you are using min. one upload field in frontend, you can set the allowed filesize of the files (in kB)
+	upload.filesize = 1000
+	
+	# cat=plugin.powermail//900; type=boolean; label= OnFocus JavaScript: (De)activate onfocus javascript in fields - removes standard value of (e.g. text-) fields onclick, so the user can click and begin to write
+	js.onfocus = 1
+	
+	# cat=plugin.powermail//910; type=boolean; label= Init JavaScript: (De)activate init javascript in fields - adds an onblur javascript to each field like init(tx_powermail_pi1[textfeld],textfeld,index.php?id=index,'')
+	js.init = 1
+	
+	# cat=plugin.powermail//920; type=boolean; label= Onchange JavaScript: (De)activate onchange javascript for select fields - adds an onchange javascript to all select fields - automatic submit onchange
+	js.onchange = 0
 }

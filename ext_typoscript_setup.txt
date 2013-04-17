@@ -17,10 +17,13 @@ plugin.tx_powermail_pi1 {
 	format.datetime = {$plugin.powermail.format.datetime}
 	format.date = {$plugin.powermail.format.date}
 	format.time = {$plugin.powermail.format.time}
-	js.onfocus = {$plugin.powermail.js.onfocus}
-	js.init = {$plugin.powermail.js.init}
-	js.onchange = {$plugin.powermail.js.onchange}
 	label.allowTags = {$plugin.powermail.label.allowTags}
 	mandatory.symbol = {$plugin.powermail.mandatory.symbol}
 	mandatory.wrap = {$plugin.powermail.mandatory.wrap}
+	upload.folder = {$plugin.powermail.upload.folder}
+	upload.file_extensions = {$plugin.powermail.upload.file_extensions}
+	upload.filesize = {$plugin.powermail.upload.filesize}
+	js.onfocus = {$plugin.powermail.js.onfocus}
+	js.init = {$plugin.powermail.js.init}
+	js.onchange = {$plugin.powermail.js.onchange}
 }
