@@ -165,11 +165,20 @@ class tx_powermail_html extends tslib_pibase {
 		$this->tmpl['html_select']['item'] = tslib_cObj::getSubpart($this->tmpl['html_select']['all'],'###ITEM###'); // work on subpart 2
 
 		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'options')) { // Only if options are set
+			$content_item = ''; $options = array(); // init
 			$optionlines = t3lib_div::trimExplode("\n",$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'options'),1); // Every row is a new option
-			$content_item = '';
+			for ($i=0;$i<count($optionlines);$i++) { // Every loop for every option
+				$options[$i] = t3lib_div::trimExplode("|",$optionlines[$i],0); // Every row is a new option
+			}
 
 			for($i=0;$i<count($optionlines);$i++) { // One tag for every option
-				$markerArray['###VALUE###'] = $this->dontAllow($optionlines[$i]);
+				$markerArray['###LABEL###'] = $this->dontAllow($options[$i][0]); // fill label marker with label
+				$markerArray['###VALUE###'] = $this->dontAllow(isset($options[$i][1])?$options[$i][1]:$options[$i][0]); // fill value marker with value
+				
+				// ###SELECTED###
+				if ($this->piVarsFromSession['uid'.$this->uid] == ($options[$i][1]?$options[$i][1]:$options[$i][0])) $markerArray['###SELECTED###'] = 'selected="selected" '; // mark as selected
+				else $markerArray['###SELECTED###'] = ''; // clear
+				
 				$content_item .= $this->pibase->pibase->cObj->substituteMarkerArrayCached($this->tmpl['html_select']['item'], $markerArray);
 			}
 		}
@@ -191,15 +200,18 @@ class tx_powermail_html extends tslib_pibase {
 		$this->tmpl['html_check']['item'] = $this->pibase->pibase->cObj->getSubpart($this->tmpl['html_check']['all'],'###ITEM###'); // work on subpart 2
 
 		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'options')) { // Only if options are set
+			$content_item = ''; $options = array(); // init
 			$optionlines = t3lib_div::trimExplode("\n",$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'options'),1); // Every row is a new option
-			$content_item = ''; // init
+			for ($i=0;$i<count($optionlines);$i++) { // Every loop for every option
+				$options[$i] = t3lib_div::trimExplode("|",$optionlines[$i],0); // Every row is a new option
+			}
 
 			for($i=0;$i<count($optionlines);$i++) { // One tag for every option
 				$markerArray['###NAME###'] = 'name="'.$this->prefixId.'[uid'.$this->uid.']['.$i.']" '; // add name to markerArray
-				$markerArray['###LABEL###'] = $this->dontAllow($optionlines[$i]); // add label
+				$markerArray['###LABEL###'] = $this->dontAllow($options[$i][0]); // add label
 				$markerArray['###LABEL_NAME###'] = 'uid'.$this->uid.'_'.$i; // add labelname
 				$markerArray['###ID###'] = 'id="uid'.$this->uid.'_'.$i.'" '; // add labelname
-				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow($optionlines[$i]).'" '; // add labelname
+				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow(isset($options[$i][1])?$options[$i][1]:$options[$i][0]).'" '; // add value (take value after pipe symbol or all if no pipe: "red | rd")
 				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
 				if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'mandatory') == 1) $markerArray['###MANDATORY_SYMBOL###'] = $this->pibase->pibase->cObj->wrap($this->conf['mandatory.']['symbol'],$this->conf['mandatory.']['wrap'],'|'); // add mandatory symbol if current field is a mandatory field
 				
@@ -234,20 +246,23 @@ class tx_powermail_html extends tslib_pibase {
 		$this->tmpl['html_radio']['item'] = $this->pibase->pibase->cObj->getSubpart($this->tmpl['html_radio']['all'],'###ITEM###'); // work on subpart 2
 
 		if($this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'options')) { // Only if options are set
+			$content_item = ''; $options = array(); // init
 			$optionlines = t3lib_div::trimExplode("\n",$this->pi_getFFvalue(t3lib_div::xml2array($this->xml),'options'),1); // Every row is a new option
-			$content_item = ''; // init
+			for ($i=0;$i<count($optionlines);$i++) { // Every loop for every option
+				$options[$i] = t3lib_div::trimExplode("|",$optionlines[$i],0); // Every row is a new option
+			}
 
 			for($i=0;$i<count($optionlines);$i++) { // One tag for every option
 				$markerArray['###NAME###'] = 'name="'.$this->prefixId.'[uid'.$this->uid.']" '; // add name to markerArray
-				$markerArray['###LABEL###'] = $this->dontAllow($optionlines[$i]); // add label
+				$markerArray['###LABEL###'] = $this->dontAllow($options[$i][0]); // add label
 				$markerArray['###LABEL_NAME###'] = 'uid'.$this->uid.'_'.$i; // add labelname
 				$markerArray['###ID###'] = 'id="uid'.$this->uid.'_'.$i.'" '; // add labelname
-				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow($optionlines[$i]).'" '; // add labelname
+				$markerArray['###VALUE###'] = 'value="'.$this->dontAllow(isset($options[$i][1])?$options[$i][1]:$options[$i][0]).'" '; // add labelname
 				$markerArray['###CLASS###'] = 'class="powermail_'.$this->formtitle.' powermail_'.$this->type.' powermail_uid'.$this->uid.' powermail_subuid'.$this->uid.'_'.$i.'" '; // add class name to markerArray
 				
 				// ###CHECKED###
 				if(isset($this->piVarsFromSession['uid'.$this->uid])) { // if there is a preselection in the session
-					if($this->piVarsFromSession['uid'.$this->uid] == $optionlines[$i]) {
+					if($this->piVarsFromSession['uid'.$this->uid] == ($options[$i][1]?$options[$i][1]:$options[$i][0])) { // mark as selected
 						$markerArray['###CHECKED###'] = 'checked="checked" '; // precheck radiobutton
 					} else $markerArray['###CHECKED###'] = ''; // clear
 				}
@@ -795,7 +810,7 @@ class tx_powermail_html extends tslib_pibase {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FieldWrapMarkerHook'])) { // Adds hook for processing of extra global markers
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FieldWrapMarkerHook'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				$this->markerArray = $_procObj->PM_FieldWrapMarkerHook($this->markerArray,$content,$this); // Get new marker Array from other extensions
+				$this->markerArray = $_procObj->PM_FieldWrapMarkerHook($this->uid,$this->xml,$this->type,$this->title,$this->markerArray,$content,$this); // Get new marker Array from other extensions
 			}
 		}
 	}

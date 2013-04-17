@@ -255,7 +255,7 @@ class tx_powermail_form extends tslib_pibase {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FormWrapMarkerHook'])) { // Adds hook for processing of extra global markers
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_FormWrapMarkerHook'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				$_procObj->PM_FormWrapMarkerHook($this); // Open function to manipulate datas
+				$_procObj->PM_FormWrapMarkerHook($this->OuterMarkerArray,$this->InnerMarkerArray,$this->conf,$this); // Open function to manipulate datas
 			}
 		}
 	}

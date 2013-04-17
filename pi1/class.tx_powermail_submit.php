@@ -54,7 +54,7 @@ class tx_powermail_submit extends tslib_pibase {
 		// Configuration
 		$this->sessiondata = $GLOBALS['TSFE']->fe_user->getKey('ses',$this->extKey.'_'.$this->pibase->cObj->data['uid']); // Get piVars from session
 		$this->sender = ($this->pibase->cObj->data['tx_powermail_sender'] ? $this->sessiondata[$this->pibase->cObj->data['tx_powermail_sender']] : $this->noreply_prefix.'@'.$_SERVER['SERVER_NAME']); // email sender
-		$this->receiver = $this->emailReceiver(); // Receiver mail
+		$this->emailReceiver(); // Receiver mail
 		$this->subject_r = $this->pibase->cObj->data['tx_powermail_subject_r']; // Subject of mails (receiver)
 		$this->subject_s = $this->pibase->cObj->data['tx_powermail_subject_s']; // Subject of mails (sender)
 		
@@ -101,6 +101,143 @@ class tx_powermail_submit extends tslib_pibase {
 		
 		return $this->content; // return HTML for THX Message
 	}
+	
+	
+	// Function sendMail() generates mail for sender and receiver
+	function sendMail($subpart) {
+
+		// Configuration
+		$this->tmpl['emails'][$subpart] = $this->pibase->cObj->getSubpart($this->tmpl['emails']['all'],'###POWERMAIL_'.strtoupper($subpart).'###'); // Content for HTML Template
+		$this->mailcontent[$subpart] = $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['emails'][$subpart],$this->markerArray); // substitute markerArray for HTML content
+		$this->mailcontent[$subpart] = preg_replace_callback ( // Automaticly fill locallangmarkers with fitting value of locallang.xml
+			'#\#\#\#POWERMAIL_LOCALLANG_(.*)\#\#\##Uis', // regulare expression
+			array($this->markers,'DynamicLocalLangMarker'), // open function
+			$this->mailcontent[$subpart] // current content
+		);
+		$this->mailcontent[$subpart] = preg_replace("|###.*###|i","",$this->mailcontent[$subpart]); // Finally clear not filled markers
+		
+		// Set emails and names
+		if ($subpart == 'recipient_mail') { // default settings: mail to receiver
+			$receiver = $this->MainReceiver; // set receiver
+			$sender = $this->sender; // set sender
+			$subject = $this->subject_r; // set subject
+			$sendername = $this->sender; // set sendername
+			$cc = (isset($this->CCReceiver)?$this->CCReceiver:''); // carbon copy (take email addresses or nothing if not available)
+		} elseif ($subpart == 'sender_mail') { // extended settings: mail to sender
+			$receiver = $this->sender; // set receiver
+			$sender = $this->MainReceiver; // set sender
+			$subject = $this->subject_s; // set subject
+			$sendername = (isset($this->sendername)?$this->sendername:$this->MainReceiver); // set sendername
+			$cc = ''; // no cc
+		}
+		
+		$this->htmlMail->start(); // start htmlmail
+		$this->htmlMail->recipient = $receiver; // main receiver email address
+		$this->htmlMail->recipient_copy = $cc; // cc field (other email addresses)
+		$this->htmlMail->subject = $subject; // mail subject
+		$this->htmlMail->from_email = $sender; // sender email address
+		$this->htmlMail->from_name = $sendername; // sender email name
+		$this->htmlMail->returnPath = $sender; // return path
+		$this->htmlMail->replyto_email = ''; // clear replyto email
+		$this->htmlMail->replyto_name = ''; // clear replyto name
+		$this->htmlMail->charset = $GLOBALS['TSFE']->metaCharset; // set current charset
+		$this->htmlMail->defaultCharset = $GLOBALS['TSFE']->metaCharset; // set current charset
+		$this->htmlMail->addPlain($this->mailcontent[$subpart]);
+		$this->htmlMail->setHTML($this->htmlMail->encodeMsg($this->mailcontent[$subpart]));
+		$this->htmlMail->send($receiver);
+	}
+	
+	
+	// Function saveMail() to save piVars and some more infos to DB (tx_powermail_mails)
+	function saveMail() {
+		
+		// Configuration
+		$this->save_PID = $GLOBALS['TSFE']->id; // PID where to save: Take current page
+		if($this->conf['PID.']['dblog']) $this->save_PID = $this->conf['PID.']['dblog']; // PID where to save: Get it from TS if set
+		
+		// DB entry for table Tabelle: tx_powermail_mails
+		$db_values = array (
+			'pid' => $this->save_PID, // PID
+			'tstamp' => time(), // save current time
+			'crdate' => time(), // save current time
+			'formid' => $this->pibase->cObj->data['uid'],
+			'recipient' => $this->MainReceiver,
+			'subject_r' => $this->subject_r,
+			'sender' => $this->sender,
+			'content' => trim($this->mailcontent['recipient_mail']),
+			'piVars' => t3lib_div::array2xml($this->sessiondata,'',0,'piVars'),
+			'senderIP' => ($this->confArr['disableIPlog'] == 1 ? $this->pi_getLL('error_backend_noip') : $_SERVER['REMOTE_ADDR']),
+			'UserAgent' => $_SERVER['HTTP_USER_AGENT'],
+			'Referer' => $_SERVER['HTTP_REFERER'],
+			'SP_TZ' => $_SERVER['SP_TZ']
+		);
+		if($this->dbInsert) $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_powermail_mails',$db_values); // DB entry
+	}
+	
+	
+	// Function emailReceiver() returns comma-separated list of email receivers
+	function emailReceiver() {
+		$emails = ''; $this->sendername = ''; // init
+		
+		// 1. Field receiver
+		if ($this->pibase->cObj->data['tx_powermail_recipient']) { // If receivers are listed in field receiver
+			$emails = str_replace(array("\r\n","\n\r","\n","\r",";"),',',$this->pibase->cObj->data['tx_powermail_recipient']); // commaseparated list of emails
+			$emailarray = t3lib_div::trimExplode(',',$emails,1); // write every part to an array
+			
+			for ($i=0,$emails='';$i<count($emailarray);$i++) { // one loop for every key
+				if (t3lib_div::validEmail($emailarray[$i])) $emails .= $emailarray[$i].', '; // if current value is an email write to $emails
+				else $this->sendername .= $emailarray[$i].' '; // if current value is no email, take it for sender name and write to $this->sendername
+			}
+			if($emails) $emails = substr(trim($emails), 0, -1); // delete last ,
+			if(isset($this->sendername)) $this->sendername = trim($this->sendername); // trim name
+		}
+		
+		// 2. Field receiver from table
+		elseif ($this->pibase->cObj->data['tx_powermail_recip_id'] && $this->pibase->cObj->data['tx_powermail_recip_table']) { // If emails from table was chosen
+			$emails = $this->pibase->cObj->data['tx_powermail_recip_id']; // commaseparated list of emails
+		}
+		
+		// 3. Field receiver query
+		elseif ($this->pibase->cObj->data['tx_powermail_query']) { // If own select query is chosen
+			$query = $this->secQuery($this->pibase->cObj->data['tx_powermail_query']); // secure function of query
+			
+			$query = preg_replace_callback ( // Automaticly replace ###UID55### with value from session to use markers in query strings
+				'#\#\#\#UID(.*)\#\#\##Uis', // regulare expression
+				array($this,'uidReplace'), // open function
+				$query // current content
+			);
+			
+			$res = mysql_query($query); // mysql query
+			
+			if ($res && $query) { // If there is a result
+				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every result
+					$i = 0; // init
+					if (is_array($row)) { // if $row is an array
+						foreach ($row as $key => $value) { // give me the key
+							if ($i == 0) { // take only first result
+								if(t3lib_div::validEmail($row[$key])) { // only if result is a valid email address
+									$emails .= $row[$key].', '; // add email address with comma at the end
+								}
+							}
+						}
+					}
+				}
+				if($emails) $emails = substr(trim($emails), 0, -1); // delete last ,
+			}
+		}
+		
+		// 4. Split to main receiver and to all other receivers (aa@aa.com, bb@bb.com, cc@cc.com => 1. aa@aa.com / 2. bb@bb.com, cc@cc.com)
+		if (isset($emails)) { // if email string is set
+			if(strpos($emails,',') > 1) { // if there is a , in the string (more than only one email is set)
+				$this->MainReceiver = substr($emails,0,strpos($emails,',')); // aa@aa.com
+				$this->CCReceiver = substr($emails,trim(strpos($emails,',')+1)); // bb@bb.com, cc@cc.com
+			} else { // only one email is set
+				$this->MainReceiver = $emails; // set mail
+			}
+		}
+		
+		return false;
+	}
 
 	
 	// Function redirect() forward the user to a new location after submit
@@ -126,109 +263,6 @@ class tx_powermail_submit extends tslib_pibase {
 			header("Connection: close");
 	
 		}
-	}
-	
-	
-	// Function sendMail() generates mail for sender and receiver
-	function sendMail($subpart) {
-
-		// Configuration
-		$this->tmpl['emails'][$subpart] = $this->pibase->cObj->getSubpart($this->tmpl['emails']['all'],'###POWERMAIL_'.strtoupper($subpart).'###'); // Content for HTML Template
-		$this->mailcontent[$subpart] = $this->pibase->cObj->substituteMarkerArrayCached($this->tmpl['emails'][$subpart],$this->markerArray); // substitute markerArray for HTML content
-		$this->mailcontent[$subpart] = preg_replace_callback ( // Automaticly fill locallangmarkers with fitting value of locallang.xml
-			'#\#\#\#POWERMAIL_LOCALLANG_(.*)\#\#\##Uis', // regulare expression
-			array($this->markers,'DynamicLocalLangMarker'), // open function
-			$this->mailcontent[$subpart] // current content
-		);
-		$this->mailcontent[$subpart] = preg_replace("|###.*###|i","",$this->mailcontent[$subpart]); // Finally clear not filled markers
-		if ($subpart == 'recipient_mail') { // default settings: mail to receiver
-			$receiver = $this->receiver; // set receiver
-			$sender = $this->sender; // set sender
-			$subject = $this->subject_r; // set subject
-		} elseif ($subpart == 'sender_mail') { // extended settings: mail to sender
-			$receiver = $this->sender; // set receiver
-			$sender = $this->receiver; // set sender
-			$subject = $this->subject_s; // set subject
-		}
-		
-		$this->htmlMail->start();
-		$this->htmlMail->recipient = $receiver;
-		$this->htmlMail->subject = $subject;
-		$this->htmlMail->from_email = $sender;
-		$this->htmlMail->from_name = $sender;
-		$this->htmlMail->returnPath = $sender;
-		$this->htmlMail->replyto_email = ''; // clear replyto email
-		$this->htmlMail->replyto_name = ''; // clear replyto name
-		$this->htmlMail->charset = $GLOBALS['TSFE']->metaCharset; // set current charset
-		$this->htmlMail->defaultCharset = $GLOBALS['TSFE']->metaCharset; // set current charset
-		$this->htmlMail->addPlain($this->mailcontent[$subpart]);
-		$this->htmlMail->setHTML($this->htmlMail->encodeMsg($this->mailcontent[$subpart]));
-		$this->htmlMail->send($receiver);
-	}
-	
-	
-	// Function saveMail() to save piVars and some more infos to DB (tx_powermail_mails)
-	function saveMail() {
-		
-		// Configuration
-		$this->save_PID = $GLOBALS['TSFE']->id; // PID where to save: Take current page
-		if($this->conf['PID.']['dblog']) $this->save_PID = $this->conf['PID.']['dblog']; // PID where to save: Get it from TS if set
-		
-		// DB entry for table Tabelle: tx_powermail_mails
-		$db_values = array (
-			'pid' => $this->save_PID, // PID
-			'tstamp' => time(), // save current time
-			'crdate' => time(), // save current time
-			'formid' => $this->pibase->cObj->data['uid'],
-			'recipient' => $this->receiver,
-			'subject_r' => $this->subject_r,
-			'sender' => $this->sender,
-			'content' => trim($this->mailcontent['recipient_mail']),
-			'piVars' => t3lib_div::array2xml($this->sessiondata,'',0,'piVars'),
-			'senderIP' => ($this->confArr['disableIPlog'] == 1 ? $this->pi_getLL('error_backend_noip') : $_SERVER['REMOTE_ADDR']),
-			'UserAgent' => $_SERVER['HTTP_USER_AGENT'],
-			'Referer' => $_SERVER['HTTP_REFERER'],
-			'SP_TZ' => $_SERVER['SP_TZ']
-		);
-		if($this->dbInsert) $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_powermail_mails',$db_values); // DB entry
-	}
-	
-	
-	// Function emailReceiver() returns comma-separated list of email receivers
-	function emailReceiver() {
-		$emails = ''; // init
-		
-		if ($this->pibase->cObj->data['tx_powermail_recipient']) { // If receivers are listed in field receiver
-			$emails = str_replace(array("\r\n","\n\r","\n","\r"),',',$this->pibase->cObj->data['tx_powermail_recipient']); // commaseparated list of emails
-		}
-		
-		elseif ($this->pibase->cObj->data['tx_powermail_recip_id']) { // If emails from table was chosen
-			$emails = $this->pibase->cObj->data['tx_powermail_recip_id']; // commaseparated list of emails
-		}
-		
-		elseif ($this->pibase->cObj->data['tx_powermail_query']) { // If own select query is chosen
-			$query = $this->secQuery($this->pibase->cObj->data['tx_powermail_query']); // secure function of query
-			$res = mysql_query($query); // mysql query
-			
-			if ($res && $query) { // If there is a result
-				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every result
-					$i = 0; // init
-					if (is_array($row)) { // if $row is an array
-						foreach ($row as $key => $value) { // give me the key
-							if ($i == 0) { // take only first result
-								if(t3lib_div::validEmail($row[$key])) { // only if result is a valid email address
-									$emails .= $row[$key].', '; // add email address with comma at the end
-								}
-							}
-						}
-					}
-				}
-				if($emails) $emails = substr(trim($emails), 0, -1); // delete last ,
-			}
-		}
-		
-		if (isset($emails)) return $emails; // return email receiver list
-		else return false;
 	}
 	
 	
@@ -276,25 +310,34 @@ class tx_powermail_submit extends tslib_pibase {
 	
 	// Function secQuery() disables query functions like UPDATE, TRUNCATE, DELETE, and so on
 	function secQuery($string) {
-		$notAllowed = array('UPDATE','TRUNCATE','DELETE','INSERT','REPLACE','DO','HANDLER','LOAD','ALTER','CREATE','DROP','RENAME','DESCRIBE','USE','BEGIN','COMMIT','ROLLBACK','LOCK','SET','REVOKE','GRANT'); // list of all not allowed strings for querycheck
-		$error = 0; // init 
+		$notAllowed = array('UPDATE','TRUNCATE','DELETE','INSERT','REPLACE','HANDLER','LOAD','ALTER','CREATE','DROP','RENAME','DESCRIBE','BEGIN','COMMIT','ROLLBACK','LOCK','REVOKE','GRANT'); // list of all not allowed strings for querycheck
+		$error = 0; $failure = ''; // init 
 		
 		if(is_array($notAllowed)) { // only if array
 			foreach ($notAllowed as $key => $value) { // one loop for every not allowed string
 				if (strpos($string, $value) !== false) { // search for (e.g.) "DELETE" in string
 					$error = 1; // set error
+					$failure .= '"'.$value.'", '; // Save error string
 				}
 				if (strpos($string, strtolower($value)) !== false) { // search for (e.g.) "delete" in string
 					$error = 1; // set error
+					$failure .= '"'.$value.'", '; // Save error string
 				}
 			}
 		}
+		if($failure) $failure = substr(trim($failure), 0, -1); // delete last ,
 		
 		if($error === 0) return $string; // return query if no error
 		else { // if error
-			echo 'Not allowed string in receiver sql query!'; // print error message
+			echo 'Not allowed string ('.$failure.') in receiver sql query!'; // print error message
 			return false; // no return
 		}
+	}
+	
+	
+	// Function uidReplace is used for the callback function to replace ###UID55## with value
+	function uidReplace($uid) {
+		if(isset($this->sessiondata['uid'.$uid[1]])) return $this->sessiondata['uid'.$uid[1]];
 	}
 
 

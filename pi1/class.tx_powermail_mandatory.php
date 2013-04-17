@@ -177,7 +177,7 @@ class tx_powermail_mandatory extends tslib_pibase {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MandatoryHook'])) { // Adds hook for processing of extra global markers
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['powermail']['PM_MandatoryHook'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				$_procObj->PM_ConfirmationHook($this); // Open function to manipulate data
+				$_procObj->PM_ConfirmationHook($this->error,$this->markerArray,$this->innerMarkerArray,$this->sessionfields,$this); // Open function to manipulate data
 			}
 		}
 	}
