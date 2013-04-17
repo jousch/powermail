@@ -24,7 +24,6 @@
 
 require_once(PATH_tslib.'class.tslib_pibase.php');
 require_once(t3lib_extMgm::extPath('powermail').'lib/class.tx_powermail_dynamicmarkers.php'); // file for dynamicmarker functions
-if(t3lib_extMgm::isLoaded('xajax',0)) require (t3lib_extMgm::extPath('xajax') . 'class.tx_xajax.php'); // xajax
 
 // This class saves powermail values in OTHER db tables if wanted (this class is not the main database class for storing)
 class tx_powermail_countryzones extends tslib_pibase {
@@ -49,32 +48,41 @@ class tx_powermail_countryzones extends tslib_pibase {
 		$this->markerArray = &$markerArray; // marker Array
 		
 		// let's go
-		if (class_exists('tx_xajax') && $this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'countryzone')) { // make available if in backend selected and xajax is loaded
-			# make XAJAX available
-			$this->xajax = t3lib_div::makeInstance('tx_xajax');
-			$this->xajax->decodeUTF8InputOn();
-			$this->xajax->setCharEncoding('utf-8');
-			$this->xajax->setWrapperPrefix($this->prefixId);
-			$this->xajax->statusMessagesOn();
-			$this->xajax->debugOff();
-	
-			// Register all my functions
-			$this->xajax->registerFunction(array('addZoneSelector', &$this, 'addZoneSelector'));
-	
-			// Return to HTML header
-			$this->xajax->processRequests();  
-			$GLOBALS['TSFE']->additionalHeaderData[$this->prefixId] = $this->xajax->getJavascript(t3lib_extMgm::siteRelPath('xajax'));
+		if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'countryzone')) { // if in backend selected
 			
-			// Insert code of zone selector via php (if preselected country or in session)
-			if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'preselect') > 0 && empty($this->piVars['uid' . ($this->uid + $this->add)])) { // if there is a country preselected and no other country chosen meanwhile
-				$this->tmpl['html_countryselect']['all'] = str_replace('<div id="powermail_countryzoneselect###POWERMAIL_FIELD_UID###" class="countryzone"></div>', '<div id="powermail_countryzoneselect###POWERMAIL_FIELD_UID###" class="countryzone">'.$this->codeForZoneSelector($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'preselect'), '').'</div>', $this->tmpl['html_countryselect']['all']); // add countryzoneselector code to html template
-			}
-			if (!empty($this->piVars['uid' . ($this->uid + $this->add)])) { // if there is already a value in the session for countryzoneselect
-				$this->tmpl['html_countryselect']['all'] = str_replace('<div id="powermail_countryzoneselect###POWERMAIL_FIELD_UID###" class="countryzone"></div>', '<div id="powermail_countryzoneselect###POWERMAIL_FIELD_UID###" class="countryzone">'.$this->codeForZoneSelector(0, $this->piVars['uid' . $this->uid]).'</div>', $this->tmpl['html_countryselect']['all']); // add countryzoneselector code to html template
+			// Load xajax file
+			if (t3lib_extMgm::isLoaded('xajax', 0) && !class_exists('tx_xajax')) { // if xajax extension is loaded and if class "tx_xajax" don't exists yet
+				require_once (t3lib_extMgm::extPath('xajax') . 'class.tx_xajax.php'); // load xajax file
 			}
 			
-			$this->markerArray['###JS###'] = 'onchange="tx_powermail_pi1addZoneSelector(this.value);"';
-			
+			// let's go
+			if (class_exists('tx_xajax')) { // make available if xajax is loaded
+				# make XAJAX available
+				$this->xajax = t3lib_div::makeInstance('tx_xajax');
+				$this->xajax->decodeUTF8InputOn();
+				$this->xajax->setCharEncoding('utf-8');
+				$this->xajax->setWrapperPrefix($this->prefixId);
+				$this->xajax->statusMessagesOn();
+				$this->xajax->debugOff();
+		
+				// Register all my functions
+				$this->xajax->registerFunction(array('addZoneSelector', &$this, 'addZoneSelector'));
+		
+				// Return to HTML header
+				$this->xajax->processRequests();  
+				$GLOBALS['TSFE']->additionalHeaderData[$this->prefixId] = $this->xajax->getJavascript(t3lib_extMgm::siteRelPath('xajax'));
+				
+				// Insert code of zone selector via php (if preselected country or in session)
+				if ($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'preselect') > 0 && empty($this->piVars['uid' . ($this->uid + $this->add)])) { // if there is a country preselected and no other country chosen meanwhile
+					$this->tmpl['html_countryselect']['all'] = str_replace('<div id="powermail_countryzoneselect###POWERMAIL_FIELD_UID###" class="countryzone"></div>', '<div id="powermail_countryzoneselect###POWERMAIL_FIELD_UID###" class="countryzone">'.$this->codeForZoneSelector($this->pi_getFFvalue(t3lib_div::xml2array($this->xml), 'preselect'), '').'</div>', $this->tmpl['html_countryselect']['all']); // add countryzoneselector code to html template
+				}
+				if (!empty($this->piVars['uid' . ($this->uid + $this->add)])) { // if there is already a value in the session for countryzoneselect
+					$this->tmpl['html_countryselect']['all'] = str_replace('<div id="powermail_countryzoneselect###POWERMAIL_FIELD_UID###" class="countryzone"></div>', '<div id="powermail_countryzoneselect###POWERMAIL_FIELD_UID###" class="countryzone">'.$this->codeForZoneSelector(0, $this->piVars['uid' . $this->uid]).'</div>', $this->tmpl['html_countryselect']['all']); // add countryzoneselector code to html template
+				}
+				
+				$this->markerArray['###JS###'] = 'onchange="tx_powermail_pi1addZoneSelector(this.value);"';
+				
+			}
 		}
 		
 	}
