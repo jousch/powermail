@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007 Mischa Heißmann, Alexander Kellner <typo3@heissmann.org, alexander.kellner@wunschtacho.de>
+*  (c) 2007 Mischa Heißmann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@wunschtacho.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -26,7 +26,7 @@
 /**
  * Class/Function which manipulates the item-array for table/field tx_powermail_forms_recip_field.
  *
- * @author	Mischa Heißmann, Alexander Kellner <typo3@heissmann.org, alexander.kellner@einpraegsam.net>
+ * @author	Mischa Heißmann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@einpraegsam.net>
  * @package	TYPO3
  * @subpackage	tx_powermail
  */

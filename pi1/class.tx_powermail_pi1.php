@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007 Mischa Heißmann, Alexander Kellner <typo3@heissmann.org, alexander.kellner@wunschtacho.de>
+*  (c) 2007 Mischa Heißmann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@wunschtacho.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -145,12 +145,12 @@ class tx_powermail_pi1 extends tslib_pibase {
 	// Function check() checks if all needed fields are filled in backend
 	function check() {
 		$error = ''; // init
-		$prefix = '<strong>PowerMail error</strong> - Please fill in this backend field: ';
+		$prefix = $this->pi_getLL('error_check_prefix','<strong>PowerMail error</strong> - Please fill in this backend field: ');
 		if (!$this->cObj->data['tx_powermail_subject_r']) { // If subject of receiver is not set
-			$error .= $prefix.'<strong>Email receiver subject</strong><br />'; // Error MSG
+			$error .= $prefix.$this->pi_getLL('error_check_subject_r','<strong>Email receiver subject</strong><br />'); // Error MSG
 		}
 		if (!$this->cObj->data['tx_powermail_recipient'] && !$this->cObj->data['tx_powermail_recip_id'] && !$this->cObj->data['tx_powermail_recip_field']) { // If email of receiver is not set
-			$error .= $prefix.'<strong>Email address of receiver</strong><br />'; // Error MSG
+			$error .= $prefix.$this->pi_getLL('error_check_recipient','<strong>Email address of receiver</strong><br />'); // Error MSG
 		}
 		return $error;
 	}

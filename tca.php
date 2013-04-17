@@ -14,12 +14,7 @@ $TCA["tx_powermail_fieldsets"] = array (
 				"type" => "passthrough"
 			)
 		),
-		"formtable" => array (		
-			"config" => array (
-				"type" => "passthrough"
-			)
-		),
-		"title" => array (		
+		"title" => array (
 			"exclude" => 1,		
 			"label" => "LLL:EXT:powermail/locallang_db.xml:tx_powermail_fieldsets.title",		
 			"config" => array (

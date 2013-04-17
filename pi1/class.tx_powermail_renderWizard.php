@@ -30,7 +30,7 @@ require_once('class.tx_powermail_jscalendar.php');
  * $Id$
  *
  * @author	Stefan Galinski <stefan.galinski@frm2.tum.de>
- * @updated	Mischa Heissmann <typo3@heissmann.org>
+ * @updated	Mischa Heissmann <typo3.2008@heissmann.org>
  */
 
 /**

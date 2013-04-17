@@ -31,7 +31,7 @@ $JSCalendarInitFlag = false;
  * $Id$
  *
  * @author	Stefan Galinski <stefan.galinski@frm2.tum.de>
- * @update	Mischa Heissmann <typo3@heissmann.org>
+ * @update	Mischa Heissmann <typo3.2008@heissmann.org>
  */
 
 /**

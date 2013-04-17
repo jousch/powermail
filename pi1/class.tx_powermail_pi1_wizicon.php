@@ -28,7 +28,7 @@
 /**
  * Plugin 'Powermail' for the 'powermail' extension.
  *
- * @author	Mischa Heiﬂmann, Alexander Kellner <typo3@heissmann.org, alexander.kellner@einpraegsam.net>
+ * @author	Mischa Heiﬂmann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@einpraegsam.net>
  * @package	TYPO3
  * @subpackage	tx_powermail
  */

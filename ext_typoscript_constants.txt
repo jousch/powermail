@@ -71,6 +71,9 @@ plugin.powermail {
 	
 	# cat=plugin.powermail//360; type=int; label= Allow filesize for upload: If you are using min. one upload field in frontend, you can set the allowed filesize of the files (in kB)
 	upload.filesize = 1000
+
+	# cat=plugin.powermail//370; type=boolean; label= Clear Session: Check if session should be cleared after submit (emails sent)
+	clear.session = 0
 	
 	# cat=plugin.powermail//900; type=boolean; label= OnFocus JavaScript: (De)activate onfocus javascript in fields - removes standard value of (e.g. text-) fields onclick, so the user can click and begin to write
 	js.onfocus = 1

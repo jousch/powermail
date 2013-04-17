@@ -244,8 +244,13 @@ $TCA['tt_content']['types'][$_EXTKEY.'_pi1']['showitem']='
 	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div5, tx_powermail_thanks;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts],
 	--div--;LLL:EXT:powermail/locallang_db.xml:tx_powermail_forms.div6';
 
+
+
 $TCA['tt_content']['ctrl']['requestUpdate'] = "tx_powermail_recip_table";
 $TCA['tt_content']['ctrl']['dividers2tabs'] = $confArr['noTabDividers']?FALSE:TRUE;
+
+
+
 
 t3lib_extMgm::addLLrefForTCAdescr('tt_content','EXT:powermail/lang/locallang_csh_tt_content.php');
 

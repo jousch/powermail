@@ -18,6 +18,13 @@
 			<label index="locallangmarker_error_file_main">This file could not be uploaded:</label>
 			<label index="locallangmarker_error_file_toolarge">This file is too large:</label>
 			<label index="locallangmarker_error_file_extension">This file extension is not allowed:</label>
+			<label index="error_check_prefix">PowerMail error!! Please fill in this backend fields: </label>
+			<label index="error_check_subject_r">Email receiver subject
+
+			</label>
+			<label index="error_check_recipient">Email address of receiver
+
+			</label>
 			<label index="multiple_forward">Next step</label>
 			<label index="multiple_back">Last step</label>
 		</languageKey>
@@ -34,6 +41,13 @@
 			<label index="locallangmarker_error_file_main">Die Datei konnte nicht hochgeladen werden:</label>
 			<label index="locallangmarker_error_file_toolarge">Diese Datei ist zu groß:</label>
 			<label index="locallangmarker_error_file_extension">Diese Datei Endung ist nicht erlaubt:</label>
+			<label index="error_check_prefix">PowerMail Fehler!! Bitte füllen Sie folgende Felder im Backend aus: </label>
+			<label index="error_check_subject_r">Betreff für Empfängermail
+			
+			</label>
+			<label index="error_check_recipient">Empfänger
+			
+			</label>
 			<label index="multiple_forward">Nächster Schritt</label>
 			<label index="multiple_back">Letzter Schritt</label>
 		</languageKey>

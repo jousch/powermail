@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007 Mischa Heißmann, Alexander Kellner <typo3@heissmann.org, alexander.kellner@wunschtacho.de>
+*  (c) 2007 Mischa Heißmann, Alexander Kellner <typo3.2008@heissmann.org, alexander.kellner@wunschtacho.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -89,6 +89,12 @@ class tx_powermail_submit extends tslib_pibase {
 			$this->content // current content
 		);
 		$this->content = preg_replace("|###.*###|i","",$this->content); // Finally clear not filled markers
+		
+		// 4. Now clear the session if option is set in TS
+		if($this->conf['clear.']['session'] == 1) {
+			$this->clearSession();
+		}
+		
 		return $this->content; // return HTML for THX Message
 	}
 
@@ -205,6 +211,12 @@ class tx_powermail_submit extends tslib_pibase {
 				$_procObj->PM_SubmitAfterMarkerHook($this); // Get new marker Array from other extensions
 			}
 		}
+	}
+	
+	// Function to clear the Session after submitting the form. Will only be cleared when option is selected in Constant-Editor oder set by TS
+	function clearSession(){
+		$GLOBALS['TSFE']->fe_user->setKey("ses", $this->extKey.'_'.$this->pibase->cObj->data['uid'], array()); // Generate Session without ERRORS
+		$GLOBALS['TSFE']->storeSessionData(); // Save session*/
 	}
 
 
