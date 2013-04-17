@@ -108,9 +108,19 @@ class tx_powermail_functions_div {
 			
 		}
 	}
+	
+	
+	// Function correctPath() checks if the link is like "fileadmin/test/ and not "/fileadmin/test"
+	function correctPath($value) {
+		// If there is no Slash at the end of the picture folder, add a slash and if there is a slash at the beginning, remove this slash
+		if (substr($value, -1, 1) != '/') $value .= '/'; // add a slash at the end if there is no slash
+		if (substr($value, 0, 1) == '/') $value = substr($value, 1); // remove slash from the front
+		
+		if ($value) return $value;
+	}
 
 
-	//function for initialisation.
+	// Function for initialisation.
 	// to call cObj, make $this->pibase->pibase->cObj->function()
 	function init(&$conf,&$pibase) {
 		$this->conf = $conf;

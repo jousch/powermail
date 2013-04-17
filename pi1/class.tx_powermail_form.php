@@ -61,7 +61,7 @@ class tx_powermail_form extends tslib_pibase {
 			} else { // simulatestaticdocuments active
 				$dynjslink = 'index.php?id='.$GLOBALS['TSFE']->id.'&type=3131';
 			}
-			$js .= "\t".'<script src="'.htmlentities($dynjslink).'" type="text/javascript"></script>'."\n";
+			$js .= "\t".'<script src="'.($this->conf['js.']['HTMLentities']==1?htmlentities($dynjslink):$dynjslink).'" type="text/javascript"></script>'."\n";
 		}
 		$GLOBALS['TSFE']->additionalHeaderData[$this->extKey] = $js; // write to html header
 		

@@ -30,6 +30,7 @@ plugin.tx_powermail_pi1 {
 	js.onfocus = {$plugin.powermail.js.onfocus}
 	js.onchange = {$plugin.powermail.js.onchange}
 	js.Prototype = {$plugin.powermail.js.Prototype}
+	js.HTMLentities = {$plugin.powermail.js.HTMLentities}
 }
 
 # TypeNum 3131 offers a dynamic javascript for powermail which allows to validate different fields

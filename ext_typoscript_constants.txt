@@ -92,4 +92,7 @@ plugin.powermail {
 
 	# cat=plugin.powermail//940; type=boolean; label= Load prototype.js: (De)activate loading prototype.js in html head of page where powermail is in (prototype.js is needed for JS validation of fields and for date2cal fields like date, datetime and time)	
 	js.Prototype = 1
+
+	# cat=plugin.powermail//950; type=boolean; label= HTMLentities for JS: (De)activate the php function htmlentities for the dynamic javascript in the html header. Example with htmlentities: index.php?id=1& amp;type=3131 / Example without htmlentities: index.php?id=1&type=3131
+	js.HTMLentities = 1
 }

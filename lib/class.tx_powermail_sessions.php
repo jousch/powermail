@@ -81,8 +81,8 @@ class tx_powermail_sessions extends tslib_pibase {
 		
 		// check for upload fields
 		$this->uids = '';
-		if(is_array($piVars)) {
-			foreach ($piVars as $key => $value) { // one loop for every piVar
+		if(is_array($_FILES['tx_powermail_pi1']['name'])) {
+			foreach ($_FILES['tx_powermail_pi1']['name'] as $key => $value) { // one loop for every piVar
 				if(is_numeric(str_replace('uid','',$key))) $this->uids .= str_replace('uid','',$key).','; // generate uid list like 5,6,77,23,
 			}
 			if(strlen($this->uids) > 0) $this->uids = substr($this->uids,0,-1); // delete last ,
@@ -97,16 +97,15 @@ class tx_powermail_sessions extends tslib_pibase {
 				$limit =''
 			);
 			if ($res) { // If there is a result
-				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every uploadfield
-				
-					if($piVars['uid'.$row['uid']]) { // if there is a content in current upload field
+				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) { // One loop for every uploadfield 
+					if($_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']]) { // if there is a content in current upload field
 						$fileinfo = pathinfo($_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']]); // get info about uploaded file
 						$newfilename = str_replace('.'.$fileinfo['extension'],'',$_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']]).'_'.t3lib_div::md5int($_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']].time()).'.'.$fileinfo['extension']; // filename like name_md5ofnameandtime.ext
 						
 						if(filesize($_FILES['tx_powermail_pi1']['tmp_name']['uid'.$row['uid']]) < ($this->conf['upload.']['filesize'] * 1024)) { // filesize check
 							if(in_array($fileinfo['extension'],$this->allowedFileExtensions)) { // if current fileextension is allowed
 								// upload copy move uploaded files to destination
-								if(t3lib_div::upload_copy_move($_FILES['tx_powermail_pi1']['tmp_name']['uid'.$row['uid']], t3lib_div::getFileAbsFileName($this->conf['upload.']['folder'].$newfilename))) {
+								if(t3lib_div::upload_copy_move($_FILES['tx_powermail_pi1']['tmp_name']['uid'.$row['uid']], t3lib_div::getFileAbsFileName($this->div_functions->correctPath($this->conf['upload.']['folder']).$newfilename))) {
 									$piVars['uid'.$row['uid']] = $newfilename; // write new filename to session
 								} else { // could not be copied (maybe write permission error or wrong path)
 									$piVars['ERROR'][$row['uid']][] = $this->pi_getLL('locallangmarker_error_file_main').' <b>'.$_FILES['tx_powermail_pi1']['name']['uid'.$row['uid']].'</b>'; // write error to session
@@ -137,7 +136,7 @@ class tx_powermail_sessions extends tslib_pibase {
 	}
 
 
-	//function for initialisation.
+	// Function for initialisation.
 	// to call cObj, make $this->pibase->cObj->function()
 	function init(&$conf,&$pibase) {
 		$this->conf = $conf;

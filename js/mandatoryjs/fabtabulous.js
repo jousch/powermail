@@ -9,11 +9,14 @@ var Fabtabs = Class.create();
 
 Fabtabs.prototype = {
 	initialize : function(element) {
+		
 		this.element = $(element);
-		var options = Object.extend({}, arguments[1] || {});
-		this.menu = $A(this.element.getElementsByTagName('a'));
-		this.show(this.getInitialTab());
-		this.menu.each(this.setupTab.bind(this));
+		if(this.element) { // added by Alex Kellner to remove error message in IE
+			var options = Object.extend({}, arguments[1] || {});
+			this.menu = $A(this.element.getElementsByTagName('a'));
+			this.show(this.getInitialTab());
+			this.menu.each(this.setupTab.bind(this));
+		}
 	},
 	setupTab : function(elm) {
 		Event.observe(elm,'click',this.activate.bindAsEventListener(this),false)

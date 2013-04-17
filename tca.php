@@ -9,6 +9,14 @@ $TCA["tx_powermail_fieldsets"] = array (
 	),
 	"feInterface" => $TCA["tx_powermail_fieldsets"]["feInterface"],
 	"columns" => array (
+		'hidden' => array (		
+			'exclude' => 1,
+			'label'   => 'wech damit',
+			'config'  => array (
+				'type'    => 'check',
+				'default' => '0'
+			)
+		),
 		"tt_content" => array (		
 			"config" => array (
 				"type" => "passthrough"
@@ -41,7 +49,7 @@ $TCA["tx_powermail_fieldsets"] = array (
 		)
 	),
 	"types" => array (
-		"0" => array("showitem" => "form, title;;;;2-2-2, felder")
+		"0" => array("showitem" => "hidden;;1;;1-1-1, form, title;;;;2-2-2, felder")
 	),
 	"palettes" => array (
 		"1" => array("showitem" => "")
@@ -69,6 +77,14 @@ $TCA["tx_powermail_fields"] = array (
 	),
 	"feInterface" => $TCA["tx_powermail_fields"]["feInterface"],
 	"columns" => array (
+		'hidden' => array (		
+			'exclude' => 1,
+			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
+			'config'  => array (
+				'type'    => 'check',
+				'default' => '0'
+			)
+		),
 		"fieldset" => array (		
 			"config" => array (
 				"type" => "passthrough"
@@ -162,7 +178,7 @@ $TCA["tx_powermail_fields"] = array (
 		),
 	),
 	"types" => array (
-		"0" => array("showitem" => "title;;;;1-1-1,formtype;;;;2-2-2,flexform;;;;3-3-3, fe_field;;;;4-4-4")
+		"0" => array("showitem" => "hidden;;1;;1-1-1, title;;;;1-1-1,formtype;;;;2-2-2,flexform;;;;3-3-3, fe_field;;;;4-4-4")
 	),
 	"palettes" => array (
 		"1" => array("showitem" => ""),
