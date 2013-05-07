@@ -21,7 +21,7 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
- 
+
 // stop implementation in frontend (only for backend)
 if (!interface_exists(tx_scheduler_AdditionalFieldProvider)) {
 	return;
@@ -36,15 +36,15 @@ if (!interface_exists(tx_scheduler_AdditionalFieldProvider)) {
  */
 
 class tx_powermail_scheduler_addFields implements tx_scheduler_AdditionalFieldProvider {
-   
+
 	/**
 	* Add additional fields to the scheduler
 	*
 	* @return    array
 	*/
-    public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $parentObject) {
-    	$additionalFields = array(); 
-		
+    public function getAdditionalFields(array &$taskInfo, $task, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $parentObject) {
+    	$additionalFields = array();
+
         if (empty($taskInfo['pid'])) {
             if ($parentObject->CMD == 'edit') {
                 $taskInfo['pid'] = $task->pid;
@@ -52,7 +52,7 @@ class tx_powermail_scheduler_addFields implements tx_scheduler_AdditionalFieldPr
                 $taskInfo['pid'] = '';
             }
         }
-		
+
         if (empty($taskInfo['filename'])) {
             if ($parentObject->CMD == 'edit') {
                 $taskInfo['filename'] = $task->filename;
@@ -68,7 +68,7 @@ class tx_powermail_scheduler_addFields implements tx_scheduler_AdditionalFieldPr
                 $taskInfo['email'] = '';
             }
         }
-		
+
         if (empty($taskInfo['email_sender'])) {
             if ($parentObject->CMD == 'edit') {
                 $taskInfo['email_sender'] = $task->email_sender;
@@ -201,7 +201,7 @@ class tx_powermail_scheduler_addFields implements tx_scheduler_AdditionalFieldPr
 	*
 	* @return    bool
 	*/
-    public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $parentObject) {
+    public function validateAdditionalFields(array &$submittedData, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $parentObject) {
         $submittedData['pid'] = intval($submittedData['pid']); // should be integer
         $submittedData['filename'] = trim($submittedData['filename']); // should be integer
         $submittedData['timeframe'] = intval($submittedData['timeframe']); // should be integer
@@ -213,13 +213,13 @@ class tx_powermail_scheduler_addFields implements tx_scheduler_AdditionalFieldPr
 		}
         return true;
     }
-   
+
 	/**
 	* make values available in scheduler object
 	*
 	* @return    void
 	*/
-    public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task) {
+    public function saveAdditionalFields(array $submittedData, \TYPO3\CMS\Scheduler\Task\AbstractTask $task) {
         $task->pid = $submittedData['pid'];
         $task->filename = $submittedData['filename'];
         $task->email = $submittedData['email'];
