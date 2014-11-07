@@ -341,7 +341,7 @@ class tx_powermail_submit extends tslib_pibase {
 			'senderIP' => ($this->confArr['disableIPlog'] == 1 ? $this->pi_getLL('error_backend_noip') : t3lib_div::getIndpEnv('REMOTE_ADDR')), // save users IP address
 			'UserAgent' => t3lib_div::getIndpEnv('HTTP_USER_AGENT'), // save user agent
 			'Referer' => t3lib_div::getIndpEnv('HTTP_REFERER'), // save referer
-			'SP_TZ' => $_SERVER['SP_TZ'] // save sp_tz if available
+			'SP_TZ' => (string) $_SERVER['SP_TZ'] // save sp_tz if available
 		);
 		if ($this->dbInsert) $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_powermail_mails', $this->db_values); // DB entry
 		$this->debug('db'); // Debug output
